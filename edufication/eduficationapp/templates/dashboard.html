@@ -26,7 +26,8 @@
 
     <!-- Custom Css -->
     <link href="{% static 'Assets/css/style.css' %}" rel="stylesheet">
-
+    <!-- Bootstrap Select Css -->
+    <link href="{% static 'Assets/plugins/bootstrap-select/css/bootstrap-select.css' %}" rel="stylesheet" />
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="{% static 'Assets/css/themes/all-themes.css' %}" rel="stylesheet" />
 </head>
@@ -85,13 +86,13 @@
                 <ul class="list">
                     <li class="header">MAIN NAVIGATION</li>
                     <li class="active">
-                        <a href="#">
+                        <a href="{% url 'adminhome' %}">
                             <i class="material-icons">home</i>
                             <span>Home</span>
                         </a>            
                     </li>
                     <li>
-                        <a href="/profile">
+                        <a href="{% url 'adminprofile' %}">
                             <i class="material-icons">person</i>
                             <span>Profile</span>
                         </a>            
@@ -103,16 +104,19 @@
                         </a>
                         <ul class="ml-menu">
                             <li>
-                                <a href="#">Batch</a>
+                                <a href="{% url 'batch'%}">Batch</a>
                             </li>
                             <li>
                                 <a href="#">Batch Faculty</a>
                             </li>
                             <li>
-                                <a href="#">Course</a>
+                                <a href="{% url 'course'%}">Course</a>
                             </li>
                             <li>
                                 <a href="#">Faculty</a>            
+                            </li>
+                            <li>
+                                <a href="{% url 'program' %}">Programs</a>
                             </li>
                             <li>
                                 <a href="#">Student</a>            

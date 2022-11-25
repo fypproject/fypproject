@@ -1,0 +1,51 @@
+{% extends 'dashboard.html' %}
+
+
+{% block body %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>Batch</h2>
+        </div>
+        <!-- Input -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Add New Batch
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                        <form  method="POST">
+                            {% csrf_token %}                 
+                                    <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="text" name="batchname" class="form-control" placeholder="Enter Batch Name" required />
+                                    </div>
+                                    </div>
+                                    <div class="form-group">
+                                    <select name="program" class="form-control show-tick">
+                                        
+                                        <option>Select Program</option>
+                                        {% for program in programs %}
+                                        <option value="{{program.p_name}}">{{program.p_name}}</option>
+                                        {% endfor %}
+                                        
+                                        
+                                    </select>
+                                    </div>
+                                <input type="submit" name="btninsert" value="Insert" class="btn btn-success" /><br><br>                
+                        </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Input -->
+    </div>
+</section>
+{% endblock body %}

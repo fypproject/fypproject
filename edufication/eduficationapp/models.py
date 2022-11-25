@@ -47,7 +47,25 @@ class myAdmin(models.Model):
     	return self.user.username
 
 
+class Program(models.Model):
+    p_id=models.AutoField(primary_key=True)
+    p_name=models.CharField(max_length=50)
+    def __str__(self):
+    	return self.p_name
 
+class Batch(models.Model):
+    b_id=models.AutoField(primary_key=True)
+    b_name=models.CharField(max_length=50)
+    b_programid=models.ForeignKey(Program,on_delete=models.CASCADE)
+    def __str__(self):
+    	return self.b_name
+
+class Course(models.Model):
+    c_id=models.AutoField(primary_key=True)
+    c_name=models.CharField(max_length=50)
+    c_programid=models.ForeignKey(Program,on_delete=models.CASCADE)
+    def __str__(self):
+    	return self.c_name
 
 
 

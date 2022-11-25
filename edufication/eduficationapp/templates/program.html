@@ -1,0 +1,53 @@
+
+{% extends 'dashboard.html' %}
+{% block body %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>
+                <span>Table</span>
+            </h2>
+        </div>
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Program Details
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                        <a href="{% url 'createprogram' %}"><input type="submit" value="Add New Batch" class="btn btn-success"/></a><br><br>
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Option</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                            {% for program in programs%}
+                                               <tr>
+                                                   <td>{{program.p_id}}</td>
+                                                    <td>{{program.p_name}}</td>
+                                                    <td>
+                                                        <a href='updateprogram/{{program.p_id}}'><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
+                                                        <a href='deleteprogram/{{program.p_id}}'><input type='submit' value='Delete' class='btn btn-danger'/></a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# 1 Basic Examples -->
+        </div>
+</section>
+{% endblock body %}
