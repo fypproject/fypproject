@@ -97,7 +97,7 @@
                             <span>Profile</span>
                         </a>            
                     </li>
-                    {% if userrole is "Admin"%}
+                    {% if userrole == "Admin"%}
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">view_list</i>
@@ -124,7 +124,22 @@
                             </li>
                         </ul>
                     </li> 
+                    {% else %}
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">class</i>
+                            <span>Course</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                {% comment %} for loop {% endcomment %}
+                                <a href='#' ></a>
+                            </li>
+                        </ul>
+                    </li>
+                    
                     {% endif %}
+                    
                 </ul>
             </div>
             <!-- #Menu -->
