@@ -1,0 +1,57 @@
+
+{% extends 'dashboard.html' %}
+{% block body %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>
+                <span>Table</span>
+            </h2>
+        </div>
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Batch Course Faculty Details
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                        <a href="{%url 'createbcf'%}"><input type="submit" value="Add New Batch Course" class="btn btn-success"/></a><br><br>
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                    <th>ID</th>
+                                    <th>Batch</th>
+                                    <th>Course</th>
+                                    <th>Faculty</th>
+                                    <th>Option</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                            {%for bcf in bcfs%}
+                                                <tr>
+                                                    <td>{{bcf.bcf_id}}</td>
+                                                    <td>{{bcf.bcf_batchid}}</td>
+                                                    <td>{{bcf.bcf_courseid}}</td>
+                                                    <td>{{bcf.bcf_facultyid}}</td>
+                                                    <td>
+                                                        <a href='updatebcf/{{bcf.bcf_id}}'><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
+                                                        <a href='deletebcf/{{bcf.bcf_id}}'><input type='submit' value='Delete' class='btn btn-danger'/></a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# 2 Basic Examples -->
+        </div>
+</section>
+{% endblock body %}

@@ -1,0 +1,65 @@
+
+
+{% extends 'dashboard.html' %}
+{% block body %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>Batch Course</h2>
+        </div>
+        <!-- Input -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Add New Batch Course
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                        <form  method="post">
+                            {% csrf_token %}
+                                <div class="form group">
+                                <select name="txtbatch" class="form-control">
+                                        <option>Select Batch</option>
+                                        {% for batch in batches %}
+                                        
+                                        <option value="{{batch.b_name}}">{{batch.b_name}}</option>
+                                        {% endfor %}
+                                        
+                                        
+                                    </select>
+                                </div><br/>
+                                <div class="form group">
+                                <select name="txtcourse" class="form-control" >
+                                        <option>Select Course</option>
+                                    
+                                        {% for course in courses %}
+                                        
+                                        <option value="{{course.c_name}}">{{course.c_name}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div><br />
+                                <div class="form group">
+                                <select name="txtfaculty" class="form-control">
+                                        <option>Select Faculty</option>
+                                        {% for faculty in faculties %}
+                                        <option value="{{faculty.username}}">{{faculty.username}}</option>
+                                        {% endfor %}
+                                    </select>
+                                    </div><br />
+                            <input type="submit" name="btninsert" value="Insert" class="btn btn-success" /><br><br>                
+                        </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Input -->
+    </div>
+</section>
+{% endblock body %}

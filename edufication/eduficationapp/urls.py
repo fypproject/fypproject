@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
-from .views import myAdminSignUpView,facultySignUpView
+from .views import myAdminSignUpView,facultySignUpView,studentSignUpView
 
 urlpatterns = [
     path("",views.index,name='index'),
@@ -9,7 +9,6 @@ urlpatterns = [
     path("myadmin/home",views.home,name='adminhome'),
     path("faculty/home",views.home,name='facultyhome'),
     path('adminsignup', myAdminSignUpView.as_view(), name='myadmin_signup'),
-    path('facultysignup', facultySignUpView.as_view(), name='faculty_signup'),
     path('logout',views.logout_view,name='logout'),
     path('myadmin/profile',views.profile,name='adminprofile'),
     path('myadmin/createprogram',views.createprogram,name='createprogram'),
@@ -24,4 +23,15 @@ urlpatterns = [
     path('myadmin/course',views.courseshow,name='course'),
     path('myadmin/updatecourse/<int:id>',views.updatecourse,name='updatecourse'),
     path('myadmin/deletecourse/<int:id>',views.deletecourse,name='deletecourse'),
+    path('myadmin/faculty',views.facultyshow,name='faculty'),
+    path('myadmin/createfaculty', facultySignUpView.as_view(), name='createfaculty'),
+    path('myadmin/deletefaculty/<int:id>',views.deletefaculty,name='deletefaculty'),
+    path('myadmin/student',views.studentshow,name='student'),
+    path('myadmin/createstudent', studentSignUpView.as_view(), name='createstudent'),
+    path('myadmin/deletestudent/<int:id>',views.deletestudent,name='deletestudent'),
+    path('myadmin/bcf',views.bcfshow,name='bcf'),
+    path('myadmin/createbcf',views.createbcf,name='createbcf'),
+    path('myadmin/updatebcf/<int:id>',views.updatebcf,name='updatebcf'),
+    #path('myadmin/deletebcf/<int:id>',views.deletecourse,name='deletecourse'),
+    
 ]

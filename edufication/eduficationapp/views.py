@@ -2,8 +2,8 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.views.generic import CreateView
-from .forms import myAdminSignUpForm,facultySignUpForm
-from .models import User,Student,myAdmin,Program,Batch,Course
+from .forms import myAdminSignUpForm,facultySignUpForm,studentSignUpForm
+from .models import *
 from django.views.decorators.cache import cache_control
 
 # @cache_control(no_cache=True, must_revalidate=True)
@@ -54,8 +54,13 @@ def home(request):
         #print(user.username) 
         return render(request,"adminhome.html",context)
     elif user.is_authenticated and user.is_faculty:
-        context={'user':user,'userrole':"Faculty"}
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        context={'user':user,'userrole':"Faculty",'bcf':bcf}
         return render(request,"facultyhome.html",context)
+    elif user.is_authenticated and user.is_student:
+        context={'user':user,'userrole':"Student"}
+        #return render(request,"home.html",context)
+        return redirect(index)
     else:
         return redirect(index)
 
@@ -89,25 +94,13 @@ class myAdminSignUpView(CreateView):
         #login(self.request, user)
         return redirect(signin)
 
-class facultySignUpView(CreateView):
-    model = User
-    form_class = facultySignUpForm
-    template_name = 'facultysignup.html'
 
-    def get_context_data(self, **kwargs):
-        kwargs['user_type'] = 'faculty'
-        return super().get_context_data(**kwargs)
-
-    def form_valid(self, form):
-        user = form.save()
-        #login(self.request, user)
-        return redirect(signin)
     
 # Program Crud
 def programshow(request):
     program= Program.objects.all()
-    print(program)
-    return render(request,"program.html",{'programs':program})
+    #print(program)
+    return render(request,"program.html",{'programs':program,'userrole':"Admin"})
 
 
 def createprogram(request):
@@ -117,7 +110,7 @@ def createprogram(request):
         program =Program(p_name=programname)
         program.save()
         return redirect(programshow)
-    return render(request,"createprogram.html")
+    return render(request,"createprogram.html",{'userrole':"Admin"})
 
 def updateprogram(request,id):
     program = Program.objects.get(p_id=id)
@@ -129,7 +122,7 @@ def updateprogram(request,id):
         return redirect(programshow)
         # program.p_name(programname)
         
-    return render(request,"updateprogram.html",{'program':program})
+    return render(request,"updateprogram.html",{'program':program,'userrole':"Admin"})
 
 def deleteprogram(request,id):
     program = Program.objects.get(p_id=id)
@@ -141,7 +134,7 @@ def batchshow(request):
     batch= Batch.objects.all()
     #print(batch)
     
-    return render(request,"batch.html",{'batchs':batch})
+    return render(request,"batch.html",{'batchs':batch,'userrole':"Admin"})
 
 
 def createbatch(request):
@@ -158,7 +151,7 @@ def createbatch(request):
         # batch.b_programid=program
         batch.save()
         return redirect(batchshow)
-    return render(request,"createbatch.html",{'programs':program})
+    return render(request,"createbatch.html",{'programs':program,'userrole':"Admin"})
 
 def updatebatch(request,id):
     program = Program.objects.all()
@@ -173,7 +166,7 @@ def updatebatch(request,id):
         return redirect(batchshow)
         # batch.p_name(batchname)
         
-    return render(request,"updatebatch.html",{'batch':batch,'programs':program})
+    return render(request,"updatebatch.html",{'batch':batch,'programs':program,'userrole':"Admin"})
 
 def deletebatch(request,id):
     batch = Batch.objects.get(b_id=id)
@@ -191,7 +184,7 @@ def courseshow(request):
     course= Course.objects.all()
     #print(course)
     
-    return render(request,"course.html",{'courses':course})
+    return render(request,"course.html",{'courses':course,'userrole':"Admin"})
 
 
 def createcourse(request):
@@ -208,7 +201,7 @@ def createcourse(request):
         # course.b_programid=program
         course.save()
         return redirect(courseshow)
-    return render(request,"createcourse.html",{'programs':program})
+    return render(request,"createcourse.html",{'programs':program,'userrole':"Admin"})
 
 def updatecourse(request,id):
     program = Program.objects.all()
@@ -223,11 +216,127 @@ def updatecourse(request,id):
         return redirect(courseshow)
         # course.p_name(coursename)
         
-    return render(request,"updatecourse.html",{'course':course,'programs':program})
+    return render(request,"updatecourse.html",{'course':course,'programs':program,'userrole':"Admin"})
 
 def deletecourse(request,id):
     course = Course.objects.get(c_id=id)
     course.delete()
     return redirect(courseshow)
 
+#faculty Crud
 
+class facultySignUpView(CreateView):
+    model = User
+    form_class = facultySignUpForm
+    template_name = 'createfaculty.html'
+    userrole= "Admin"
+
+    def get_context_data(self, **kwargs):
+        context =super().get_context_data(**kwargs)
+        context['userrole'] = self.userrole
+        kwargs['user_type'] = 'faculty'
+        return context
+
+    def form_valid(self, form):
+        user = form.save()
+        #login(self.request, user)
+        return redirect(facultyshow)
+
+def facultyshow(request):
+    faculty= User.objects.filter(is_faculty=True)
+    #print(course)
+    
+    return render(request,"faculty.html",{'faculties':faculty,'userrole':"Admin"})
+
+def deletefaculty(request,id):
+    faculty = User.objects.get(id=id)
+    faculty.delete()
+    return redirect(facultyshow)
+
+# Student Crud
+
+class studentSignUpView(CreateView):
+    model = User
+    form_class = studentSignUpForm
+    template_name = 'createstudent.html'
+    userrole= "Admin"
+
+    def get_context_data(self, **kwargs):
+        context =super().get_context_data(**kwargs)
+        context['userrole'] = self.userrole
+        kwargs['user_type'] = 'student'
+        return context
+
+    def form_valid(self, form):
+        user = form.save()
+        #login(self.request, user)
+        return redirect(studentshow)
+def studentshow(request):
+    student= User.objects.filter(is_student=True)
+    #print(course)
+    
+    return render(request,"student.html",{'students':student,'userrole':"Admin"})
+
+def deletestudent(request,id):
+    student = User.objects.get(id=id)
+    student.delete()
+    return redirect(studentshow)
+
+# Batch Faculty Crud
+def bcfshow(request):
+    bcf= Bcf.objects.all()
+    return render(request,"bcf.html",{'userrole':"Admin",'bcfs':bcf})
+
+def createbcf(request):
+    faculty= User.objects.filter(is_faculty=True)
+    batch=Batch.objects.all()
+    course = Course.objects.all()
+    context={'courses':course,'faculties':faculty,'batches':batch,'userrole':"Admin"}
+    if request.method == "POST":
+        coursename= request.POST['txtcourse']
+        facultyname =request.POST['txtfaculty']
+        batchname=request.POST['txtbatch']
+        courseid= Course.objects.get(c_name=coursename)
+        batchid=Batch.objects.get(b_name=batchname)
+        facultyid=User.objects.get(username=facultyname)
+        
+        #print(programname)
+        bcf = Bcf(bcf_batchid=batchid,bcf_courseid=courseid,bcf_facultyid=facultyid)
+        bcf.save()
+        return redirect(bcfshow)
+    return render(request,"createbcf.html",context)
+
+def updatebcf(request,id):
+    course = Course.objects.all()
+    faculty= User.objects.filter(is_faculty=True)
+    batch=Batch.objects.all()
+    bcf = Bcf.objects.get(bcf_id=id)
+    context={'courses':course,'faculties':faculty,'batches':batch,'userrole':"Admin",'bcf':bcf}
+    if request.method == "POST":
+        coursename= request.POST['txtcourse']
+        facultyname =request.POST['txtfaculty']
+        batchname=request.POST['txtbatch']
+        bcf.bcf_courseid= Course.objects.get(c_name=coursename)
+        bcf.bcf_batchid=Batch.objects.get(b_name=batchname)
+        bcf.bcf_facultyid=User.objects.get(username=facultyname)
+        
+        #print(programname)
+        bcf.save()
+        return redirect(bcfshow)
+    
+    # print(course.c_name)
+    # if request.method == "POST":
+    #     coursename= request.POST['coursename']
+    #     programname=request.POST['program']
+    #     course.c_name= coursename
+    #     course.c_programid=Program.objects.get(p_name=programname)
+    #     course.save()
+    #     return redirect(courseshow)
+    #     # course.p_name(coursename)
+        
+    return render(request,"updatebcf.html",context)
+    
+def deletebcf(request,id):
+    bcf = Bcf.objects.get(id=id)
+    bcf.delete()
+    return redirect(bcfshow)

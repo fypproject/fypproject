@@ -108,19 +108,19 @@
                                 <a href="{% url 'batch'%}">Batch</a>
                             </li>
                             <li>
-                                <a href="#">Batch Faculty</a>
+                                <a href="{%url 'bcf'%}">Batch Faculty</a>
                             </li>
                             <li>
                                 <a href="{% url 'course'%}">Course</a>
                             </li>
                             <li>
-                                <a href="#">Faculty</a>            
+                                <a href="{%url 'faculty'%}">Faculty</a>            
                             </li>
                             <li>
                                 <a href="{% url 'program' %}">Programs</a>
                             </li>
                             <li>
-                                <a href="#">Student</a>            
+                                <a href="{% url 'student'%}">Student</a>            
                             </li>
                         </ul>
                     </li> 
@@ -131,10 +131,12 @@
                             <span>Course</span>
                         </a>
                         <ul class="ml-menu">
+
+                            {%for bcf in bcf%}
                             <li>
-                                {% comment %} for loop {% endcomment %}
-                                <a href='#' ></a>
+                                <a href='' >{{bcf.bcf_courseid}}</a>
                             </li>
+                            {%endfor%}
                         </ul>
                     </li>
                     
@@ -146,7 +148,7 @@
             <!-- Footer -->
             <div class="legal">
                 <div class="copyright">
-                    &copy; 2020 <a href="#">Edufication</a>.
+                    &copy; 2022 <a href="#">Edufication</a>.
                 </div>
                 <div class="version">
                     <b>Version: </b> 1.0.0

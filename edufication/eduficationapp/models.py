@@ -18,9 +18,8 @@ class Student(models.Model):
     s_country=models.CharField(max_length=50,blank=True,null=True)
     s_image=models.ImageField(blank=True,null=True)
     s_regno=models.CharField(max_length=50,unique=True)
-    s_statusid=models.IntegerField(default=2)
-    s_parentscontact=models.CharField(max_length=50)
-    s_batchid=models.IntegerField()
+    s_parentscontact=models.CharField(max_length=50,blank=True,null=True)
+    s_batchid=models.IntegerField(blank=True,null=True)
     def __str__(self):
     	return self.user.username
 
@@ -67,9 +66,13 @@ class Course(models.Model):
     def __str__(self):
     	return self.c_name
 
-
-
-
+class Bcf(models.Model):
+    bcf_id=models.AutoField(primary_key=True)
+    bcf_batchid=models.ForeignKey(Batch,on_delete=models.CASCADE)
+    bcf_courseid=models.ForeignKey(Course,on_delete=models.CASCADE)
+    bcf_facultyid=models.ForeignKey(User,on_delete=models.CASCADE)
+    def __str__(self):
+    	return self.bcf_id,self.bcf_batchid,self.bcf_courseid,self.bcf_facultyid
 
 
 
