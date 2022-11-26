@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.views.generic import CreateView
-from .forms import myAdminSignUpForm
+from .forms import myAdminSignUpForm,facultySignUpForm
 from .models import User,Student,myAdmin,Program,Batch,Course
 from django.views.decorators.cache import cache_control
 
@@ -31,7 +31,9 @@ def signin(request):
             login(request, user)
             if user.is_authenticated and user.is_myadmin:
                 #print(user.id,user.username)
-                return redirect(adminhome)
+                return redirect(home)
+            elif user.is_authenticated and user.is_faculty:
+                return redirect(home)
             else:
                 return redirect(index)
         else:
@@ -44,15 +46,23 @@ def logout_view(request):
     return redirect(index)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def adminhome(request):
+def home(request):
     # myadmin=myAdmin.object.filter(user=request.user)
     user = request.user
     if user.is_authenticated and user.is_myadmin:
         context={'user':user,'userrole':"Admin"}
-        print(user.username) 
+        #print(user.username) 
         return render(request,"adminhome.html",context)
+    elif user.is_authenticated and user.is_faculty:
+        context={'user':user,'userrole':"Faculty"}
+        return render(request,"facultyhome.html",context)
     else:
         return redirect(index)
+
+
+
+
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def profile(request):
     user=request.user
@@ -72,6 +82,20 @@ class myAdminSignUpView(CreateView):
 
     def get_context_data(self, **kwargs):
         kwargs['user_type'] = 'myAdmin'
+        return super().get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        user = form.save()
+        #login(self.request, user)
+        return redirect(signin)
+
+class facultySignUpView(CreateView):
+    model = User
+    form_class = facultySignUpForm
+    template_name = 'facultysignup.html'
+
+    def get_context_data(self, **kwargs):
+        kwargs['user_type'] = 'faculty'
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form):

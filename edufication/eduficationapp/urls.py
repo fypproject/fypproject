@@ -1,13 +1,15 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
-from .views import myAdminSignUpView
+from .views import myAdminSignUpView,facultySignUpView
 
 urlpatterns = [
     path("",views.index,name='index'),
     path("signin",views.signin,name='signin'),
-    path("myadmin/home",views.adminhome,name='adminhome'),
+    path("myadmin/home",views.home,name='adminhome'),
+    path("faculty/home",views.home,name='facultyhome'),
     path('adminsignup', myAdminSignUpView.as_view(), name='myadmin_signup'),
+    path('facultysignup', facultySignUpView.as_view(), name='faculty_signup'),
     path('logout',views.logout_view,name='logout'),
     path('myadmin/profile',views.profile,name='adminprofile'),
     path('myadmin/createprogram',views.createprogram,name='createprogram'),
