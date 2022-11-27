@@ -1,7 +1,10 @@
+from xml.dom import ValidationErr
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
-from django.views.generic import CreateView
+from django.views.generic import CreateView            
+from django.forms.utils import ErrorList
+
 from .forms import myAdminSignUpForm,facultySignUpForm,studentSignUpForm
 from .models import *
 from django.views.decorators.cache import cache_control
@@ -19,7 +22,7 @@ def index(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def signin(request):
-
+    msg=''
     if request.method == "POST":
         username=request.POST['username']
         password=request.POST['password']
@@ -37,7 +40,8 @@ def signin(request):
             else:
                 return redirect(index)
         else:
-            print(password,username)
+            messages.error(request,"Invalid Username/Password")
+            return render(request,"signin.html")
     return render(request,"signin.html")
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def logout_view(request):
@@ -271,6 +275,18 @@ class studentSignUpView(CreateView):
         user = form.save()
         #login(self.request, user)
         return redirect(studentshow)
+        # self.object = form.save(commit=False)
+        # self.object.user = self.request.user
+
+        # try:
+        #     self.object.full_clean()
+        # except ValidationErr:
+        #     #raise ValidationError("No can do, you have used this name before!")
+        #     #return self.form_invalid(form)
+        #     form._errors["s_regno"] = ErrorList([u"Registration number already exists..."])
+        #     return super(studentSignUpView, self).form_invalid(form)
+
+        return super(studentSignUpView, self).form_valid(form),redirect(studentshow)
 def studentshow(request):
     student= User.objects.filter(is_student=True)
     #print(course)

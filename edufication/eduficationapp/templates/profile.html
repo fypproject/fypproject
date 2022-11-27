@@ -44,17 +44,34 @@
                                             <div class="post">
                                                 <div class="post-heading">
                                                     <h4>Name</h4>
-                                                    <p>{{query.ad_fname}}</p>
+                                                    <p>{{user.first_name}}</p>
                                                     <h4>Email</h4>
-                                                    <p>{{query.ad_email}}</p>
+                                                    <p>{{user.email}}</p>
                                                     <h4>Username</h4>
-                                                    <p>{{query.ad_uname}}</p>
+                                                    <p>{{user.username}}</p>
+                                                    {%if userrole == "Admin"%}
                                                     <h4>Phone Number</h4>
-                                                    <p>{{query.ad_phoneno}}</p>
+                                                    <p>{{user.myadmin.ad_phoneno}}</p>
                                                     <h4>City</h4>
-                                                    <p>{{query.ad_city}}</p>
+                                                    <p>{{user.myadmin.ad_city}}</p>
                                                     <h4>Country</h4>
-                                                    <p>{{query.ad_country}}</p>
+                                                    <p>{{user.myadmin.ad_country}}</p>
+                                                    {% elif userrole == "Faculty"%}
+                                                    <h4>Phone Number</h4>
+                                                    <p>{{user.faculty.f_phoneno}}</p>
+                                                    <h4>City</h4>
+                                                    <p>{{user.faculty.f_city}}</p>
+                                                    <h4>Country</h4>
+                                                    <p>{{user.faculty.f_country}}</p>
+                                                    {% elif userrole == "Student"%}
+                                                    <h4>Phone Number</h4>
+                                                    <p>{{user.student.s_phoneno}}</p>
+                                                    <h4>City</h4>
+                                                    <p>{{user.student.s_city}}</p>
+                                                    <h4>Country</h4>
+                                                    <p>{{user.student.s_country}}</p>
+                                                    {% endif %}
+
 
                                                 </div>
                                             </div>

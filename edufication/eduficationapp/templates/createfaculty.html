@@ -54,6 +54,10 @@
                                         </div>
                                     <input type="submit" name="btninsert" value="Insert" class="btn btn-success" /><br><br>                
                                 </form>
+                                {% if form.errors %}
+                                    <label>{{form.errors.password2}}</label>
+                                    <label>{{form.errors.username}}</label>
+                                {% endif %}
                                 </div>
                                 </div>
                             </div>

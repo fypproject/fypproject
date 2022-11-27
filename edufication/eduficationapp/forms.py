@@ -30,7 +30,7 @@ class myAdminSignUpForm(UserCreationForm):
 
 class facultySignUpForm(UserCreationForm):
     first_name=forms.CharField(required=True,widget=forms.TextInput(attrs={'class': 'form-control inputelement','placeholder':'Enter Name'}))
-    email=forms.EmailField(required=True,widget=forms.TextInput(attrs={'class': 'form-control inputelement','placeholder':'Enter Email'}))
+    email=forms.EmailField(required=True,widget=forms.TextInput(attrs={'class': 'form-control inputelement','placeholder':'Enter Email','type':'email'}))
 
     class Meta(UserCreationForm.Meta):
         model = User
@@ -54,7 +54,7 @@ class facultySignUpForm(UserCreationForm):
 
 class studentSignUpForm(UserCreationForm):
     first_name=forms.CharField(required=True,widget=forms.TextInput(attrs={'class': 'form-control inputelement','placeholder':'Enter Name'}))
-    email=forms.EmailField(required=True,widget=forms.TextInput(attrs={'class': 'form-control inputelement','placeholder':'Enter Email'}))
+    email=forms.EmailField(required=True,widget=forms.TextInput(attrs={'class': 'form-control inputelement','placeholder':'Enter Email','type':'email'}))
     s_regno=forms.CharField(required=True,widget=forms.TextInput(attrs={'class': 'form-control inputelement','placeholder':'Enter Registeration Number'}))
     class Meta(UserCreationForm.Meta):
         model = User
@@ -76,3 +76,8 @@ class studentSignUpForm(UserCreationForm):
         self.fields['username'].widget.attrs.update({'class': 'form-control inputelement','placeholder':'Enter Username'})
         self.fields['password1'].widget.attrs.update({'class': 'form-control inputelement','placeholder':'Enter Password'})
         self.fields['password2'].widget.attrs.update({'class': 'form-control inputelement','placeholder':'Confirm Password '})
+    def clean_s_regno(self):
+        s_regno = self.cleaned_data['s_regno']
+        if Student.objects.filter( s_regno=s_regno).exists():
+            raise forms.ValidationError("Registration Number already exists")
+        return s_regno

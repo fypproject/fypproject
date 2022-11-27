@@ -1,14 +1,152 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
+  <meta charset="utf-8">
+  <title>Edufication - Home</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <meta content="" name="keywords">
+  <meta content="" name="description">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,700,700i|Montserrat:300,400,500,700" rel="stylesheet">
+
+  <!-- Bootstrap CSS File -->
+  <link href="{% static 'homestyle/lib/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+  <!-- Libraries CSS Files -->
+  <link href="{% static 'homestyle/lib/font-awesome/css/font-awesome.min.css' %}" rel="stylesheet">
+  <link href="{% static 'homestyle/lib/animate/animate.min.css' %}" rel="stylesheet">
+  <link href="{% static 'homestyle/lib/ionicons/css/ionicons.min.css' %}" rel="stylesheet">
+  <link href="{% static 'homestyle/lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+  <link href="{% static 'homestyle/lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
+
+  <!-- Main Stylesheet File -->
+  <link href="{% static 'homestyle/css/style.css' %}" rel="stylesheet">
 </head>
+
 <body>
-    Hello World
-    <br>
-    <a href="/signin">Sign In</a>
+
+  <!--==========================
+    Header
+  ============================-->
+
+  <header id="header">
+    <div class="container-fluid">
+    <div class="col-sm-12">
+      <div id="logo" class="pull-left">
+       
+           <h1><a href="{%url 'index' %}" class="scrollto">Edufication</a></h1>
+        
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="#intro"><img src="img/logo.png" alt="" title="" /></a>-->
+      </div>
+
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+          
+          <li class=""><a href="{% url 'signin'%}">Signin</a>
+            
+          </li>
+        </ul>
+      </nav><!-- #nav-menu-container -->
+    </div>
+    </div>
+  </header><!-- #header -->
+
+
+  <!-- #header -->
+
+  <!--==========================
+    Intro Section
+  ============================-->
+  <section id="intro">
+    <div class="intro-container">
+      <div id="introCarousel" class="carousel  slide carousel-fade" data-ride="carousel">
+        <ol class="carousel-indicators"></ol>
+
+        <div class="carousel-inner" role="listbox">
+
+          <div class="carousel-item active">
+            <div class="carousel-background"><img src="{% static 'homestyle/img/1.jpg' %}" alt=""></div>
+            <div class="carousel-container">
+            <div class="carousel-content">
+                <h2>Edufication</h2>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="carousel-background"><img src="{% static 'homestyle/img/2.jpg' %}" alt=""></div>
+            <div class="carousel-container">
+            <div class="carousel-content">
+                <h2>Edufication</h2>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="carousel-background"><img src="{% static 'homestyle/img/3.jpg' %}" alt=""></div>
+            <div class="carousel-container">
+            <div class="carousel-content">
+                <h2>Edufication</h2>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="carousel-background"><img src="{% static 'homestyle/img/4.jpg' %}" alt=""></div>
+            <div class="carousel-container">
+            <div class="carousel-content">
+                <h2>Edufication</h2>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="carousel-background"><img src="{% static 'homestyle/img/5.jpg' %}" alt=""></div>
+            <div class="carousel-container">
+              <div class="carousel-content">
+                <h2>Edufication</h2>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <a class="carousel-control-prev" href="#introCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon ion-chevron-left" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+
+        <a class="carousel-control-next" href="#introCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon ion-chevron-right" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+
+      </div>
+    </div>
+  </section><!-- #intro -->
+
+  <!-- JavaScript Libraries -->
+  <script src="{% static 'homestyle/lib/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'homestyle/lib/jquery/jquery-migrate.min.js' %}"></script>
+  <script src="{% static 'homestyle/lib/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'homestyle/lib/easing/easing.min.js' %}"></script>
+  <script src="{% static 'homestyle/lib/superfish/hoverIntent.js' %}"></script>
+  <script src="{% static 'homestyle/lib/superfish/superfish.min.js' %}"></script>
+  <script src="{% static 'homestyle/lib/wow/wow.min.js' %}"></script>
+  <script src="{% static 'homestyle/lib/waypoints/waypoints.min.js' %}"></script>
+  <script src="{% static 'homestyle/lib/counterup/counterup.min.js' %}"></script>
+  <script src="{% static 'homestyle/lib/owlcarousel/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'homestyle/lib/isotope/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'homestyle/lib/lightbox/js/lightbox.min.js' %}"></script>
+  <script src="{% static 'homestyle/lib/touchSwipe/jquery.touchSwipe.min.js' %}"></script>
+  <!-- Contact Form JavaScript File -->
+  <script src="{% static 'homestyle/contactform/contactform.js' %}"></script>
+
+  <!-- Template Main Javascript File -->
+  <script src="{% static 'homestyle/js/main.js' %}"></script>
+
 </body>
 </html>
