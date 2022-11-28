@@ -6,8 +6,9 @@ from .views import myAdminSignUpView,facultySignUpView,studentSignUpView
 urlpatterns = [
     path("",views.index,name='index'),
     path("signin",views.signin,name='signin'),
-    path("myadmin/home",views.home,name='adminhome'),
-    path("faculty/home",views.home,name='facultyhome'),
+    path("myadmin/home",views.adminhome,name='adminhome'),
+    path("faculty/home",views.facultyhome,name='facultyhome'),
+    path("student/home",views.studenthome,name='studenthome'),
     path('adminsignup', myAdminSignUpView.as_view(), name='myadmin_signup'),
     path('logout',views.logout_view,name='logout'),
     path('myadmin/profile',views.profile,name='adminprofile'),

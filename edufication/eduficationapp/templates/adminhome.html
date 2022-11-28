@@ -3,8 +3,241 @@
 {% block body %}
 <section class="content">
     <div class="container-fluid">
-        Hello {{user.username}}
+        <div class="block-header">
+            <h2>
+                <span>HOME</span>
+            </h2>
         </div>
-    
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Batch Details
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Program</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    {% for batch in batches%}
+                                    <tr>
+                                        <td>{{batch.b_id}}</td>
+                                         <td>{{batch.b_name}}</td>
+                                         <td>{{batch.b_programid}}</td>
+                                         
+                                     </tr>
+                                     {% endfor %}
+                                           
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# 1 Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Batch Course Faculty Details
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                    <th>ID</th>
+                                    <th>Batch</th>
+                                    <th>Course</th>
+                                    <th>Faculty</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    {%for bcf in bcfs%}
+                                                <tr>
+                                                    <td>{{bcf.bcf_id}}</td>
+                                                    <td>{{bcf.bcf_batchid}}</td>
+                                                    <td>{{bcf.bcf_courseid}}</td>
+                                                    <td>{{bcf.bcf_facultyid}}</td>
+                                                    
+                                                </tr>
+                                                {% endfor %}
+                              </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# 2 Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Course Details
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Program</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    {% for course in courses%}
+                                               <tr>
+                                                   <td>{{course.c_id}}</td>
+                                                    <td>{{course.c_name}}</td>
+                                                    <td>{{course.c_programid}}</td>
+                                                    
+                                                </tr>
+                                                {% endfor %}
+                                
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# 3 Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Faculty Details
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        {% comment %} <th>Status</th> {% endcomment %}
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    {%for faculty in faculties%}
+                                    <tr>
+                                        <td>{{faculty.id}}</td>
+                                        <td>{{faculty.username}}</td>
+                                        <td>{{faculty.first_name}}</td>
+                                        <td>{{faculty.email}}</td>
+                                        {% comment %} <td>{{faculty.is_active}}</td>  {% endcomment %}
+                                       
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <!-- #END# 4 Basic Examples -->
+         <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Program Details
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    {% for program in programs%}
+                                               <tr>
+                                                   <td>{{program.p_id}}</td>
+                                                    <td>{{program.p_name}}</td>
+                                                    
+                                                </tr>
+                                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# 5 Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Student Details
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Username</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Registration Number</th>
+                                        {% comment %} <th>Batch</th>
+                                        <th>Status</th> {% endcomment %}
+                                    </tr>
+                                </thead>
+                                
+                                <tbody>
+                                    {%for student in students%}
+                                                <tr>
+                                                    <td>{{student.id}}</td>
+                                                    <td>{{student.username}}</td>
+                                                    <td>{{student.first_name}}</td>
+                                                    <td>{{student.email}}</td>
+                                                    <td>{{student.student.s_regno}}</td>
+                                                    {% comment %} <td>{{student.is_active}}</td>  {% endcomment %}
+                                                    
+                                                </tr>
+                                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# 6 Basic Examples -->
+        </div>
 </section>
 {% endblock body %}

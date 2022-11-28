@@ -9,7 +9,19 @@ class User(AbstractUser):
     is_student = models.BooleanField(default=False)
     is_faculty = models.BooleanField(default=False)
     is_myadmin = models.BooleanField(default=False)
-    
+
+class Program(models.Model):
+    p_id=models.AutoField(primary_key=True)
+    p_name=models.CharField(max_length=50)
+    def __str__(self):
+    	return self.p_name
+
+class Batch(models.Model):
+    b_id=models.AutoField(primary_key=True)
+    b_name=models.CharField(max_length=50)
+    b_programid=models.ForeignKey(Program,on_delete=models.CASCADE)
+    def __str__(self):
+    	return self.b_name   
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
@@ -19,7 +31,7 @@ class Student(models.Model):
     s_image=models.ImageField(blank=True,null=True)
     s_regno=models.CharField(max_length=50,unique=True)
     s_parentscontact=models.CharField(max_length=50,blank=True,null=True)
-    s_batchid=models.IntegerField(blank=True,null=True)
+    s_batchid=models.ForeignKey(Batch,on_delete=models.CASCADE,null=True,blank=True)
     def __str__(self):
     	return self.user.username
 
@@ -46,18 +58,7 @@ class myAdmin(models.Model):
     	return self.user.username
 
 
-class Program(models.Model):
-    p_id=models.AutoField(primary_key=True)
-    p_name=models.CharField(max_length=50)
-    def __str__(self):
-    	return self.p_name
 
-class Batch(models.Model):
-    b_id=models.AutoField(primary_key=True)
-    b_name=models.CharField(max_length=50)
-    b_programid=models.ForeignKey(Program,on_delete=models.CASCADE)
-    def __str__(self):
-    	return self.b_name
 
 class Course(models.Model):
     c_id=models.AutoField(primary_key=True)

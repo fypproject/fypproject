@@ -34,9 +34,11 @@ def signin(request):
             login(request, user)
             if user.is_authenticated and user.is_myadmin:
                 #print(user.id,user.username)
-                return redirect(home)
+                return redirect(adminhome)
             elif user.is_authenticated and user.is_faculty:
-                return redirect(home)
+                return redirect(facultyhome)
+            elif user.is_authenticated and user.is_student:
+                return redirect(studenthome)
             else:
                 return redirect(index)
         else:
@@ -50,25 +52,43 @@ def logout_view(request):
     return redirect(index)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def home(request):
+def adminhome(request):
     # myadmin=myAdmin.object.filter(user=request.user)
+    batch= Batch.objects.all()
+    course=Course.objects.all()
+    bcf=Bcf.objects.all()
+    student= User.objects.filter(is_student=True)
+    faculty= User.objects.filter(is_faculty=True)
+    program= Program.objects.all()
     user = request.user
     if user.is_authenticated and user.is_myadmin:
-        context={'user':user,'userrole':"Admin"}
+        context={'user':user,'userrole':"Admin",'batches':batch,'courses':course,'bcfs':bcf,'students':student,'faculties':faculty,'programs':program}
         #print(user.username) 
         return render(request,"adminhome.html",context)
-    elif user.is_authenticated and user.is_faculty:
-        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
-        context={'user':user,'userrole':"Faculty",'bcf':bcf}
-        return render(request,"facultyhome.html",context)
-    elif user.is_authenticated and user.is_student:
-        context={'user':user,'userrole':"Student"}
-        #return render(request,"home.html",context)
-        return redirect(index)
     else:
         return redirect(index)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def facultyhome(request):
+    # myadmin=myAdmin.object.filter(user=request.user)
+    user = request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        context={'user':user,'userrole':"Faculty",'bcf':bcf}
+        return render(request,"facultyhome.html",context)
+    else:
+        return redirect(index)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def studenthome(request):
+    # myadmin=myAdmin.object.filter(user=request.user)
+    user = request.user
+   
+    if user.is_authenticated and user.is_student:
+        context={'user':user,'userrole':"Student"}
+        return render(request,"facultyhome.html",context)
+    else:
+        return redirect(index)
 
 
 
@@ -272,7 +292,16 @@ class studentSignUpView(CreateView):
         return context
 
     def form_valid(self, form):
-        user = form.save()
+        
+        #s_batchid = form.cleaned_data.get('s_batchid')
+        
+        #form.save(commit=False)
+        user= form.save()
+        # user= Student(s_batchid=s_batchid)
+        # user.save()
+        
+        
+        
         #login(self.request, user)
         return redirect(studentshow)
         # self.object = form.save(commit=False)

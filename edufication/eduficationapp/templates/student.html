@@ -29,6 +29,7 @@
                                         <th>Username</th>
                                         <th>Name</th>
                                         <th>Email</th>
+                                        <th>Batch</th>
                                         {% comment %} <th>Status</th>  {% endcomment %}
                                         <th>Option</th>
                                     </tr>
@@ -41,6 +42,7 @@
                                                     <td>{{student.username}}</td>
                                                     <td>{{student.first_name}}</td>
                                                     <td>{{student.email}}</td>
+                                                    <td>{{student.student.s_batchid}}</td>
                                                     {% comment %} <td>{{student.is_active}}</td>  {% endcomment %}
                                                     <td>
                                                         <a href='#'><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
