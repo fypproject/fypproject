@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DropDown Scene</title>
+</head>
+<body>
+    <form action="" method="post" id="bcfform" data-courses-url="{%url 'ajax_load_courses'%}">
+        {% csrf_token %}
+        <label>Batch</label>
+        <br>
+        <select name="batch" id="displaybatch">
+            <option value="">Select Option</option>
+            {% for batch in batches %}
+            <option value="{{batch.b_name}}">{{batch.b_name}}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <label>Course</label>
+        <br>
+        <select name="courses" id="displaycourse">
+            <option>------</option>
+            
+        </select>
+    </form>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $("#displaybatch").change(function () {
+      var url = $("#bcfform").attr("data-courses-url");
+      var batchId = $(this).val();
+      console.log(batchId)
+
+      $.ajax({
+        url: url,
+        data: {
+          'batch': batchId
+        },
+        success: function (data) {
+          $("#displaycourse").html(data);
+        }
+      });
+
+    });
+  </script>
+
+</body>
+</html>

@@ -28,17 +28,33 @@ def signin(request):
         password=request.POST['password']
         print(username,password)
         user=authenticate(username=username,password=password)
+        
         print(user)
         if user is not None:
+            if user.is_student:
+                student= Student.objects.get(user_id=user.id)
+            elif user.is_faculty:
+                faculty=Faculty.objects.get(user_id=user.id)
+            elif user.is_myadmin:
+                admin= myAdmin.objects.get(user_id=user.id)
             
-            login(request, user)
             if user.is_authenticated and user.is_myadmin:
                 #print(user.id,user.username)
+                login(request, user)
                 return redirect(adminhome)
-            elif user.is_authenticated and user.is_faculty:
+            elif user.is_authenticated and user.is_faculty and faculty.f_status=="Active":
+                login(request, user)
                 return redirect(facultyhome)
-            elif user.is_authenticated and user.is_student:
+            elif user.is_authenticated and user.is_faculty and faculty.f_status=="Inactive":
+                return redirect(inactive)
+            
+            elif user.is_authenticated and user.is_student and student.s_status=="Active":
+                login(request, user)
                 return redirect(studenthome)
+            
+            elif user.is_authenticated and user.is_student and student.s_status=="Inactive":
+                
+                return redirect(inactive)
             else:
                 return redirect(index)
         else:
@@ -272,6 +288,16 @@ def facultyshow(request):
     
     return render(request,"faculty.html",{'faculties':faculty,'userrole':"Admin"})
 
+def updatefaculty(request,id):
+    faculty=User.objects.get(id=id)
+    faculty1= Faculty.objects.get(user_id=id)
+    context={'faculty':faculty,'userrole':"Admin"}
+    if request.method =="POST":
+        statusname=request.POST['txtstatus']
+        faculty1.f_status=statusname
+        faculty1.save()
+        return redirect(facultyshow)
+    return render(request,"updatefaculty.html",context)
 def deletefaculty(request,id):
     faculty = User.objects.get(id=id)
     faculty.delete()
@@ -321,6 +347,24 @@ def studentshow(request):
     #print(course)
     
     return render(request,"student.html",{'students':student,'userrole':"Admin"})
+
+def updatestudent(request,id):
+    student=User.objects.get(id=id)
+    student1= Student.objects.get(user_id=id)
+    batch = Batch.objects.all()
+    context={'student':student,'batches':batch,'userrole':"Admin"}
+    if request.method =="POST":
+        batchname= request.POST['txtbatch']
+        statusname=request.POST['txtstatus']
+        batchid=Batch.objects.get(b_name=batchname)
+        student1.s_batchid=batchid
+        student1.s_status=statusname
+        student1.save()
+        return redirect(studentshow)
+
+
+
+    return render(request,"updatestudent.html",context)
 
 def deletestudent(request,id):
     student = User.objects.get(id=id)
@@ -382,6 +426,25 @@ def updatebcf(request,id):
     return render(request,"updatebcf.html",context)
     
 def deletebcf(request,id):
-    bcf = Bcf.objects.get(id=id)
+    bcf = Bcf.objects.get(bcf_id=id)
     bcf.delete()
     return redirect(bcfshow)
+
+
+def inactive(request):
+    return render(request,"inactive.html")
+
+
+def test(request):
+    batch=Batch.objects.all()
+    context={'batches':batch}
+    return render(request,"test.html",context)
+
+def load_courses(request):
+    batchid = request.GET.get('batch')
+    print(batchid)
+    batch= Batch.objects.get(b_name=batchid)
+    print(batch.b_programid)
+    courses = Course.objects.filter(c_programid=batch.b_programid)
+    
+    return render(request, 'loadcoursesdropdown.html',{'courses':courses})

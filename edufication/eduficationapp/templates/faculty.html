@@ -28,7 +28,7 @@
                                         <th>Username</th>
                                         <th>Name</th>
                                         <th>Email</th>
-                                        {% comment %} <th>Status</th>  {% endcomment %}
+                                        <th>Status</th> 
                                         <th>Option</th>
                                     </tr>
                                 </thead>
@@ -39,9 +39,9 @@
                                                     <td>{{faculty.username}}</td>
                                                     <td>{{faculty.first_name}}</td>
                                                     <td>{{faculty.email}}</td>
-                                                    {% comment %} <td>{{faculty.is_active}}</td>  {% endcomment %}
+                                                    <td>{{faculty.faculty.f_status}}</td> 
                                                     <td>
-                                                        <a href='#'><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
+                                                        <a href='updatefaculty/{{faculty.id}}'><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
                                                         <a href='deletefaculty/{{faculty.id}}'><input type='submit' value='Delete' class='btn btn-danger'/></a>
                                                     </td>
                                                 </tr>

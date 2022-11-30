@@ -24,6 +24,10 @@ class Batch(models.Model):
     	return self.b_name   
 
 class Student(models.Model):
+    STATUS = (
+        ('Active','Active'),
+        ('Inactive','Inactive'),
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     s_phoneno=models.CharField(max_length=50,blank=True,null=True)
     s_city=models.CharField(max_length=50,blank=True,null=True)
@@ -32,16 +36,22 @@ class Student(models.Model):
     s_regno=models.CharField(max_length=50,unique=True)
     s_parentscontact=models.CharField(max_length=50,blank=True,null=True)
     s_batchid=models.ForeignKey(Batch,on_delete=models.CASCADE,null=True,blank=True)
+    s_status=models.CharField(max_length=200,null=True,choices=STATUS,default="Active")
     def __str__(self):
     	return self.user.username
 
 class Faculty(models.Model):
+    STATUS = (
+        ('Active','Active'),
+        ('Inactive','Inactive'),
+    )
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     f_phoneno=models.CharField(max_length=50,blank=True,null=True)
     f_city=models.CharField(max_length=50,blank=True,null=True)
     f_country=models.CharField(max_length=50,blank=True,null=True)
     f_image=models.ImageField(blank=True,null=True)
     f_qualifications=models.CharField(max_length=50,null=True,blank=True)
+    f_status=models.CharField(max_length=200,null=True,choices=STATUS,default="Active")
 
     
     def __str__(self):

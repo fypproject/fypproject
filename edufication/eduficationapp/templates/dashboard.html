@@ -14,7 +14,6 @@
 
     <!-- Bootstrap Core Css -->
     <link href="{% static 'Assets/plugins/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
-
     <!-- Waves Effect Css -->
     <link href="{% static 'Assets/plugins/node-waves/waves.css' %}" rel="stylesheet" />
 
@@ -30,6 +29,7 @@
     <link href="{% static 'Assets/plugins/bootstrap-select/css/bootstrap-select.css' %}" rel="stylesheet" />
     <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
     <link href="{% static 'Assets/css/themes/all-themes.css' %}" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 
 <body class="theme-red">
@@ -157,9 +157,9 @@
             <!-- #Footer -->
         </aside>
     </section>
-
+    
     {% block body  %} {% endblock body  %}
-
+    
     <!-- Jquery Core Js -->
     <script src="{% static 'Assets/plugins/jquery/jquery.min.js' %}"></script>
 
@@ -201,6 +201,7 @@
 
     <!-- Demo Js -->
     <script src="{% static 'Assets/js/demo.js' %}"></script>
+    {%block script%} {%endblock script%}
 </body>
 
 </html>

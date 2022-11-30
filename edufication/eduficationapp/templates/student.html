@@ -30,7 +30,7 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Batch</th>
-                                        {% comment %} <th>Status</th>  {% endcomment %}
+                                        <th>Status</th> 
                                         <th>Option</th>
                                     </tr>
                                 </thead>
@@ -43,9 +43,9 @@
                                                     <td>{{student.first_name}}</td>
                                                     <td>{{student.email}}</td>
                                                     <td>{{student.student.s_batchid}}</td>
-                                                    {% comment %} <td>{{student.is_active}}</td>  {% endcomment %}
+                                                    <td>{{student.student.s_status}}</td> 
                                                     <td>
-                                                        <a href='#'><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
+                                                        <a href='updatestudent/{{student.id}}'><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
                                                         <a href='deletestudent/{{student.id}}'><input type='submit' value='Delete' class='btn btn-danger'/></a>
                                                     </td>
                                                 </tr>

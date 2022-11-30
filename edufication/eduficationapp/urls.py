@@ -26,13 +26,20 @@ urlpatterns = [
     path('myadmin/deletecourse/<int:id>',views.deletecourse,name='deletecourse'),
     path('myadmin/faculty',views.facultyshow,name='faculty'),
     path('myadmin/createfaculty', facultySignUpView.as_view(), name='createfaculty'),
+    path('myadmin/updatefaculty/<int:id>',views.updatefaculty,name='updatefaculty'),
     path('myadmin/deletefaculty/<int:id>',views.deletefaculty,name='deletefaculty'),
     path('myadmin/student',views.studentshow,name='student'),
     path('myadmin/createstudent', studentSignUpView.as_view(), name='createstudent'),
+    path('myadmin/updatestudent/<int:id>', views.updatestudent, name='updatestudent'),
     path('myadmin/deletestudent/<int:id>',views.deletestudent,name='deletestudent'),
     path('myadmin/bcf',views.bcfshow,name='bcf'),
     path('myadmin/createbcf',views.createbcf,name='createbcf'),
     path('myadmin/updatebcf/<int:id>',views.updatebcf,name='updatebcf'),
-    #path('myadmin/deletebcf/<int:id>',views.deletecourse,name='deletecourse'),
+    path('myadmin/deletebcf/<int:id>',views.deletebcf,name='deletebcf'),
+    path('inactive',views.inactive,name='inactive'),
+
+
+    path('test',views.test,name='test'),
+    path('ajax/load-courses/', views.load_courses, name='ajax_load_courses'),
     
 ]
