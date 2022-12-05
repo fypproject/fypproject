@@ -32,7 +32,7 @@ class Student(models.Model):
     s_phoneno=models.CharField(max_length=50,blank=True,null=True)
     s_city=models.CharField(max_length=50,blank=True,null=True)
     s_country=models.CharField(max_length=50,blank=True,null=True)
-    s_image=models.ImageField(blank=True,null=True)
+    s_image=models.ImageField(blank=True,null=True,upload_to='images/',default='images/default.jpg')
     s_regno=models.CharField(max_length=50,unique=True)
     s_parentscontact=models.CharField(max_length=50,blank=True,null=True)
     s_batchid=models.ForeignKey(Batch,on_delete=models.CASCADE,null=True,blank=True)
@@ -49,7 +49,7 @@ class Faculty(models.Model):
     f_phoneno=models.CharField(max_length=50,blank=True,null=True)
     f_city=models.CharField(max_length=50,blank=True,null=True)
     f_country=models.CharField(max_length=50,blank=True,null=True)
-    f_image=models.ImageField(blank=True,null=True)
+    f_image=models.ImageField(blank=True,null=True,upload_to='images/',default='images/default.jpg')
     f_qualifications=models.CharField(max_length=50,null=True,blank=True)
     f_status=models.CharField(max_length=200,null=True,choices=STATUS,default="Active")
 
@@ -62,7 +62,7 @@ class myAdmin(models.Model):
     ad_phoneno=models.CharField(max_length=50,blank=True,null=True)
     ad_city=models.CharField(max_length=50,blank=True,null=True)
     ad_country=models.CharField(max_length=50,blank=True,null=True)
-    ad_image=models.ImageField(blank=True,null=True)
+    ad_image=models.ImageField(blank=True,null=True,upload_to='images/')
    
     def __str__(self):
     	return self.user.username

@@ -1,5 +1,7 @@
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 from .views import myAdminSignUpView,facultySignUpView,studentSignUpView
 
@@ -12,6 +14,9 @@ urlpatterns = [
     path('adminsignup', myAdminSignUpView.as_view(), name='myadmin_signup'),
     path('logout',views.logout_view,name='logout'),
     path('myadmin/profile',views.profile,name='adminprofile'),
+    path('myadmin/profile/update',views.updateprofile,name='adminupdateprofile'),
+    path('myadmin/profile/updateimage',views.updateprofileimage,name='adminprofileimage'),
+    path('myadmin/profile/updatepass',views.updateprofilepass,name='adminupdateprofilepass'),
     path('myadmin/createprogram',views.createprogram,name='createprogram'),
     path('myadmin/program',views.programshow,name='program'),
     path('myadmin/updateprogram/<int:id>',views.updateprogram,name='updateprogram'),
@@ -42,4 +47,4 @@ urlpatterns = [
     path('test',views.test,name='test'),
     path('ajax/load-courses/', views.load_courses, name='ajax_load_courses'),
     
-]
+]+static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

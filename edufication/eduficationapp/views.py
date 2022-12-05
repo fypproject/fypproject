@@ -119,6 +119,58 @@ def profile(request):
         return redirect(index)
     
 
+def updateprofile(request):
+    user=request.user
+    
+    if user.is_authenticated and user.is_myadmin:
+        if request.method == "POST":
+            name= request.POST['txtfname']
+            email=request.POST['txtemail']
+            phone_no=request.POST['txtphoneno']
+            city=request.POST['txtcity']
+            country=request.POST['txtcountry']
+            user.first_name=name
+            user.email=email
+            user.save()
+            admin1=myAdmin.objects.get(user_id=user.id)
+            admin1.ad_phoneno=phone_no
+            admin1.ad_city=city
+            admin1.ad_country=country
+            admin1.save()
+            return redirect(profile)
+
+
+def updateprofileimage(request):
+    user=request.user
+    
+    if user.is_authenticated and user.is_myadmin:
+        if request.method == "POST":
+            image= request.FILES['File']
+            admin1= myAdmin.objects.get(user_id=user.id)
+            admin1.ad_image=image
+            admin1.save()
+            return redirect(profile)
+            
+def updateprofilepass(request):
+    user=request.user
+    msg=""
+    if user.is_authenticated and user.is_myadmin:
+        if request.method == "POST":
+            oldpass=request.POST['txtoldpass']
+            newpass=request.POST['txtnewpass']
+            if user.check_password(oldpass):
+                user.set_password(newpass)
+                user.save()
+            else:
+                msg="Wrong Old Password"
+
+                return render(request,"profile.html",{'msg':msg,'userrole':"Admin"})
+                print("Password Not Changed")
+            return redirect(profile)
+
+
+
+
 
 class myAdminSignUpView(CreateView):
     model = User

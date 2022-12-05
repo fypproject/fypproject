@@ -9,7 +9,7 @@
                     <div class="profile-header">&nbsp;</div>
                     <div class="profile-body">
                         <div class="image-area">
-                            <img src="" alt="AdminBSB - Profile Image" width="150" height="150"/>
+                            <img src="{{user.myadmin.ad_image.url}}" alt="{{user.myadmin.ad_image}}" width="150" height="150"/>
                         </div>
                         <div class="content-area">
                             
@@ -77,16 +77,26 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <label>{{msg}}</label>
+
                                 </div>
                                 
                                 <div role="tabpanel" class="tab-pane fade in" id="profile_settings">
-                                    <form class="form-horizontal" method="post">
+                                    <form class="form-horizontal" method="POST" action="{%url 'adminupdateprofile'%}">
                                         {% csrf_token %}
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Username</label>
+                                            <div class="col-sm-10">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control" name="txtuname" value="{{user.username}}" readonly disabled>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Name</label>
                                             <div class="col-sm-10">
                                                 <div class="form-line">
-                                                    <input type="text" class="form-control" name="txtfname" value="{{query.ad_fname}}" required>
+                                                    <input type="text" class="form-control" name="txtfname" value="{{user.first_name}}" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -94,23 +104,16 @@
                                             <label class="col-sm-2 control-label">Email</label>
                                             <div class="col-sm-10">
                                                 <div class="form-line">
-                                                    <input type="email" class="form-control" name="txtemail" value="{{query.ad_email}}" required>
+                                                    <input type="email" class="form-control" name="txtemail" value="{{user.email}}" required>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label">Username</label>
-                                            <div class="col-sm-10">
-                                                <div class="form-line">
-                                                    <input type="text" class="form-control" name="txtlname" value="{{query.ad_uname}}" required>
-                                                </div>
-                                            </div>
-                                        </div>
+                                       
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Phone Number</label>
                                             <div class="col-sm-10">
                                                 <div class="form-line">
-                                                    <input type="text" class="form-control" name="txtphoneno" value="{{query.ad_phoneno}}" >
+                                                    <input type="text" class="form-control" name="txtphoneno" value="{{user.myadmin.ad_phoneno}}" >
                                                 </div>
                                             </div>
                                         </div>
@@ -118,7 +121,7 @@
                                             <label class="col-sm-2 control-label">City</label>
                                             <div class="col-sm-10">
                                                 <div class="form-line">
-                                                    <input type="text" class="form-control" name="txtcity" value="{{query.ad_city}}">
+                                                    <input type="text" class="form-control" name="txtcity" value="{{user.myadmin.ad_city}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -126,7 +129,7 @@
                                             <label class="col-sm-2 control-label">Country</label>
                                             <div class="col-sm-10">
                                                 <div class="form-line">
-                                                    <input type="text" class="form-control" name="txtcountry" value="{{query.ad_country}}">
+                                                    <input type="text" class="form-control" name="txtcountry" value="{{user.myadmin.ad_country}}">
                                                 </div>
                                             </div>
                                         </div>
@@ -141,12 +144,13 @@
 
 
                                 <div role="tabpanel" class="tab-pane fade in" id="change_password_settings">
-                                    <form class="form-horizontal" method="post">
+                                    <form class="form-horizontal" method="POST" action="{%url 'adminupdateprofilepass'%}">
+                                        {% csrf_token %}
                                         <div class="form-group">
                                             <label for="OldPassword" class="col-sm-3 control-label">Old Password</label>
                                             <div class="col-sm-9">
                                                 <div class="form-line">
-                                                    <input type="password" class="form-control" id="OldPassword" name="OldPass" placeholder="Old Password" required>
+                                                    <input type="password" class="form-control" id="OldPassword" name="txtoldpass" placeholder="Old Password" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -169,7 +173,8 @@
                                 <!-- image form -->
 
                                 <div role="tabpanel" class="tab-pane fade in" id="edit_image">
-                                    <form class="form-horizontal" method="post" enctype="multipart/form-data">
+                                    <form class="form-horizontal" method="POST" action="{% url 'adminprofileimage'%}" enctype="multipart/form-data">
+                                        {% csrf_token %}
                                         <div class="form-group">
                                             <label class="col-sm-2 control-label">Image</label>
                                             <div class="col-sm-10">
