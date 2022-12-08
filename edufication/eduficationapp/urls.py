@@ -42,7 +42,7 @@ urlpatterns = [
     path('myadmin/updatebcf/<int:id>',views.updatebcf,name='updatebcf'),
     path('myadmin/deletebcf/<int:id>',views.deletebcf,name='deletebcf'),
     path('inactive',views.inactive,name='inactive'),
-
+    path('faculty/profile',views.facultyprofile,name='facultyprofile'),
 
     path('test',views.test,name='test'),
     path('ajax/load-courses/', views.load_courses, name='ajax_load_courses'),

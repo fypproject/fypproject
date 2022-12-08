@@ -117,7 +117,17 @@ def profile(request):
         return render(request,"profile.html",context)
     else:
         return redirect(index)
-    
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def facultyprofile(request):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        context={'user':user,'userrole':"Faculty",'bcf':bcf}
+        print(user.username) 
+        return render(request,"facultyprofile.html",context)
+    else:
+        return redirect(index)
 
 def updateprofile(request):
     user=request.user
@@ -138,6 +148,25 @@ def updateprofile(request):
             admin1.ad_country=country
             admin1.save()
             return redirect(profile)
+    elif user.is_authenticated and user.is_faculty:
+        if request.method == "POST":
+            name= request.POST['txtfname']
+            email=request.POST['txtemail']
+            phone_no=request.POST['txtphoneno']
+            city=request.POST['txtcity']
+            country=request.POST['txtcountry']
+            qualifications=request.POST['txtqualifications']
+            user.first_name=name
+            user.email=email
+            user.save()
+            faculty1=Faculty.objects.get(user_id=user.id)
+            faculty1.f_phoneno=phone_no
+            faculty1.f_city=city
+            faculty1.f_country=country
+            faculty1.f_qualifications=qualifications
+
+            faculty1.save()
+            return redirect(facultyprofile) 
 
 
 def updateprofileimage(request):
@@ -150,6 +179,13 @@ def updateprofileimage(request):
             admin1.ad_image=image
             admin1.save()
             return redirect(profile)
+    elif user.is_authenticated and user.is_faculty:
+        if request.method == "POST":
+            image= request.FILES['File']
+            faculty1= Faculty.objects.get(user_id=user.id)
+            faculty1.f_image=image
+            faculty1.save()
+            return redirect(facultyprofile)
             
 def updateprofilepass(request):
     user=request.user
@@ -167,7 +203,19 @@ def updateprofilepass(request):
                 return render(request,"profile.html",{'msg':msg,'userrole':"Admin"})
                 print("Password Not Changed")
             return redirect(profile)
+    elif user.is_authenticated and user.is_faculty:
+        if request.method == "POST":
+            oldpass=request.POST['txtoldpass']
+            newpass=request.POST['txtnewpass']
+            if user.check_password(oldpass):
+                user.set_password(newpass)
+                user.save()
+            else:
+                msg="Wrong Old Password"
 
+                return render(request,"facultyprofile.html",{'msg':msg,'userrole':"Faculty"})
+                print("Password Not Changed")
+            return redirect(facultyprofile)
 
 
 

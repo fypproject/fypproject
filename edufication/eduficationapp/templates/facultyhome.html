@@ -3,8 +3,29 @@
 {% block body %}
 <section class="content">
     <div class="container-fluid">
-        Hello {{user.username}}
+        <div class="block-header">
+            <h2>
+                <span>HOME</span>
+            </h2>
         </div>
-    
+        
+                            {% for bcf in bcf%}
+                            <a href =""><div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                <div class="card">
+                                    <div class="header bg-cyan">
+                                        <h2>
+                                           {{bcf.bcf_courseid}}
+                                        </h2>
+                                    </div>
+                                    <div class="body">
+                                       Batch : {{bcf.bcf_batchid}}
+                                    </div>
+                                </div>
+                            </div></a>
+                                {%endfor%}
+                                
+
+        
+    </div>
 </section>
 {% endblock body %}

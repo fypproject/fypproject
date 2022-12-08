@@ -85,18 +85,44 @@
             <div class="menu">
                 <ul class="list">
                     <li class="header">MAIN NAVIGATION</li>
+                    {%if userrole == "Admin"%}
                     <li class="active">
+                       
                         <a href="{% url 'adminhome' %}">
+                            
+                            
+                                
                             <i class="material-icons">home</i>
                             <span>Home</span>
                         </a>            
                     </li>
+                    {%elif userrole == "Faculty"%}
+                    <li class="active">
+                       
+                        
+                            
+                            <a href="{% url 'facultyhome' %}">
+                                
+                            <i class="material-icons">home</i>
+                            <span>Home</span>
+                        </a>            
+                    </li>
+                    {% endif %}
+                    {%if userrole == "Admin"%}
                     <li>
                         <a href="{% url 'adminprofile' %}">
                             <i class="material-icons">person</i>
                             <span>Profile</span>
                         </a>            
                     </li>
+                    {%elif userrole == "Faculty"%}
+                    <li>
+                        <a href="{% url 'facultyprofile' %}">
+                            <i class="material-icons">person</i>
+                            <span>Profile</span>
+                        </a>            
+                    </li>
+                    {%endif%}
                     {% if userrole == "Admin"%}
                     <li>
                         <a href="javascript:void(0);" class="menu-toggle">

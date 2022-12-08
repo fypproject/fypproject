@@ -49,7 +49,7 @@ class Faculty(models.Model):
     f_phoneno=models.CharField(max_length=50,blank=True,null=True)
     f_city=models.CharField(max_length=50,blank=True,null=True)
     f_country=models.CharField(max_length=50,blank=True,null=True)
-    f_image=models.ImageField(blank=True,null=True,upload_to='images/',default='images/default.jpg')
+    f_image=models.ImageField(blank=True,null=True,upload_to='images/')
     f_qualifications=models.CharField(max_length=50,null=True,blank=True)
     f_status=models.CharField(max_length=200,null=True,choices=STATUS,default="Active")
 
