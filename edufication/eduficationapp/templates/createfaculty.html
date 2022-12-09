@@ -23,31 +23,37 @@
                                 <form  method="POST">
                                     {% csrf_token %}
                                         <div class="form-group">
+                                            
                                             <div class="form-line">
+                                                <label>Username</label>
                                             {% comment %} <input type="text" name="txtfname" class="form-control inputelement" placeholder="Enter Name" required /> {% endcomment %}
                                             {{form.username}}
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="form-line">
+                                                <label>Password</label>
                                                 {% comment %} <input type="text" name="txtlname" class="form-control inputelement" placeholder="Enter Username" required /> {% endcomment %}
                                                 {{form.password1}}
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="form-line">
+                                                <label>Confirm Password</label>
                                             {% comment %} <input type="email" name="txtemail" class="form-control inputelement" placeholder="Enter Email" required /> {% endcomment %}
                                             {{form.password2}}
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="form-line">
+                                                <label>Name</label>
                                             {% comment %} <input type="password" name="txtpass" class="form-control inputelement" placeholder="Enter Password" required /> {% endcomment %}
                                             {{form.first_name}}
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="form-line">
+                                                <label>Email</label>
                                             {% comment %} <input type="password" name="txtpass" class="form-control inputelement" placeholder="Enter Password" required /> {% endcomment %}
                                             {{form.email}}
                                             </div>

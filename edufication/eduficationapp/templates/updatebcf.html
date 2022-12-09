@@ -23,6 +23,7 @@
                         <form  method="post">
                             {% csrf_token %}
                                 <div class="form group">
+                                    <label>Batch</label>
                                 <select name="txtbatch" class="form-control">
                                         <option value="{{bcf.bcf_batchid}}">{{bcf.bcf_batchid}}</option>
                                         {% for batch in batches %}
@@ -33,6 +34,7 @@
                                     </select>
                                 </div><br/>
                                 <div class="form group">
+                                    <label>Course</label>
                                 <select name="txtcourse" class="form-control" >
                                         <option value="{{bcf.bcf_courseid}}">{{bcf.bcf_courseid}}</option>
                                         {% for course in courses %}
@@ -41,6 +43,7 @@
                                     </select>
                                 </div><br />
                                 <div class="form group">
+                                    <label>Faculty</label>
                                 <select name="txtfaculty" class="form-control">
                                         <option value="{{bcf.bcf_facultyid}}">{{bcf.bcf_facultyid}}</option>
                                         {% for faculty in faculties %}

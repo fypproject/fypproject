@@ -32,11 +32,13 @@
                             {% csrf_token %}
                                 <div class="form-group">
                                     <div class="form-line">
+                                        <label>Batch Name</label>
                                     <input type="text" name="batchname" class="form-control inputelement" value="{{batch.b_name}}" required />
                                     </div>
                                     
                                 </div>
                                 <div class="form-group">
+                                    <label>Program</label>
                                     <select name="program" class="form-control show-tick">
                                         
                                         <option value="{{batch.b_programid}}" >{{batch.b_programid}}</option>

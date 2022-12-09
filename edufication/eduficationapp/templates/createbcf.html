@@ -23,6 +23,7 @@
                         <form  method="post">
                             {% csrf_token %}
                                 <div class="form group">
+                                    <label>Batch</label>
                                 <select name="txtbatch" class="form-control">
                                         <option>Select Batch</option>
                                         {% for batch in batches %}
@@ -34,6 +35,7 @@
                                     </select>
                                 </div><br/>
                                 <div class="form group">
+                                    <label>Course</label>
                                 <select name="txtcourse" class="form-control" >
                                         <option>Select Course</option>
                                     
@@ -44,6 +46,7 @@
                                     </select>
                                 </div><br />
                                 <div class="form group">
+                                    <label>Faculty</label>
                                 <select name="txtfaculty" class="form-control">
                                         <option>Select Faculty</option>
                                         {% for faculty in faculties %}

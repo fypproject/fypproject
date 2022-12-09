@@ -25,6 +25,7 @@
                                     {% csrf_token %}
                                         
                                         <div class="input-group">
+                                            <label>Status</label>
                                             <select name="txtstatus" class="form-control show-tick" >
                                                 <option value="{{faculty.faculty.f_status}}">{{faculty.faculty.f_status}}</option>
                                                 <option value="Active">Active</option>
