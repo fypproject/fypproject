@@ -535,6 +535,46 @@ def inactive(request):
     return render(request,"inactive.html")
 
 
+
+### Faculty Section
+
+
+def coursegallery(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        bcfid = Bcf.objects.get(bcf_id=id)
+        context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf}
+    else:
+        return redirect(index)
+    return render(request,"coursegallery.html",context)
+
+def lecturehome(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        bcfid = Bcf.objects.get(bcf_id=id)
+        context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf}
+    else:
+        return redirect(index)
+    return render(request,"lecture.html",context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def test(request):
     batch=Batch.objects.all()
     context={'batches':batch}

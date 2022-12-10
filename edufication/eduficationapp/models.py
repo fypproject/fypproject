@@ -82,24 +82,19 @@ class Bcf(models.Model):
     bcf_batchid=models.ForeignKey(Batch,on_delete=models.CASCADE)
     bcf_courseid=models.ForeignKey(Course,on_delete=models.CASCADE)
     bcf_facultyid=models.ForeignKey(User,on_delete=models.CASCADE)
-    def __str__(self):
-    	return self.bcf_id,self.bcf_batchid,self.bcf_courseid,self.bcf_facultyid
-
-
-
-
-
-# class myAdmin(models.Model):
-#     ad_id=models.AutoField
-#     ad_fname=models.CharField(max_length=50)
-#     ad_email=models.CharField(max_length=100,unique=True)
-#     ad_uname=models.CharField(max_length=50,unique=True)
-#     ad_password=models.CharField(max_length=50)
-#     ad_phoneno=models.CharField(max_length=50,null=True,blank=True)
-#     ad_city=models.CharField(max_length=50,null=True,blank=True)
-#     ad_country=models.CharField(max_length=50,null=True,blank=True)
-#     ad_image=models.ImageField(upload_to="adminprofile/images",null=True,blank=True)
-
-#     def __str__(self):
-#         return self.ad_fname
     
+
+
+class Lecture(models.Model):
+    choice=(
+        ('Announcement','Announcement'),
+        ('Lecture','Lecture'),
+    )
+    l_id=models.AutoField(primary_key=True)
+    l_name=models.CharField(max_length=255,choices=choice)
+    l_desc=models.CharField(max_length=1000)
+    l_file=models.FileField(blank=True,null=True,upload_to='lectures/')
+    l_bcfid=models.ForeignKey(Bcf,on_delete=models.CASCADE)
+    
+    def __str__(self):
+    	return self.l_id

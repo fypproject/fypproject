@@ -1,0 +1,57 @@
+
+{% extends 'dashboard.html' %}
+{% block body %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>
+                <span>Course</span>
+            </h2>
+        </div>
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Lecture
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                        <a href="insert.php?id=<?php echo $id?>"><input type="submit" value="Add New Lecture" class="btn btn-success"/></a><br><br>
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>File</th>
+                                        <th>Option</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                               
+                                               <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td><a href="" target='_blank'> File </a></td></td>
+                                                    <td>
+                                                        <a href=""><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
+                                                        <a href=""><input type='submit' value='Delete' class='btn btn-danger'/></a>
+                                                    </td>
+                                                    
+                                                </tr>
+                                        
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

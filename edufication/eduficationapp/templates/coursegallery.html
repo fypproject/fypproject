@@ -1,0 +1,68 @@
+{% extends 'dashboard.html' %}
+{% block body %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>
+                <span>Course: {{bcfid.bcf_courseid}}</span>
+            </h2>
+        </div>
+        
+        
+        <!-- Widgets -->
+        
+        <div class="row clearfix">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box bg-orange hover-expand-effect">
+                    <div class="icon">
+                        <i class="material-icons">account_box</i>
+                    </div>
+                    <div class="content">
+                        <div class="text"><h3>ATTENDANCE</h3></div>
+                    </div>
+                </div>
+            </div> 
+            <a href="/faculty/lecture/{{bcfid.bcf_id}}">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box bg-pink hover-expand-effect">
+                    <div class="icon">
+                        <i class="material-icons">library_books</i>
+                    </div>
+                    <div class="content">
+                        <div class="text"><h3>LECTURE</h3></div>
+                    </div>
+                </div>
+            </div>
+            </a>
+
+            <a href="assignment/Gallery.php?id=<?php echo $id?>" >
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box bg-cyan hover-expand-effect">
+                    <div class="icon">
+                        <i class="material-icons">assignment</i>
+                    </div>
+                    <div class="content">
+                        <div class="text"><h3>ASSIGNMENT</h3></div>
+                    </div>
+                </div>
+            </div>
+            </a>
+            <a href="quiz/Gallery.php?id=<?php echo $id?>">
+            <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <div class="info-box bg-light-green hover-expand-effect">
+                    <div class="icon">
+                        <i class="material-icons">question_answer</i>
+                    </div>
+                    <div class="content">
+                        <div class="text"><h3>QUIZ</h3></div>
+                    </div>
+                </div>
+            </div>
+            </a>
+            
+        </div>
+        <!-- #END# Widgets -->
+        
+    </div>
+</section>
+{% endblock body %}
