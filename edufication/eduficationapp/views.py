@@ -554,12 +554,65 @@ def lecturehome(request,id):
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
         bcfid = Bcf.objects.get(bcf_id=id)
-        context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf}
+        lecture= Lecture.objects.all()
+        context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'lectures':lecture}
     else:
         return redirect(index)
     return render(request,"lecture.html",context)
 
+def createlecture(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        bcfid = Bcf.objects.get(bcf_id=id)
+        context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf}
+        if request.method == "POST":
+            txtchoice= request.POST['txtchoice']
+            txtdesc=request.POST['txtdesc']
+            file=request.FILES.get('File')
+            lecture1= Lecture(l_name=txtchoice,l_desc=txtdesc,l_file=file,l_bcfid=bcfid)
+            lecture1.save()
+            return redirect(lecturehome,id=bcfid.bcf_id)
+            
 
+    else:
+        return redirect(index)
+    return render(request,"createlecture.html",context)
+
+def updatelecture(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+
+        #bcfid = Bcf.objects.get(bcf_id=id)
+        lecture=Lecture.objects.get(l_id=id)
+        context={'userrole':"Faculty",'bcf':bcf,'lecture':lecture}
+        if request.method == "POST":
+            txtdesc=request.POST['txtdesc']
+            
+            file=request.FILES.get('File')
+            if file is None:
+                lecture.l_desc=txtdesc
+                lecture.save()
+                
+            else:
+                lecture.l_desc=txtdesc
+                lecture.l_file=file
+                lecture.save()
+            #print(lecture.l_bcfid.bcf_id)
+            return redirect(lecturehome,id=lecture.l_bcfid.bcf_id)    
+           
+                
+            
+            
+    return render(request,"updatelecture.html",context)
+def deletelecture(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        lecture = Lecture.objects.get(l_id=id)
+        lecture.delete()
+        return redirect(lecturehome,id=lecture.l_bcfid.bcf_id)
+    
 
 
 

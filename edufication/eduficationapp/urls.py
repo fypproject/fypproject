@@ -45,6 +45,9 @@ urlpatterns = [
     path('faculty/profile',views.facultyprofile,name='facultyprofile'),
     path('faculty/coursegallery/<int:id>',views.coursegallery,name='coursegallery'),
     path('faculty/lecture/<int:id>',views.lecturehome,name='lecturehome'),
+    path('faculty/createlecture/<int:id>',views.createlecture,name='createlecture'),
+    path('faculty/updatelecture/<int:id>',views.updatelecture,name='updatelecture'),
+    path('faculty/deletelecture/<int:id>',views.deletelecture,name='deletelecture'),
 
 
     path('test',views.test,name='test'),

@@ -20,7 +20,7 @@
                     </div>
                     <div class="body">
                         <div class="table-responsive">
-                        <a href="insert.php?id=<?php echo $id?>"><input type="submit" value="Add New Lecture" class="btn btn-success"/></a><br><br>
+                        <a href="/faculty/createlecture/{{bcfid.bcf_id}}"><input type="submit" value="Add New Lecture" class="btn btn-success"/></a><br><br>
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                     <tr>
@@ -32,18 +32,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                               
+                                        {%for lecture in lectures%}
                                                <tr>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td><a href="" target='_blank'> File </a></td></td>
+                                                    <td>{{lecture.l_id}}</td>
+                                                    <td>{{lecture.l_name}}</td>
+                                                    <td>{{lecture.l_desc}}</td>
+                                                    {% if lecture.l_file.url is not None %}
+                                                    <td><a href="{{lecture.l_file.url}}" download> File </a></td></td>
+                                                    {% else%}
+                                                    <td> Null </td></td>
+                                                    {%endif%}
                                                     <td>
-                                                        <a href=""><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
-                                                        <a href=""><input type='submit' value='Delete' class='btn btn-danger'/></a>
+                                                        <a href="{%url 'updatelecture' id=lecture.l_id %}"><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
+                                                        <a href="{%url 'deletelecture' id=lecture.l_id %}"><input type='submit' value='Delete' class='btn btn-danger'/></a>
                                                     </td>
                                                     
                                                 </tr>
+                                                {%endfor    %}
                                         
                                 </tbody>
                             </table>

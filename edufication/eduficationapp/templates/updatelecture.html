@@ -1,8 +1,6 @@
 
 {% extends 'dashboard.html' %}
 {% block body %}
-
-
 <section class="content">
     <div class="container-fluid">
         <div class="block-header">
@@ -14,35 +12,30 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            Add New Lecture
+                            Update Lecture
                         </h2>
                     </div>
                     <div class="body">
                         <div class="row clearfix">
                             <div class="col-sm-12">
-                            <form method="POST" enctype="multipart/form-data">    
+                            <form method="post" enctype="multipart/form-data">    
                                 {% csrf_token %}
-                                <div class="input-group">
-                                    <label>Choice</label>
-                                    <select name="txtchoice" class="form-control show-tick" >
-                                        <option value="Announcement">Announcement</option>
-                                        <option value="Lecture">Lecture</option>
-                                        
-                                    </select>
-                                </div>
-                                <label>Description</label>
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <textarea rows="4" name="txtdesc" class="form-control no-resize" placeholder="Description..."></textarea>
+                                        <input type="text" name="txtdesc" class="form-control" value="{{lecture.l_desc}}" />
                                     </div>
                                 </div>
-                                <label>File Upload:</label>
+                                <div>
+                                <label>File Currently:</label>  {{lecture.l_file}}
+                                
+                                </div>
+                                <br>
                                 <div class="form-group">
                                     <div class="form-line ">
                                         <input name="File" type="file" />
                                     </div>
                                 </div>
-                                <input type="submit" name="btninsert" value="Insert" class="btn btn-success" />
+                                <input type="submit" name="btnupdate" value="Update" class="btn btn-success" />
                             </form>
                             </div>
                         </div>
@@ -52,5 +45,7 @@
         </div>
         <!-- #END# Input -->
     </div>
-</section>
+</section>    
+
+
 {% endblock body %}

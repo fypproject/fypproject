@@ -82,7 +82,7 @@ class Bcf(models.Model):
     bcf_batchid=models.ForeignKey(Batch,on_delete=models.CASCADE)
     bcf_courseid=models.ForeignKey(Course,on_delete=models.CASCADE)
     bcf_facultyid=models.ForeignKey(User,on_delete=models.CASCADE)
-    
+   
 
 
 class Lecture(models.Model):
@@ -96,5 +96,4 @@ class Lecture(models.Model):
     l_file=models.FileField(blank=True,null=True,upload_to='lectures/')
     l_bcfid=models.ForeignKey(Bcf,on_delete=models.CASCADE)
     
-    def __str__(self):
-    	return self.l_id
+    
