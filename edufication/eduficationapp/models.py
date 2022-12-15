@@ -96,4 +96,12 @@ class Lecture(models.Model):
     l_file=models.FileField(blank=True,null=True,upload_to='lectures/')
     l_bcfid=models.ForeignKey(Bcf,on_delete=models.CASCADE)
     
-    
+class Assignment(models.Model):
+    a_id=models.AutoField(primary_key=True)
+    a_name=models.CharField(max_length=255)
+    a_desc=models.CharField(max_length=1000)
+    a_startdate=models.DateTimeField()
+    a_enddate=models.DateTimeField()
+    a_file=models.FileField(blank=True,null=True,upload_to='assignments/')
+    a_mark=models.IntegerField()
+    a_bcfid=models.ForeignKey(Bcf,on_delete=models.CASCADE)

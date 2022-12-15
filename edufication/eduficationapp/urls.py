@@ -48,7 +48,11 @@ urlpatterns = [
     path('faculty/createlecture/<int:id>',views.createlecture,name='createlecture'),
     path('faculty/updatelecture/<int:id>',views.updatelecture,name='updatelecture'),
     path('faculty/deletelecture/<int:id>',views.deletelecture,name='deletelecture'),
-
+    path('faculty/assignment/<int:id>',views.assignmenthome,name='assignmenthome'),
+    path('faculty/createassignment/<int:id>',views.createassignment,name='createassignment'),
+    path('faculty/updateassignment/<int:id>',views.updateassignment,name='updateassignment'),
+    path('faculty/deleteassignment/<int:id>',views.deleteassignment,name='deleteassignment'),
+    
 
     path('test',views.test,name='test'),
     path('ajax/load-courses/', views.load_courses, name='ajax_load_courses'),

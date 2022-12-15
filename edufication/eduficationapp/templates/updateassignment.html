@@ -1,0 +1,82 @@
+
+
+{% extends 'dashboard.html' %}
+{% block body %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>Course</h2>
+        </div>
+        <!-- Input -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Update Assignment
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                            <form method="post" enctype="multipart/form-data"> 
+                                {% csrf_token %}
+                                <label>Assignment</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text" name="txtname" class="form-control" value="{{assignment.a_name}}" readonly disabled/>
+                                    </div>
+                                </div>   
+                                <label>Description</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <textarea rows="4" name="txtdesc" class="form-control no-resize"  placeholder="Description..." >{{assignment.a_desc}}</textarea>
+                                    </div>
+                                </div>
+                                <label>Start Date and time</label>
+                                <br>
+                                <p>Current Start Date and Time:  {{assignment.a_startdate}}</p>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="datetime-local" name="stdate" class="form-control inputelement" value="{{assignment.a_startdate}}"  />
+                                    </div>
+                                </div>
+                                <label>End Date and Time</label>
+                                <br>
+                                <p>Current End Date and Time:  {{assignment.a_enddate}}</p>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="datetime-local" name="enddate" class="form-control inputelement" value="{{assignment.a_enddate}}"  />
+                                    </div>
+                                </div>
+                                <label>Marks</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="text" name="txtmark" class="form-control inputelement" value="{{assignment.a_mark}}"  />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label>File Currently:</label>  {{assignment.a_file}}
+                                    
+                                    </div>
+                                    <br>
+                                <label>Upload File</label>
+                                <div class="form-group">
+                                    <div class="form-line ">
+                                        <input name="File" type="file" />
+                                    </div>
+                                </div>
+                                <input type="submit" name="btnupdate" value="Update" class="btn btn-success" />
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Input -->
+    </div>
+</section>
+
+{% endblock body %}

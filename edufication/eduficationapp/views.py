@@ -549,6 +549,7 @@ def coursegallery(request,id):
         return redirect(index)
     return render(request,"coursegallery.html",context)
 
+### Lecture Scenes
 def lecturehome(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -612,8 +613,81 @@ def deletelecture(request,id):
         lecture = Lecture.objects.get(l_id=id)
         lecture.delete()
         return redirect(lecturehome,id=lecture.l_bcfid.bcf_id)
-    
+### Assignment Scenes 
+def assignmenthome(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        bcfid = Bcf.objects.get(bcf_id=id)
+        assignment= Assignment.objects.all()
+        context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'assignments':assignment}
+    else:
+        return redirect(index)
+    return render(request,"assignment.html",context)
 
+def createassignment(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        bcfid = Bcf.objects.get(bcf_id=id)
+        context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf}
+        if request.method == "POST":
+            txtchoice= request.POST['txtname']
+            txtdesc=request.POST['txtdesc']
+            stdate=request.POST['stdate']
+            enddate=request.POST['enddate']
+            txtmark=request.POST['txtmark']
+            file=request.FILES.get('File')
+            assignment1= Assignment(a_name=txtchoice,a_desc=txtdesc,a_startdate=stdate,a_enddate=enddate,a_mark=txtmark,a_file=file,a_bcfid=bcfid)
+            assignment1.save()
+            return redirect(assignmenthome,id=bcfid.bcf_id)
+            
+
+    else:
+        return redirect(index)
+    return render(request,"createassignment.html",context)
+
+def updateassignment(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+
+        #bcfid = Bcf.objects.get(bcf_id=id)
+        assignment=Assignment.objects.get(a_id=id)
+        context={'userrole':"Faculty",'bcf':bcf,'assignment':assignment}
+        if request.method == "POST":
+            txtdesc=request.POST['txtdesc']
+            stdate=request.POST['stdate']
+            enddate=request.POST['enddate']
+            txtmark=request.POST['txtmark']
+            file=request.FILES.get('File')
+            if file is None:
+                assignment.a_desc=txtdesc
+                assignment.a_startdate=stdate
+                assignment.a_enddate=enddate
+                assignment.a_mark=txtmark
+                assignment.save()
+                
+            else:
+                assignment.a_desc=txtdesc
+                assignment.a_startdate=stdate
+                assignment.a_enddate=enddate
+                assignment.a_mark=txtmark
+                assignment.a_file=file
+                assignment.save()
+            #print(assignment.l_bcfid.bcf_id)
+            return redirect(assignmenthome,id=assignment.a_bcfid.bcf_id)    
+           
+                
+            
+            
+    return render(request,"updateassignment.html",context)
+def deleteassignment(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        assignment = Assignment.objects.get(a_id=id)
+        assignment.delete()
+        return redirect(assignmenthome,id=assignment.a_bcfid.bcf_id)
 
 
 

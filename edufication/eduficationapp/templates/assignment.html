@@ -1,0 +1,70 @@
+
+{% extends 'dashboard.html' %}
+{% block body %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>
+                <span>Course</span>
+            </h2>
+        </div>
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Assignment
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                        <a href="/faculty/createassignment/{{bcfid.bcf_id}}"><input type="submit" value="Add New Assignment" class="btn btn-success"/></a>&nbsp&nbsp
+                        <a href=""><input type='submit' value='Received Assignment' class='btn btn-info'/></a>
+                        <br><br>
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Description</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Marks</th>
+                                        <th>File</th>
+                                        <th>Option</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {%for assignment in assignments %}
+                                        <tr>
+                                                <td>{{assignment.a_id}}</td>
+                                                <td>{{assignment.a_name}}</td>
+                                                <td style="width:300px;">{{assignment.a_desc}}</td>
+                                                <td>{{assignment.a_startdate}}</td>
+                                                <td>{{assignment.a_enddate}}</td>
+                                                <td>{{assignment.a_mark}}</td>
+                                                {% if assignment.a_file.url is not None %}
+                                                    <td><a href="{{assingment.a_file.url}}" download> File </a></td></td>
+                                                    {% else%}
+                                                    <td> Null </td></td>
+                                                    {%endif%}
+                                                
+                                                <td>
+                                                    <a href="{%url 'updateassignment' id=assignment.a_id %}"><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
+                                                    <a href="{%url 'deleteassignment' id=assignment.a_id %}"><input type='submit' value='Delete' class='btn btn-danger'/></a>
+                                                </td>
+                                            </tr>
+                                            {%endfor%}
+                                       
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}
