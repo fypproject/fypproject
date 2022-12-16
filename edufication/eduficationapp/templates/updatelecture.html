@@ -22,7 +22,7 @@
                                 {% csrf_token %}
                                 <div class="form-group">
                                     <div class="form-line">
-                                        <input type="text" name="txtdesc" class="form-control" value="{{lecture.l_desc}}" />
+                                        <textarea rows="4" name="txtdesc" class="form-control no-resize"  placeholder="Description..." >{{lecture.l_desc}}</textarea>
                                     </div>
                                 </div>
                                 <div>

@@ -1,0 +1,61 @@
+{% extends 'dashboard.html' %}
+{% block body %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>Course</h2>
+        </div>
+        <!-- Input -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Add New Quiz
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                        <form  method="POST" >
+                                {% csrf_token %}
+                                <label>Quiz Title</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="text" name="txtname" class="form-control inputelement" placeholder="Enter Quiz title" required />
+                                    </div>
+                                </div>
+                                <label>Start Date and Time</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="datetime-local" name="stdate" class="form-control inputelement" placeholder="Enter Start Date" required />
+                                    </div>
+                                </div>
+                                <label>End Date and Time</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="datetime-local" name="enddate" class="form-control inputelement" placeholder="Enter End Date" required />
+                                    </div>
+                                </div>
+                                <label>Total Questions</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="number" name="question" class="form-control inputelement" placeholder="Enter Total Question number" required />
+                                    </div>
+                                </div>
+                            <input type="submit" name="btninsert" value="Next" class="btn btn-success" /><br><br>                
+                        </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Input -->
+    </div>
+</section>
+
+
+
+{% endblock body %}

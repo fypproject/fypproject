@@ -52,6 +52,11 @@ urlpatterns = [
     path('faculty/createassignment/<int:id>',views.createassignment,name='createassignment'),
     path('faculty/updateassignment/<int:id>',views.updateassignment,name='updateassignment'),
     path('faculty/deleteassignment/<int:id>',views.deleteassignment,name='deleteassignment'),
+    path('faculty/quiz/<int:id>',views.quizhome,name='quizhome'),
+    path('faculty/createquiz/<int:id>',views.createquiz,name='createquiz'),
+    path('faculty/updatequiz/<int:id>',views.updatequiz,name='updatequiz'),
+    path('faculty/deletequiz/<int:id>',views.deletequiz,name='deletequiz'),
+    path('faculty/createqquiz/<int:id>',views.createqquiz,name='createqquiz'),
     
 
     path('test',views.test,name='test'),

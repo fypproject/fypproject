@@ -105,3 +105,23 @@ class Assignment(models.Model):
     a_file=models.FileField(blank=True,null=True,upload_to='assignments/')
     a_mark=models.IntegerField()
     a_bcfid=models.ForeignKey(Bcf,on_delete=models.CASCADE)
+
+class Quiz(models.Model):
+    q_id=models.AutoField(primary_key=True)
+    q_name=models.CharField(max_length=255)
+    q_startdate=models.DateTimeField()
+    q_enddate=models.DateTimeField()
+    q_question=models.IntegerField()
+    q_bcfid=models.ForeignKey(Bcf,on_delete=models.CASCADE)
+
+class QuizQuestion(models.Model):
+    qq_id=models.AutoField(primary_key=True)
+    qq_question= models.CharField(max_length=255)
+    qq_option1=models.CharField(max_length=255)
+    qq_option2=models.CharField(max_length=255)
+    qq_option3=models.CharField(max_length=255)
+    qq_option4=models.CharField(max_length=255)
+    qq_marks=models.IntegerField()
+    qq_correctanswer=models.CharField(max_length=255)
+    qq_quizid=models.ForeignKey(Quiz,on_delete=models.CASCADE)
+    

@@ -541,10 +541,19 @@ def inactive(request):
 
 def coursegallery(request,id):
     user=request.user
+    
+
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
-        bcfid = Bcf.objects.get(bcf_id=id)
-        context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf}
+        try:
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id)
+        except:
+            return redirect(facultyhome)
+        #bcf1=Bcf.objects.get(bcf_facultyid=user.id,bcf_id=bcfid.bcf_id)
+        if bcfid.bcf_facultyid is not None:
+            context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf}
+        else:
+            return redirect(facultyhome)
     else:
         return redirect(index)
     return render(request,"coursegallery.html",context)
@@ -554,9 +563,16 @@ def lecturehome(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
-        bcfid = Bcf.objects.get(bcf_id=id)
-        lecture= Lecture.objects.all()
-        context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'lectures':lecture}
+        try:
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id)
+        except:
+            return redirect(facultyhome)
+        if bcfid.bcf_facultyid is not None:
+            lecture= Lecture.objects.filter(l_bcfid=bcfid)
+            context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'lectures':lecture}
+        else:
+            return redirect(facultyhome)
+        
     else:
         return redirect(index)
     return render(request,"lecture.html",context)
@@ -565,8 +581,15 @@ def createlecture(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
-        bcfid = Bcf.objects.get(bcf_id=id)
-        context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf}
+        try:
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id)
+        except:
+            return redirect(facultyhome)
+        if bcfid.bcf_facultyid is not None:
+            context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf}
+        else:
+            return redirect(facultyhome)
+       
         if request.method == "POST":
             txtchoice= request.POST['txtchoice']
             txtdesc=request.POST['txtdesc']
@@ -613,14 +636,26 @@ def deletelecture(request,id):
         lecture = Lecture.objects.get(l_id=id)
         lecture.delete()
         return redirect(lecturehome,id=lecture.l_bcfid.bcf_id)
+
+
+
+
+
 ### Assignment Scenes 
 def assignmenthome(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
-        bcfid = Bcf.objects.get(bcf_id=id)
-        assignment= Assignment.objects.all()
-        context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'assignments':assignment}
+        try:
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id)
+        except:
+            return redirect(facultyhome)
+        if bcfid.bcf_facultyid is not None :
+            assignment= Assignment.objects.filter(a_bcfid=bcfid)
+            context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'assignments':assignment}
+        else:
+            return redirect(facultyhome)
+        
     else:
         return redirect(index)
     return render(request,"assignment.html",context)
@@ -629,8 +664,15 @@ def createassignment(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
-        bcfid = Bcf.objects.get(bcf_id=id)
-        context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf}
+        try:
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id)
+        except:
+            return redirect(facultyhome)
+        if bcfid.bcf_facultyid is not None:
+            context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf}
+        else:
+            return redirect(facultyhome)
+        
         if request.method == "POST":
             txtchoice= request.POST['txtname']
             txtdesc=request.POST['txtdesc']
@@ -688,6 +730,114 @@ def deleteassignment(request,id):
         assignment = Assignment.objects.get(a_id=id)
         assignment.delete()
         return redirect(assignmenthome,id=assignment.a_bcfid.bcf_id)
+
+
+### Quiz Scenes
+
+def quizhome(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        try:
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id)
+        except:
+            return redirect(facultyhome)
+        if bcfid.bcf_facultyid is not None:
+            quiz= Quiz.objects.filter(q_bcfid=bcfid)
+            context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'quizes':quiz}
+        else:
+            return redirect(facultyhome)
+        
+    else:
+        return redirect(index)
+    return render(request,"quiz.html",context)
+
+def createquiz(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        try:
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id)
+        except:
+            return redirect(facultyhome)
+        if bcfid.bcf_facultyid is not None:
+            context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf}
+        else:
+            return redirect(facultyhome)
+        if request.method == "POST":
+            txtname= request.POST['txtname']
+            stdate=request.POST['stdate']
+            enddate=request.POST['enddate']
+            question=request.POST['question']
+            quiz1= Quiz(q_name=txtname,q_startdate=stdate,q_enddate=enddate,q_question=question,q_bcfid=bcfid)
+            quiz1.save()
+            #print(quiz1.q_id)
+            return redirect(createqquiz,id=quiz1.q_id)
+            
+            
+
+    else:
+        return redirect(index)
+    return render(request,"createquiz.html",context)
+
+def updatequiz(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+
+        #bcfid = Bcf.objects.get(bcf_id=id)
+        quiz=Quiz.objects.get(q_id=id)
+        context={'userrole':"Faculty",'bcf':bcf,'quiz':quiz}
+        if request.method == "POST":
+            stdate=request.POST['stdate']
+            enddate=request.POST['enddate']
+            
+            quiz.q_startdate=stdate
+            quiz.q_enddate=enddate
+            quiz.save()
+                
+            
+            #print(assignment.l_bcfid.bcf_id)
+            return redirect(quizhome,id=quiz.q_bcfid.bcf_id)    
+           
+                
+            
+            
+    return render(request,"updatequiz.html",context)
+def deletequiz(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        quiz = Quiz.objects.get(q_id=id)
+        quiz.delete()
+        return redirect(quizhome,id=quiz.q_bcfid.bcf_id)
+
+
+### Quiz Questions Scenes
+
+def createqquiz(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        quiz=Quiz.objects.get(q_id=id)
+        qquiz=QuizQuestion.objects.filter(qq_quizid=quiz.q_id).count()
+        context={'userrole':"Faculty",'bcf':bcf}
+        if request.method == "POST":
+            question= request.POST['txtques']
+            opt1=request.POST['opt1']
+            opt2=request.POST['opt2']
+            opt3=request.POST['opt3']
+            opt4=request.POST['opt4']
+            mark=request.POST['mark']
+            ans=request.POST['ans']
+
+            for i in range(qquiz,quiz.q_question):
+                qquiz1=QuizQuestion(qq_question=question,qq_option1=opt1,qq_option2=opt2,qq_option3=opt3,qq_option4=opt4,qq_marks=mark,qq_correctanswer=ans,qq_quizid=quiz)
+                qquiz1.save()
+                if qquiz == quiz.q_question-1:
+                    return redirect(quizhome,id=quiz.q_bcfid.bcf_id)
+                return redirect(createqquiz,id=quiz.q_id)
+            #return redirect(quizhome,id=quiz.q_bcfid.bcf_id)
+    return render(request,"createqquiz.html",context)
 
 
 
