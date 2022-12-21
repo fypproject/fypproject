@@ -1,0 +1,77 @@
+
+{% extends 'dashboard.html' %}
+{% block body %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>Course</h2>
+        </div>
+        <!-- Input -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Add New Quiz Question
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                        <form  method="POST">
+                                {% csrf_token %}
+                                <label>Question:</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="text" name="txtques" class="form-control inputelement" value="{{qquiz.qq_question}}" required>
+                                    </div>
+                                </div>
+                                <label>Option 1</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="text" name="opt1" class="form-control inputelement" value="{{qquiz.qq_option1}}" required />
+                                    </div>
+                                </div>
+                                <label>Option 2</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="text" name="opt2" class="form-control inputelement" value="{{qquiz.qq_option2}}" required />
+                                    </div>
+                                </div>
+                                <label>Option 3</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="text" name="opt3" class="form-control inputelement" value="{{qquiz.qq_option3}}" required />
+                                    </div>
+                                </div>
+                                <label>Option 4</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="text" name="opt4" class="form-control inputelement" value="{{qquiz.qq_option4}}" required />
+                                    </div>
+                                </div>
+                                <label>Mark</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="number" name="mark" class="form-control inputelement" value="{{qquiz.qq_marks}}" required />
+                                    </div>
+                                </div>
+                                <label>Correct Answer</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                    <input type="text" name="ans" class="form-control inputelement" value="{{qquiz.qq_correctanswer}}" required />
+                                    </div>
+                                </div>
+                                <input type="submit" name="btnupdate" value="Update" class="btn btn-success" />
+                        </form>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Input -->
+    </div>
+</section>
+
+{% endblock body %}

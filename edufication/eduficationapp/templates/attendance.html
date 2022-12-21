@@ -1,4 +1,3 @@
-
 {% extends 'dashboard.html' %}
 {% block body %}
 
@@ -15,38 +14,33 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            Quiz
+                            Attendance
                         </h2>
                     </div>
                     <div class="body">
                         <div class="table-responsive">
-                        <a href="{%url 'createquiz' id=bcfid.bcf_id%}"><input type="submit" value="Add New Quiz" class="btn btn-success"/></a><br><br>
+                        <a href="{%url 'createattendance' id=bcfid.bcf_id%}"><input type="submit" value="Add Attendance" class="btn btn-success"/></a><br><br>
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Title</th>
-                                    <th>Start Date</th>
-                                    <th>End Date</th>
-                                    <th>Total Question</th>
+                                    <th>Name</th>
+                                    <th>Date</th>
                                     <th>Option</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    {%for quiz in quizes%}
+                                    {% for attendance in attendances%}
                                            <tr>
-                                                    <td>{{quiz.q_id}}</td>
-                                                    <td>{{quiz.q_name}}</td>
-                                                    <td>{{quiz.q_startdate}}</td>
-                                                    <td>{{quiz.q_enddate}}</td>
-                                                    <td>{{quiz.q_question}}</td>
+                                                    <td>{{attendance.at_id}}</td>
+                                                    <td>{{attendance.at_name}}</td>
+                                                    <td>{{attendance.at_date}}</td>
                                                     <td>
-                                                        <a href="{%url 'updatequiz' id=quiz.q_id%}"><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
-                                                        <a href="{%url 'deletequiz' id=quiz.q_id%}"><input type='submit' value='Delete' class='btn btn-danger'/></a>&nbsp&nbsp
-                                                        <a href="{%url 'qquizhome' id=quiz.q_id%}"><input type='submit' value='Questions' class='btn btn-success'/></a>
+                                                        <a href="{%url 'attendancerecord' id=attendance.at_id%}"><input type='submit' value='Attendance Record' class='btn btn-success'/></a>
                                                     </td>
                                                 </tr>
                                                 {%endfor%}
+                                                
                                             
                                 </tbody>
                             </table>

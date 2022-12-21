@@ -829,25 +829,190 @@ def createqquiz(request,id):
             opt4=request.POST['opt4']
             mark=request.POST['mark']
             ans=request.POST['ans']
+            qquiz1=QuizQuestion(qq_question=question,qq_option1=opt1,qq_option2=opt2,qq_option3=opt3,qq_option4=opt4,qq_marks=mark,qq_correctanswer=ans,qq_quizid=quiz)
+            qquiz1.save()
+            if qquiz == quiz.q_question-1:
+                return redirect(quizhome,id=quiz.q_bcfid.bcf_id)
+            
+            return redirect(createqquiz,id=quiz.q_id)
 
-            for i in range(qquiz,quiz.q_question):
-                qquiz1=QuizQuestion(qq_question=question,qq_option1=opt1,qq_option2=opt2,qq_option3=opt3,qq_option4=opt4,qq_marks=mark,qq_correctanswer=ans,qq_quizid=quiz)
-                qquiz1.save()
-                if qquiz == quiz.q_question-1:
-                    return redirect(quizhome,id=quiz.q_bcfid.bcf_id)
-                return redirect(createqquiz,id=quiz.q_id)
+
+
+            # for i in range(qquiz,quiz.q_question):
+            #     qquiz1=QuizQuestion(qq_question=question,qq_option1=opt1,qq_option2=opt2,qq_option3=opt3,qq_option4=opt4,qq_marks=mark,qq_correctanswer=ans,qq_quizid=quiz)
+            #     qquiz1.save()
+            #     if qquiz == quiz.q_question-1:
+            #         return redirect(quizhome,id=quiz.q_bcfid.bcf_id)
+            #     return redirect(createqquiz,id=quiz.q_id)
             #return redirect(quizhome,id=quiz.q_bcfid.bcf_id)
     return render(request,"createqquiz.html",context)
 
 
+def qquizhome(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        
+        try:
+            quizid= Quiz.objects.get(q_id=id)    
+            bcfid=Bcf.objects.get(bcf_id=quizid.q_bcfid.bcf_id,bcf_facultyid=user.id)
+        except:
+            
+            return redirect(facultyhome)
+        if bcfid is not None:
+            quiz=Quiz.objects.get(q_id=quizid.q_id)
+            qquiz1= QuizQuestion.objects.filter(qq_quizid=quizid)
+            context={'userrole':"Faculty",'bcf':bcf,'qquizes':qquiz1,'quiz':quiz}
+        else:
+            return redirect(facultyhome)
+        
+        
+    else:
+        return redirect(index)
+
+    return render(request,"qquiz.html",context)
+
+def updateqquiz(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        
+        
+        #quiz=Quiz.objects.get(q_id=id)
+        qquiz1= QuizQuestion.objects.get(qq_id=id)
+        context={'userrole':"Faculty",'bcf':bcf,'qquiz':qquiz1}  
+
+        if request.method == "POST":
+            question= request.POST['txtques']
+            opt1=request.POST['opt1']
+            opt2=request.POST['opt2']
+            opt3=request.POST['opt3']
+            opt4=request.POST['opt4']
+            mark=request.POST['mark']
+            ans=request.POST['ans']
+            qquiz1.qq_question=question
+            qquiz1.qq_option1=opt1
+            qquiz1.qq_option2=opt2
+            qquiz1.qq_option3=opt3
+            qquiz1.qq_option4=opt4
+            qquiz1.qq_marks=mark
+            qquiz1.qq_correctanswer=ans
+            qquiz1.save()
+            return redirect(qquizhome,id=qquiz1.qq_quizid.q_id)  
+    else:
+        return redirect(index)
+
+    return render(request,"updateqquiz.html",context)
+
+
+
+### Attendance Scenes
+
+def attendancehome(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        try:
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id)
+        except:
+            return redirect(facultyhome)
+        if bcfid.bcf_facultyid is not None:
+            attendance= Attendance.objects.filter(at_bcfid=bcfid)
+            context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'attendances':attendance}
+        else:
+            return redirect(facultyhome)
+        
+    else:
+        return redirect(index)
+    return render(request,"attendance.html",context)
 
 
 
 
+def createattendance(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        try:
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id)
+        except:
+            return redirect(facultyhome)
+        if bcfid.bcf_facultyid is not None:
+            context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf}
+        else:
+            return redirect(facultyhome)
+        if request.method == "POST":
+            txtname= request.POST['txtname']
+            date=request.POST['date']
+            attendance1= Attendance(at_name=txtname,at_date=date,at_bcfid=bcfid)
+            attendance1.save()
+            #print(quiz1.q_id)
+            return redirect(createattendancerecord,id=attendance1.at_id)
+            
+            
+
+    else:
+        return redirect(index)
+    return render(request,"createattendance.html",context)
+
+
+def createattendancerecord(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        attendance=Attendance.objects.get(at_id=id)
+        bcfid=Bcf.objects.get(bcf_id=attendance.at_bcfid.bcf_id)
+
+        studentuser=User.objects.filter(is_student=True)
+        student=Student.objects.filter(s_batchid=bcfid.bcf_batchid)
+        print(student.count())
+
+        context={'userrole':"Faculty",'bcf':bcf,'students':student}
+        if request.method == "POST":
+            #print(request.POST)
+            options=request.POST.getlist('txtoption')
+            names=request.POST.getlist('txtname')
+            # for name in names:
+            #     print(name)
+            
+            # for option in options:
+            #     print(option)
+            for name,option in zip(names,options):
+                print(name,option)
+                
+                attendancerecord=AttendanceRecord(atr_studentid=User.objects.get(first_name=name),atr_option=option,atr_atid=attendance)
+                attendancerecord.save()
+            return redirect(attendancehome,id=bcfid.bcf_id)    
+
+    
+    return render(request,"createattendancerecord.html",context)
 
 
 
+def attendancerecordhome(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        
+        try:
+            attendanceid= Attendance.objects.get(at_id=id)    
+            bcfid=Bcf.objects.get(bcf_id=attendanceid.at_bcfid.bcf_id,bcf_facultyid=user.id)
+        except:
+            
+            return redirect(facultyhome)
+        if bcfid is not None:
+            attendance=Attendance.objects.get(at_id=attendanceid.at_id)
+            attendancerecord= AttendanceRecord.objects.filter(atr_atid=attendanceid)
+            context={'userrole':"Faculty",'bcf':bcf,'attendancerecord':attendancerecord,'attendance':attendance}
+        else:
+            return redirect(facultyhome)
+        
+        
+    else:
+        return redirect(index)
 
+
+    return render(request,"attendancerecord.html",context)
 
 
 

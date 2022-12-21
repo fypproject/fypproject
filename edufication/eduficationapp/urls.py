@@ -57,6 +57,15 @@ urlpatterns = [
     path('faculty/updatequiz/<int:id>',views.updatequiz,name='updatequiz'),
     path('faculty/deletequiz/<int:id>',views.deletequiz,name='deletequiz'),
     path('faculty/createqquiz/<int:id>',views.createqquiz,name='createqquiz'),
+    path('faculty/qquiz/<int:id>',views.qquizhome,name='qquizhome'),
+    path('faculty/updateqquiz/<int:id>',views.updateqquiz,name='updateqquiz'),
+
+    path('faculty/attendance/<int:id>',views.attendancehome,name='attendancehome'),
+    path('faculty/createattendance/<int:id>',views.createattendance,name='createattendance'),
+    path('faculty/createattendancerecord/<int:id>',views.createattendancerecord,name='createattendancerecord'),
+    path('faculty/attendancerecord/<int:id>',views.attendancerecordhome,name='attendancerecord'),
+    
+    
     
 
     path('test',views.test,name='test'),

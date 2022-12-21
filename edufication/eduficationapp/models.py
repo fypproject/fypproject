@@ -124,4 +124,22 @@ class QuizQuestion(models.Model):
     qq_marks=models.IntegerField()
     qq_correctanswer=models.CharField(max_length=255)
     qq_quizid=models.ForeignKey(Quiz,on_delete=models.CASCADE)
-    
+
+
+class Attendance(models.Model):
+    at_id=models.AutoField(primary_key=True)
+    at_name=models.CharField(max_length=255)
+    at_date=models.DateField()
+    at_bcfid=models.ForeignKey(Bcf,on_delete=models.CASCADE)
+
+class AttendanceRecord(models.Model):
+    options=(
+        ('Present','Present'),
+        ('Absent','Absent'),
+        ('Late','Late'),
+        ('Excused','Excused'),
+    )
+    atr_id=models.AutoField(primary_key=True)
+    atr_studentid=models.ForeignKey(User,on_delete=models.CASCADE)
+    atr_option=models.CharField(max_length=255,choices=options)
+    atr_atid=models.ForeignKey(Attendance,on_delete=models.CASCADE)

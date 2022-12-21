@@ -1,0 +1,65 @@
+
+{% extends 'dashboard.html' %}
+{% block body %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>
+                <span>Course</span>
+            </h2>
+        </div>
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Question For {{quiz.q_name}}
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                        <a href="{%url 'quizhome' id=quiz.q_bcfid.bcf_id %}"><input type="button" value="Back" class="btn btn-success"/></a><br><br>
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Question</th>
+                                    <th>Option1</th>
+                                    <th>Option2</th>
+                                    <th>Option3</th>
+                                    <th>Option4</th>
+                                    <th>Mark</th>
+                                    <th>Answer</th>
+                                    <th>Option</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                            {%for qquiz in qquizes%}
+                                                <tr>
+                                                    <td>{{qquiz.qq_id}}</td>
+                                                    <td>{{qquiz.qq_question}}</td>
+                                                    <td>{{qquiz.qq_option1}}</td>
+                                                    <td>{{qquiz.qq_option2}}</td>
+                                                    <td>{{qquiz.qq_option3}}</td>
+                                                    <td>{{qquiz.qq_option4}}</td>
+                                                    <td>{{qquiz.qq_marks}}</td>
+                                                    <td>{{qquiz.qq_correctanswer}}</td>
+                                                    <td>
+                                                        <a href="{%url 'updateqquiz' id=qquiz.qq_id%}"><input type='submit' value='Update' class='btn btn-info'/></a>
+                                                    </td>
+                                                </tr>
+                                           {%endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+{% endblock body %}
