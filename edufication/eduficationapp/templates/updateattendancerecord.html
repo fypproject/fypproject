@@ -1,0 +1,56 @@
+
+
+{% extends 'dashboard.html' %}
+{% block body %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>Course</h2>
+        </div>
+        <!-- Input -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Update Attendance Record
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                            <form method="POST"> 
+                                {% csrf_token %}
+                                <label>Name</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <input type="text" name="txtname" class="form-control" value="{{attendancerecord.atr_studentid.first_name}}" readonly/>
+                                    </div>
+                                </div>  
+                                <label>Option</label>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <select name="txtoption" class="form-control show-tick" >
+                                            <option value="{{attendancerecord.atr_option}}">{{attendancerecord.atr_option}}</option>
+                                            <option value="Present">Present</option>
+                                            <option value="Absent">Absent</option>
+                                            <option value="Late">Late</option>
+                                            <option value="Excused">Excused</option>
+                                            
+                                        </select>
+                                    </div>
+                                </div>   
+                                <input type="submit" name="btnupdate" value="Update" class="btn btn-success" />
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Input -->
+    </div>
+</section>
+
+{% endblock body %}

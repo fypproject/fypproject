@@ -1016,6 +1016,40 @@ def attendancerecordhome(request,id):
 
 
 
+def updateattendancerecord(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        
+        
+        #quiz=Quiz.objects.get(q_id=id)
+        attendancerecord1= AttendanceRecord.objects.get(atr_id=id)
+        context={'userrole':"Faculty",'bcf':bcf,'attendancerecord':attendancerecord1}  
+
+        if request.method == "POST":
+            txtname= request.POST['txtname']
+            txtoption=request.POST['txtoption']
+            attendancerecord1.atr_option=txtoption
+            attendancerecord1.save()
+            return redirect(attendancerecordhome,id=attendancerecord1.atr_atid.at_id)  
+    else:
+        return redirect(index)
+
+    return render(request,"updateattendancerecord.html",context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 def test(request):
     batch=Batch.objects.all()

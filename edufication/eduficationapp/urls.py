@@ -64,6 +64,7 @@ urlpatterns = [
     path('faculty/createattendance/<int:id>',views.createattendance,name='createattendance'),
     path('faculty/createattendancerecord/<int:id>',views.createattendancerecord,name='createattendancerecord'),
     path('faculty/attendancerecord/<int:id>',views.attendancerecordhome,name='attendancerecord'),
+    path('faculty/updateattendancerecord/<int:id>',views.updateattendancerecord,name='updateattendancerecord'),
     
     
     

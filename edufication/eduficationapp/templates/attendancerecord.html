@@ -26,15 +26,19 @@
                                     <th>Reg ID</th>
                                     <th>Name</th>
                                     <th>Option</th>
+                                    <th>Update</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                     {%for attendance in attendancerecord%}
                                            <tr>
                                                     <td>{{attendance.atr_studentid.student.s_regno}}</td>
-                                                    <td>{{attendance.atr_studentid}}</td>
+                                                    <td>{{attendance.atr_studentid.first_name}}</td>
                                                     <td>
                                                         {{attendance.atr_option}}
+                                                    </td>
+                                                    <td>
+                                                        <a href="{%url 'updateattendancerecord' id=attendance.atr_id%}"><input type='submit' value='Update' class='btn btn-info'/></a>
                                                     </td>
                                                     
                                                     
