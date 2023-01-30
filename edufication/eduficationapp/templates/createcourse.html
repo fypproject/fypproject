@@ -29,9 +29,9 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Program</label>
-                                    <select name="program" class="form-control show-tick">
+                                    <select name="program" class="form-control show-tick" required>
                                         
-                                        <option>Select Program</option>
+                                        <option value="">Select Program</option>
                                         {% for program in programs %}
                                         <option value="{{program.p_name}}">{{program.p_name}}</option>
                                         {% endfor %}

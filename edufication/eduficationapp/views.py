@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.views.generic import CreateView            
 from django.forms.utils import ErrorList
+from datetime import datetime
 
 from .forms import myAdminSignUpForm,facultySignUpForm,studentSignUpForm
 from .models import *
@@ -661,6 +662,7 @@ def assignmenthome(request,id):
     return render(request,"assignment.html",context)
 
 def createassignment(request,id):
+    msg=""
     user=request.user
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
@@ -678,6 +680,18 @@ def createassignment(request,id):
             txtdesc=request.POST['txtdesc']
             stdate=request.POST['stdate']
             enddate=request.POST['enddate']
+            now=datetime.now()
+            date_time = now.strftime("%Y-%m-%dT%H:%M")
+            if stdate <= date_time:
+                msg="Wrong Start date and time"
+                return render(request,"createassignment.html",{'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'msg':msg})
+            if stdate > enddate:
+                msg="Wrong End date and time"
+                #print(datetime.now())
+                return render(request,"createassignment.html",{'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'msg':msg})
+            
+
+            
             txtmark=request.POST['txtmark']
             file=request.FILES.get('File')
             assignment1= Assignment(a_name=txtchoice,a_desc=txtdesc,a_startdate=stdate,a_enddate=enddate,a_mark=txtmark,a_file=file,a_bcfid=bcfid)
@@ -701,6 +715,15 @@ def updateassignment(request,id):
             txtdesc=request.POST['txtdesc']
             stdate=request.POST['stdate']
             enddate=request.POST['enddate']
+            now=datetime.now()
+            date_time = now.strftime("%Y-%m-%dT%H:%M")
+            if stdate <= date_time:
+                msg="Wrong Start date and time"
+                return render(request,"updateassignment.html",{'userrole':"Faculty",'assignment':assignment,'bcf':bcf,'msg':msg})
+            if stdate > enddate:
+                msg="Wrong End date and time"
+                #print(datetime.now())
+                return render(request,"updateassignment.html",{'userrole':"Faculty",'assignment':assignment,'bcf':bcf,'msg':msg})
             txtmark=request.POST['txtmark']
             file=request.FILES.get('File')
             if file is None:
@@ -768,6 +791,15 @@ def createquiz(request,id):
             txtname= request.POST['txtname']
             stdate=request.POST['stdate']
             enddate=request.POST['enddate']
+            now=datetime.now()
+            date_time = now.strftime("%Y-%m-%dT%H:%M")
+            if stdate <= date_time:
+                msg="Wrong Start date and time"
+                return render(request,"createquiz.html",{'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'msg':msg})
+            if stdate > enddate:
+                msg="Wrong End date and time"
+                #print(datetime.now())
+                return render(request,"createquiz.html",{'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'msg':msg})
             question=request.POST['question']
             quiz1= Quiz(q_name=txtname,q_startdate=stdate,q_enddate=enddate,q_question=question,q_bcfid=bcfid)
             quiz1.save()
@@ -791,7 +823,15 @@ def updatequiz(request,id):
         if request.method == "POST":
             stdate=request.POST['stdate']
             enddate=request.POST['enddate']
-            
+            now=datetime.now()
+            date_time = now.strftime("%Y-%m-%dT%H:%M")
+            if stdate <= date_time:
+                msg="Wrong Start date and time"
+                return render(request,"updatequiz.html",{'userrole':"Faculty",'bcf':bcf,'quiz':quiz,'msg':msg})
+            if stdate > enddate:
+                msg="Wrong End date and time"
+                #print(datetime.now())
+                return render(request,"updatequiz.html",{'userrole':"Faculty",'bcf':bcf,'quiz':quiz,'msg':msg})
             quiz.q_startdate=stdate
             quiz.q_enddate=enddate
             quiz.save()

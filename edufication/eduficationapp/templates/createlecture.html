@@ -24,7 +24,8 @@
                                 {% csrf_token %}
                                 <div class="input-group">
                                     <label>Choice</label>
-                                    <select name="txtchoice" class="form-control show-tick" >
+                                    <select name="txtchoice" class="form-control show-tick" required >
+                                        <option value="">Select Choice</option>
                                         <option value="Announcement">Announcement</option>
                                         <option value="Lecture">Lecture</option>
                                         

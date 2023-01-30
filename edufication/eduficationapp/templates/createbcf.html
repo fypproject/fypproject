@@ -24,8 +24,8 @@
                             {% csrf_token %}
                                 <div class="form group">
                                     <label>Batch</label>
-                                <select name="txtbatch" class="form-control">
-                                        <option>Select Batch</option>
+                                <select name="txtbatch" class="form-control" required>
+                                        <option value="">Select Batch</option>
                                         {% for batch in batches %}
                                         
                                         <option value="{{batch.b_name}}">{{batch.b_name}}</option>
@@ -36,8 +36,8 @@
                                 </div><br/>
                                 <div class="form group">
                                     <label>Course</label>
-                                <select name="txtcourse" class="form-control" >
-                                        <option>Select Course</option>
+                                <select name="txtcourse" class="form-control" required >
+                                        <option value="">Select Course</option>
                                     
                                         {% for course in courses %}
                                         
@@ -47,14 +47,14 @@
                                 </div><br />
                                 <div class="form group">
                                     <label>Faculty</label>
-                                <select name="txtfaculty" class="form-control">
-                                        <option>Select Faculty</option>
+                                <select name="txtfaculty" class="form-control" required>
+                                        <option value="">Select Faculty</option>
                                         {% for faculty in faculties %}
                                         <option value="{{faculty.username}}">{{faculty.username}}</option>
                                         {% endfor %}
                                     </select>
                                     </div><br />
-                            <input type="submit" name="btninsert" value="Insert" class="btn btn-success" /><br><br>                
+                            <input type="submit" name="btninsert" value="Assign" class="btn btn-success" /><br><br>                
                         </form>
                         </div>
                         </div>

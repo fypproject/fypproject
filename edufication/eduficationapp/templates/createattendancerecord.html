@@ -35,7 +35,8 @@
                                            <tr>
                                                     <td>{{student.s_regno}}</td>
                                                     <td>{{student.s_batchid}}</td>
-                                                    <td><input type="text" name="txtname" value="{{student.user.first_name}}" readonly /></td>
+                                                    <td><input type="text" name="txtname" value="{{student.user.first_name}}" style="background-color:transparent; border:none;" readonly /></td>
+                                                    {% comment %} <td>{{student.user.first_name}}</td> {% endcomment %}
                                                     <td>
                                                         <select name="txtoption" class="form-control show-tick" >
                                                             <option value="Present">Present</option>
