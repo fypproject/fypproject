@@ -12,7 +12,8 @@
         <!-- Widgets -->
         
         <div class="row clearfix">
-            <a href="/faculty/attendance/{{bcfid.bcf_id}}">
+        <a href="{%url 'studentattendancehome' id=bcfid.bcf_id%}">
+            {% comment %} {%url 'studentattendancehome' id=bcfid.bcf_id%} {% endcomment %}
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box bg-orange hover-expand-effect">
                     <div class="icon">
@@ -22,9 +23,10 @@
                         <div class="text"><h3>ATTENDANCE</h3></div>
                     </div>
                 </div>
-            </div> 
-        </a>
-            <a href="/faculty/lecture/{{bcfid.bcf_id}}">
+            </div>
+        </a> 
+            <a href="{%url 'studentlecturehome' id=bcfid.bcf_id%}">
+                {% comment %} {%url 'studentlecturehome' id=bcfid.bcf_id%} {% endcomment %}
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box bg-pink hover-expand-effect">
                     <div class="icon">
@@ -37,7 +39,8 @@
             </div>
             </a>
 
-            <a href="/faculty/assignment/{{bcfid.bcf_id}}" >
+            <a href="{%url 'studentassignmenthome' id=bcfid.bcf_id%}" >
+                {% comment %} {%url 'studentassignmenthome' id=bcfid.bcf_id%} {% endcomment %}
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box bg-cyan hover-expand-effect">
                     <div class="icon">
@@ -49,7 +52,8 @@
                 </div>
             </div>
             </a>
-            <a href="{%url 'quizhome' id=bcfid.bcf_id%}">
+            <a href="">
+                {% comment %} {%url 'studentquizhome' id=bcfid.bcf_id%} {% endcomment %}
             <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                 <div class="info-box bg-light-green hover-expand-effect">
                     <div class="icon">

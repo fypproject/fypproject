@@ -1,0 +1,84 @@
+
+{% extends 'dashboard.html' %}
+{% block body %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>
+                <span>Course: {{bcfid.bcf_courseid}}</span>
+            </h2>
+        </div>
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                          Received : {{assignments.a_name}}   
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                       
+                        <h3>Total Marks:{{assignments.a_mark}}</h3> 
+                        <br><br>
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Registration Number</th>
+                                        <th>Assignment End Date/Time</th>
+                                        <th>Submitted Date/Time</th>
+                                        <th>Obtained Marks</th>
+                                        <th>File</th>
+                                        <th>Status</th>
+                                        <th>Option</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {%for student,assignmentsubmit in assignmentreceived%}
+                                        <tr>
+                                                <td>{{student.user.first_name}}</td>
+                                                <td >{{student.s_regno}}</td>
+                                                <td>{{assignments.a_enddate}}</td>
+                                                <td>
+                                                    {%if assignmentsubmit.as_date is None%}
+                                                    Not Submitted
+                                                    {%else%}
+                                                    {{assignmentsubmit.as_date}}
+                                                    {%endif%}
+                                                </td>
+                                                <td>{%if assignmentsubmit.as_marks is None%}
+                                                    Not Entered
+                                                    {%else%}
+                                                    {{assignmentsubmit.as_marks}}
+                                                {%endif%}</td>
+                                                <td> <a href="{{assignmentsubmit.as_file.url}}" download> {{assignmentsubmit.as_file|cut:'submitassignments/'}} </a></td>
+                                                <td>{%if assignments.a_enddate < assignmentsubmit.as_date%}
+                                                    Late
+                                                    {%elif assignments.a_enddate > assignmentsubmit.as_date%}
+                                                    On Time
+                                                    {%else%}
+                                                    Not Submitted
+                                                    {%endif%}
+                                                </td>
+                                                <td>
+                                                    {%if assignmentsubmit.as_id is not None%}
+                                                    <a href="{%url 'updateassignmentmarks' id=assignmentsubmit.as_id%}"><input type='submit' value='Upload Marks' class='btn btn-info'/></a>&nbsp&nbsp
+                                                    {%else%}
+                                                    {%endif%}
+                                                </td>
+                                            </tr>
+                                            
+                                       {%endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

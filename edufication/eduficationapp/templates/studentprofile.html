@@ -1,0 +1,210 @@
+{% extends 'dashboard.html' %}
+
+{% block body %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-xs-12 col-sm-3">
+                <div class="card profile-card">
+                    <div class="profile-header">&nbsp;</div>
+                    <div class="profile-body">
+                        {%if user.student.s_image.url is not None %}
+                        <div class="image-area">
+                            <img alt="{{user.student.s_image.url}}" src="{{user.student.s_image.url}}"  width="150" height="150"/>
+                        </div>
+                        {%else%}
+                        <div class="image-area">
+                            <img alt="/media/images/default.jpg" src="/media/images/default.jpg"  width="150" height="150"/>
+                        </div>
+                        {%endif%}
+                        
+                        <div class="content-area">
+                            
+                            {% comment %} <?php
+                                echo "<h3>".$row['ad_fname']."</h3>";
+                                echo "<p>".$row['ad_email']."</p>";
+                            
+                            ?> {% endcomment %}
+                            <p>{{user.first_name}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-xs-12 col-sm-9">
+                <div class="card">
+                    <div class="body">
+                        <div>
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
+                                <li role="presentation"><a href="#profile_settings" aria-controls="settings" role="tab" data-toggle="tab">Profile Settings</a></li>
+                                <li role="presentation"><a href="#change_password_settings" aria-controls="settings" role="tab" data-toggle="tab">Change Password</a></li>
+                                <li role="presentation"><a href="#edit_image" aria-controls="settings" role="tab" data-toggle="tab">Edit Image</a></li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade in active" id="home">
+                                    
+                                    <div class="panel panel-default panel-post">
+                                        <div class="panel-body">
+                                            <div class="post">
+                                                <div class="post-heading">
+                                                    <h4>Name</h4>
+                                                    <p>{{user.first_name}}</p>
+                                                    <h4>Email</h4>
+                                                    <p>{{user.email}}</p>
+                                                    <h4>Username</h4>
+                                                    <p>{{user.username}}</p>
+                                                    <h4>Registration Number</h4>
+                                                    <p>{{user.student.s_regno}}</p>
+                                                    <h4>Batch Section</h4>
+                                                    <p>{{user.student.s_batchid}}</p>
+                                                    <h4>Phone Number</h4>
+                                                    <p>{{user.student.s_phoneno}}</p>
+                                                    <h4>Parents Contact</h4>
+                                                    <p>{{user.student.s_parentscontact}}</p>
+                                                    <h4>City</h4>
+                                                    <p>{{user.student.s_city}}</p>
+                                                    <h4>Country</h4>
+                                                    <p>{{user.student.s_country}}</p>
+                                                    
+                                                    
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <label>{{msg}}</label>
+
+                                </div>
+                                
+                                <div role="tabpanel" class="tab-pane fade in" id="profile_settings">
+                                    <form class="form-horizontal" method="POST" action="{%url 'adminupdateprofile'%}">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Username</label>
+                                            <div class="col-sm-10">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control" name="txtuname" value="{{user.username}}" readonly disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Name</label>
+                                            <div class="col-sm-10">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control" name="txtfname" value="{{user.first_name}}" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Email</label>
+                                            <div class="col-sm-10">
+                                                <div class="form-line">
+                                                    <input type="email" class="form-control" name="txtemail" value="{{user.email}}" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                       
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Phone Number</label>
+                                            <div class="col-sm-10">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control" name="txtphoneno" value="{{user.student.s_phoneno | default:'' }}" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Parents Contact</label>
+                                            <div class="col-sm-10">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control" name="txtparentscontact" value="{{user.student.s_parentscontact | default:''}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">City</label>
+                                            <div class="col-sm-10">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control" name="txtcity" value="{{user.student.s_city | default:''}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Country</label>
+                                            <div class="col-sm-10">
+                                                <div class="form-line">
+                                                    <input type="text" class="form-control" name="txtcountry" value="{{user.student.s_country | default:''}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <input type="submit" name="btnupdate" value="Update" class="btn btn-info" />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+
+                                <div role="tabpanel" class="tab-pane fade in" id="change_password_settings">
+                                    <form class="form-horizontal" method="POST" action="{%url 'adminupdateprofilepass'%}">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="OldPassword" class="col-sm-3 control-label">Old Password</label>
+                                            <div class="col-sm-9">
+                                                <div class="form-line">
+                                                    <input type="password" class="form-control" id="OldPassword" name="txtoldpass" placeholder="Old Password" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="NewPassword" class="col-sm-3 control-label">New Password</label>
+                                            <div class="col-sm-9">
+                                                <div class="form-line">
+                                                    <input type="password" class="form-control" id="NewPassword" name="txtnewpass" placeholder="New Password" required>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-3 col-sm-9">
+                                                <input type="submit" name="btnpass" value="Update Password" class="btn btn-danger" />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <!-- image form -->
+
+                                <div role="tabpanel" class="tab-pane fade in" id="edit_image">
+                                    <form class="form-horizontal" method="POST" action="{% url 'adminprofileimage'%}" enctype="multipart/form-data">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">Image</label>
+                                            <div class="col-sm-10">
+                                                <div class="form-line">
+                                                    <input name="File" type="file" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                            <input type="submit" name="btnimg" value="Edit Image" class="btn btn-info" />
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

@@ -52,6 +52,8 @@ urlpatterns = [
     path('faculty/createassignment/<int:id>',views.createassignment,name='createassignment'),
     path('faculty/updateassignment/<int:id>',views.updateassignment,name='updateassignment'),
     path('faculty/deleteassignment/<int:id>',views.deleteassignment,name='deleteassignment'),
+    path('faculty/receivedassignment/<int:id>',views.receivedassignment,name='receivedassignment'),
+    path('faculty/updateassignmentmarks/<int:id>',views.updateassignmentmarks,name='updateassignmentmarks'), 
     path('faculty/quiz/<int:id>',views.quizhome,name='quizhome'),
     path('faculty/createquiz/<int:id>',views.createquiz,name='createquiz'),
     path('faculty/updatequiz/<int:id>',views.updatequiz,name='updatequiz'),
@@ -65,8 +67,15 @@ urlpatterns = [
     path('faculty/createattendancerecord/<int:id>',views.createattendancerecord,name='createattendancerecord'),
     path('faculty/attendancerecord/<int:id>',views.attendancerecordhome,name='attendancerecord'),
     path('faculty/updateattendancerecord/<int:id>',views.updateattendancerecord,name='updateattendancerecord'),
-    
-    
+
+    path('student/profile',views.studentprofile,name='studentprofile'),
+    path('student/coursegallery/<int:id>',views.scoursegallery,name='scoursegallery'),
+    path('student/attendance/<int:id>',views.sattendancehome,name='studentattendancehome'),
+    path('student/lecture/<int:id>',views.slecturehome,name='studentlecturehome'),
+    path('student/assignment/<int:id>',views.sassignmenthome,name='studentassignmenthome'),
+    path('student/submitassignment/<int:id>',views.submitassignment,name='submitassignment'),
+    path('student/submittedassignment/<int:id>',views.submittedassignment,name='submittedassignment'),
+
     
 
     path('test',views.test,name='test'),

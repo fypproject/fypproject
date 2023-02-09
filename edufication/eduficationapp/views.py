@@ -102,8 +102,10 @@ def studenthome(request):
     user = request.user
    
     if user.is_authenticated and user.is_student:
-        context={'user':user,'userrole':"Student"}
-        return render(request,"facultyhome.html",context)
+        bcf=Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
+        #print(bcf)
+        context={'user':user,'userrole':"Student",'bcf':bcf}
+        return render(request,"studenthome.html",context)
     else:
         return redirect(index)
 
@@ -130,6 +132,19 @@ def facultyprofile(request):
     else:
         return redirect(index)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def studentprofile(request):
+    user=request.user
+    if user.is_authenticated and user.is_student:
+        bcf= Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
+        context={'user':user,'userrole':"Student",'bcf':bcf}
+        print(user.username) 
+        return render(request,"studentprofile.html",context)
+    else:
+        return redirect(index)
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def updateprofile(request):
     user=request.user
     
@@ -167,9 +182,28 @@ def updateprofile(request):
             faculty1.f_qualifications=qualifications
 
             faculty1.save()
-            return redirect(facultyprofile) 
+            return redirect(facultyprofile)
+    elif user.is_authenticated and user.is_student:
+        if request.method == "POST":
+            name= request.POST['txtfname']
+            email=request.POST['txtemail']
+            phone_no=request.POST['txtphoneno']
+            city=request.POST['txtcity']
+            country=request.POST['txtcountry']
+            parentscontact=request.POST['txtparentscontact']
+            user.first_name=name
+            user.email=email
+            user.save()
+            student1=Student.objects.get(user_id=user.id)
+            student1.s_phoneno=phone_no
+            student1.s_city=city
+            student1.s_country=country
+            student1.s_parentscontact=parentscontact
 
+            student1.save()
+            return redirect(studentprofile)  
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def updateprofileimage(request):
     user=request.user
     
@@ -187,7 +221,14 @@ def updateprofileimage(request):
             faculty1.f_image=image
             faculty1.save()
             return redirect(facultyprofile)
-            
+    elif user.is_authenticated and user.is_student:
+        if request.method == "POST":
+            image= request.FILES['File']
+            student1= Student.objects.get(user_id=user.id)
+            student1.s_image=image
+            student1.save()
+            return redirect(studentprofile)
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)           
 def updateprofilepass(request):
     user=request.user
     msg=""
@@ -217,7 +258,19 @@ def updateprofilepass(request):
                 return render(request,"facultyprofile.html",{'msg':msg,'userrole':"Faculty"})
                 print("Password Not Changed")
             return redirect(facultyprofile)
+    elif user.is_authenticated and user.is_student:
+        if request.method == "POST":
+            oldpass=request.POST['txtoldpass']
+            newpass=request.POST['txtnewpass']
+            if user.check_password(oldpass):
+                user.set_password(newpass)
+                user.save()
+            else:
+                msg="Wrong Old Password"
 
+                return render(request,"studentprofile.html",{'msg':msg,'userrole':"Student"})
+                print("Password Not Changed")
+            return redirect(studentprofile)
 
 
 
@@ -238,12 +291,13 @@ class myAdminSignUpView(CreateView):
 
     
 # Program Crud
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def programshow(request):
     program= Program.objects.all()
     #print(program)
     return render(request,"program.html",{'programs':program,'userrole':"Admin"})
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def createprogram(request):
     if request.method == "POST":
         programname= request.POST['programname']
@@ -253,6 +307,7 @@ def createprogram(request):
         return redirect(programshow)
     return render(request,"createprogram.html",{'userrole':"Admin"})
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def updateprogram(request,id):
     program = Program.objects.get(p_id=id)
     print(program.p_name)
@@ -265,19 +320,22 @@ def updateprogram(request,id):
         
     return render(request,"updateprogram.html",{'program':program,'userrole':"Admin"})
 
+    
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def deleteprogram(request,id):
     program = Program.objects.get(p_id=id)
     program.delete()
     return redirect(programshow)
 
 # Batch Crud
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def batchshow(request):
     batch= Batch.objects.all()
     #print(batch)
     
     return render(request,"batch.html",{'batchs':batch,'userrole':"Admin"})
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def createbatch(request):
     program = Program.objects.all()
     if request.method == "POST":
@@ -294,6 +352,8 @@ def createbatch(request):
         return redirect(batchshow)
     return render(request,"createbatch.html",{'programs':program,'userrole':"Admin"})
 
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def updatebatch(request,id):
     program = Program.objects.all()
     batch = Batch.objects.get(b_id=id)
@@ -308,7 +368,7 @@ def updatebatch(request,id):
         # batch.p_name(batchname)
         
     return render(request,"updatebatch.html",{'batch':batch,'programs':program,'userrole':"Admin"})
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def deletebatch(request,id):
     batch = Batch.objects.get(b_id=id)
     batch.delete()
@@ -321,13 +381,14 @@ def deletebatch(request,id):
 
 
 # Course Crud
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def courseshow(request):
     course= Course.objects.all()
     #print(course)
     
     return render(request,"course.html",{'courses':course,'userrole':"Admin"})
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def createcourse(request):
     program = Program.objects.all()
     if request.method == "POST":
@@ -343,7 +404,7 @@ def createcourse(request):
         course.save()
         return redirect(courseshow)
     return render(request,"createcourse.html",{'programs':program,'userrole':"Admin"})
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def updatecourse(request,id):
     program = Program.objects.all()
     course = Course.objects.get(c_id=id)
@@ -359,13 +420,13 @@ def updatecourse(request,id):
         
     return render(request,"updatecourse.html",{'course':course,'programs':program,'userrole':"Admin"})
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def deletecourse(request,id):
     course = Course.objects.get(c_id=id)
     course.delete()
     return redirect(courseshow)
 
 #faculty Crud
-
 class facultySignUpView(CreateView):
     model = User
     form_class = facultySignUpForm
@@ -383,12 +444,14 @@ class facultySignUpView(CreateView):
         #login(self.request, user)
         return redirect(facultyshow)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def facultyshow(request):
     faculty= User.objects.filter(is_faculty=True)
     #print(course)
     
     return render(request,"faculty.html",{'faculties':faculty,'userrole':"Admin"})
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def updatefaculty(request,id):
     faculty=User.objects.get(id=id)
     faculty1= Faculty.objects.get(user_id=id)
@@ -399,13 +462,14 @@ def updatefaculty(request,id):
         faculty1.save()
         return redirect(facultyshow)
     return render(request,"updatefaculty.html",context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)    
 def deletefaculty(request,id):
     faculty = User.objects.get(id=id)
     faculty.delete()
     return redirect(facultyshow)
 
 # Student Crud
-
 class studentSignUpView(CreateView):
     model = User
     form_class = studentSignUpForm
@@ -443,12 +507,16 @@ class studentSignUpView(CreateView):
         #     return super(studentSignUpView, self).form_invalid(form)
 
         return super(studentSignUpView, self).form_valid(form),redirect(studentshow)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def studentshow(request):
     student= User.objects.filter(is_student=True)
     #print(course)
     
     return render(request,"student.html",{'students':student,'userrole':"Admin"})
 
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def updatestudent(request,id):
     student=User.objects.get(id=id)
     student1= Student.objects.get(user_id=id)
@@ -467,16 +535,21 @@ def updatestudent(request,id):
 
     return render(request,"updatestudent.html",context)
 
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def deletestudent(request,id):
     student = User.objects.get(id=id)
     student.delete()
     return redirect(studentshow)
 
 # Batch Faculty Crud
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def bcfshow(request):
     bcf= Bcf.objects.all()
     return render(request,"bcf.html",{'userrole':"Admin",'bcfs':bcf})
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def createbcf(request):
     faculty= User.objects.filter(is_faculty=True)
     batch=Batch.objects.all()
@@ -496,6 +569,7 @@ def createbcf(request):
         return redirect(bcfshow)
     return render(request,"createbcf.html",context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def updatebcf(request,id):
     course = Course.objects.all()
     faculty= User.objects.filter(is_faculty=True)
@@ -525,13 +599,14 @@ def updatebcf(request,id):
     #     # course.p_name(coursename)
         
     return render(request,"updatebcf.html",context)
-    
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)    
 def deletebcf(request,id):
     bcf = Bcf.objects.get(bcf_id=id)
     bcf.delete()
     return redirect(bcfshow)
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def inactive(request):
     return render(request,"inactive.html")
 
@@ -539,7 +614,7 @@ def inactive(request):
 
 ### Faculty Section
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def coursegallery(request,id):
     user=request.user
     
@@ -560,6 +635,8 @@ def coursegallery(request,id):
     return render(request,"coursegallery.html",context)
 
 ### Lecture Scenes
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def lecturehome(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -578,6 +655,7 @@ def lecturehome(request,id):
         return redirect(index)
     return render(request,"lecture.html",context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def createlecture(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -604,6 +682,7 @@ def createlecture(request,id):
         return redirect(index)
     return render(request,"createlecture.html",context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def updatelecture(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -627,22 +706,27 @@ def updatelecture(request,id):
             #print(lecture.l_bcfid.bcf_id)
             return redirect(lecturehome,id=lecture.l_bcfid.bcf_id)    
            
-                
+    else:
+        return redirect(index)        
             
             
     return render(request,"updatelecture.html",context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)    
 def deletelecture(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
         lecture = Lecture.objects.get(l_id=id)
         lecture.delete()
         return redirect(lecturehome,id=lecture.l_bcfid.bcf_id)
+    
 
 
 
 
+### Assignment Scenes
 
-### Assignment Scenes 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True) 
 def assignmenthome(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -661,6 +745,7 @@ def assignmenthome(request,id):
         return redirect(index)
     return render(request,"assignment.html",context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def createassignment(request,id):
     msg=""
     user=request.user
@@ -703,6 +788,7 @@ def createassignment(request,id):
         return redirect(index)
     return render(request,"createassignment.html",context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def updateassignment(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -743,10 +829,13 @@ def updateassignment(request,id):
             #print(assignment.l_bcfid.bcf_id)
             return redirect(assignmenthome,id=assignment.a_bcfid.bcf_id)    
            
-                
+    else:
+        return redirect(index)             
             
             
     return render(request,"updateassignment.html",context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def deleteassignment(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -754,9 +843,83 @@ def deleteassignment(request,id):
         assignment.delete()
         return redirect(assignmenthome,id=assignment.a_bcfid.bcf_id)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def receivedassignment(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        assignment= Assignment.objects.get(a_id=id)
+
+        try:
+            bcfid = Bcf.objects.get(bcf_id=assignment.a_bcfid.bcf_id,bcf_facultyid=user.id)
+        except:
+            return redirect(facultyhome)
+        studentsarr=[]
+        assubmitarr=[]
+        if bcfid.bcf_facultyid is not None :
+            user1=User.objects.filter(is_student=True)
+            
+            for student in user1:
+                student1=Student.objects.filter(user=student,s_batchid=bcfid.bcf_batchid.b_id)
+
+                if student1.exists():
+                    #print(student1)
+                    studentsarr.append(student1[0])
+                    assignmentsubmit=AssignmentSubmit.objects.filter(as_assignmentid=assignment.a_id,as_studentid=student)
+                    if assignmentsubmit.exists():
+                        assubmitarr.append(assignmentsubmit[0])
+                        print(assignmentsubmit[0])
+                    else:
+                        assubmitarr.append('')
+
+
+            print(assubmitarr)
+            assignmentreceived=list(zip(studentsarr,assubmitarr))
+            #student1=Student.objects.filter(user=User.objects.filter(is_student=True),s_batchid=bcfid.bcf_batchid.b_id)
+            # print(student1)
+            #print(studentsarr[0])
+            context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'assignments':assignment,'assignmentreceived':assignmentreceived}
+        else:
+            return redirect(facultyhome)
+        
+    else:
+        return redirect(index)
+    return render(request,"receivedassignment.html",context)
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def updateassignmentmarks(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        assignmentsubmit=AssignmentSubmit.objects.get(as_id=id)
+        assignment= Assignment.objects.get(a_id=assignmentsubmit.as_assignmentid.a_id)
+
+        try:
+
+            bcfid = Bcf.objects.get(bcf_id=assignment.a_bcfid.bcf_id,bcf_facultyid=user.id)
+        except:
+            return redirect(facultyhome)
+        if bcfid.bcf_facultyid is not None :
+            
+            context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'assignmentsubmit':assignmentsubmit}
+        else:
+            return redirect(facultyhome)
+        
+        if request.method== "POST":
+            marks=request.POST["marks"]
+            assignmentsubmit.as_marks=marks
+            assignmentsubmit.save()
+            return redirect(receivedassignment,id=assignmentsubmit.as_assignmentid.a_id)
+        
+    else:
+        return redirect(index)
+    return render(request,"updateassignmentmarks.html",context)
+
+
 
 ### Quiz Scenes
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def quizhome(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -775,6 +938,7 @@ def quizhome(request,id):
         return redirect(index)
     return render(request,"quiz.html",context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def createquiz(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -812,6 +976,7 @@ def createquiz(request,id):
         return redirect(index)
     return render(request,"createquiz.html",context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def updatequiz(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -840,10 +1005,13 @@ def updatequiz(request,id):
             #print(assignment.l_bcfid.bcf_id)
             return redirect(quizhome,id=quiz.q_bcfid.bcf_id)    
            
-                
+    else:
+        return redirect(index)            
             
             
     return render(request,"updatequiz.html",context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def deletequiz(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -854,6 +1022,7 @@ def deletequiz(request,id):
 
 ### Quiz Questions Scenes
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def createqquiz(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -876,7 +1045,8 @@ def createqquiz(request,id):
             
             return redirect(createqquiz,id=quiz.q_id)
 
-
+    else:
+        return redirect(index) 
 
             # for i in range(qquiz,quiz.q_question):
             #     qquiz1=QuizQuestion(qq_question=question,qq_option1=opt1,qq_option2=opt2,qq_option3=opt3,qq_option4=opt4,qq_marks=mark,qq_correctanswer=ans,qq_quizid=quiz)
@@ -887,7 +1057,7 @@ def createqquiz(request,id):
             #return redirect(quizhome,id=quiz.q_bcfid.bcf_id)
     return render(request,"createqquiz.html",context)
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def qquizhome(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -912,6 +1082,7 @@ def qquizhome(request,id):
 
     return render(request,"qquiz.html",context)
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def updateqquiz(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -948,6 +1119,7 @@ def updateqquiz(request,id):
 
 ### Attendance Scenes
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def attendancehome(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -968,7 +1140,7 @@ def attendancehome(request,id):
 
 
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def createattendance(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -995,7 +1167,7 @@ def createattendance(request,id):
         return redirect(index)
     return render(request,"createattendance.html",context)
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def createattendancerecord(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -1023,12 +1195,13 @@ def createattendancerecord(request,id):
                 attendancerecord=AttendanceRecord(atr_studentid=User.objects.get(first_name=name),atr_option=option,atr_atid=attendance)
                 attendancerecord.save()
             return redirect(attendancehome,id=bcfid.bcf_id)    
-
+    else:
+        return redirect(index) 
     
     return render(request,"createattendancerecord.html",context)
 
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def attendancerecordhome(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -1055,7 +1228,7 @@ def attendancerecordhome(request,id):
     return render(request,"attendancerecord.html",context)
 
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def updateattendancerecord(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
@@ -1081,12 +1254,213 @@ def updateattendancerecord(request,id):
 
 
 
+### Students Scene
 
 
+### Student Course Gallery
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def scoursegallery(request,id):
+    user=request.user
+    
+
+    if user.is_authenticated and user.is_student:
+        bcf= Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
+        try:
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_batchid=user.student.s_batchid)
+        except:
+            return redirect(studenthome)
+        #bcf1=Bcf.objects.get(bcf_facultyid=user.id,bcf_id=bcfid.bcf_id)
+        if bcfid.bcf_batchid is not None:
+            context={'bcfid':bcfid,'userrole':"Student",'bcf':bcf}
+        else:
+            return redirect(studenthome)
+    else:
+        return redirect(index)
+    return render(request,"scoursegallery.html",context)
+
+### Student Attendance Home
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def sattendancehome(request,id):
+    user=request.user
+    
+
+    if user.is_authenticated and user.is_student:
+        bcf= Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
+        atrecords=[]
+        #print(attendancerecord1)
+        try:
+            
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_batchid=user.student.s_batchid)
+            attendances=Attendance.objects.filter(at_bcfid=bcfid.bcf_id)
+            for attendance in attendances:
+                #print(attendance.at_id)
+                attendancerecord1=AttendanceRecord.objects.get(atr_studentid=user.id,atr_atid=attendance.at_id)
+                print(attendancerecord1)
+                atrecords.append(attendancerecord1)
+                    
+            
+        except:
+            return redirect(studenthome)
+        #studentname=attendancerecord1.atr_studentid
+        #print(studentname)
+        if bcfid.bcf_batchid is not None:
+            context={'bcfid':bcfid,'userrole':"Student",'bcf':bcf,'atrecords':atrecords}
+        else:
+            return redirect(studenthome)
+    else:
+        return redirect(index)
+    return render(request,"sattendance.html",context)
 
 
+### Student Lecture Home
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def slecturehome(request,id):
+    user=request.user
+    
+
+    if user.is_authenticated and user.is_student:
+        bcf= Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
+        
+        #print(attendancerecord1)
+        try:
+            
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_batchid=user.student.s_batchid)
+            lecture=Lecture.objects.filter(l_bcfid=bcfid.bcf_id)
+                    
+            
+        except:
+            return redirect(studenthome)
+        
+        if bcfid.bcf_batchid is not None:
+            context={'bcfid':bcfid,'userrole':"Student",'bcf':bcf,'lectures':lecture}
+        else:
+            return redirect(studenthome)
+    else:
+        return redirect(index)
+    return render(request,"slecture.html",context)
+
+### Student Assignment Scene
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def sassignmenthome(request,id):
+    user=request.user
+    
+
+    if user.is_authenticated and user.is_student:
+        bcf= Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
+        arrenddate=[]
+        arrsubdate=[]
+        assignmentsarr=[]
+        #print(attendancerecord1)
+        
+        try:
+            
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_batchid=user.student.s_batchid)
+            
+
+        except:
+            return redirect(studenthome)
+        assignment= Assignment.objects.filter(a_bcfid=bcfid.bcf_id)                    
+        for ass in assignment:
+            
+            assignmentsubmit=AssignmentSubmit.objects.filter(as_assignmentid=ass.a_id)
+            if assignmentsubmit.count() == 0:
+                assignmentsarr.append('')
+                arrsubdate.append('')
+            else:
+                for asse in assignmentsubmit:
+                    assignmentsarr.append(asse)
+                    arrsubdate.append(asse.as_date.strftime("%Y-%m-%d %H:%M"))
+
+           
+            
+            arrenddate.append(ass.a_enddate.strftime("%Y-%m-%d %H:%M"))
+         
+        print(assignmentsarr)
+        now=datetime.now()
+        date_time = now.strftime("%Y-%m-%d %H:%M")
+        #print(date_time)
+        
+        assignment1=list(zip(assignment,arrenddate,assignmentsarr,arrsubdate))
+        if bcfid.bcf_batchid is not None:
+            context={'bcfid':bcfid,'userrole':"Student",'bcf':bcf,'assignments':assignment1,'date_time':date_time}
+        else:
+            return redirect(studenthome)
+    else:
+        return redirect(index)
+    return render(request,"sassignment.html",context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def submitassignment(request,id):
+    user=request.user
+    
+
+    if user.is_authenticated and user.is_student:
+        bcf= Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
+        assignment= Assignment.objects.get(a_id=id)  
+        #print(attendancerecord1)
+        try:
+            
+            bcfid = Bcf.objects.get(bcf_id=assignment.a_bcfid.bcf_id,bcf_batchid=user.student.s_batchid)   
+                              
+
+        except:
+            return redirect(studenthome)
+        
+        if bcfid.bcf_batchid is not None:
+            context={'bcfid':bcfid,'userrole':"Student",'bcf':bcf,'assignment':assignment}
+        else:
+            return redirect(studenthome)
+
+        if request.method=="POST":
+            file=request.FILES.get('File')
+            assignmentsubmit=AssignmentSubmit(as_file=file,as_date=datetime.now(),as_assignmentid=assignment,as_studentid=User.objects.get(username=user.username))
+            assignmentsubmit.save()
+            return redirect(sassignmenthome,id=assignment.a_bcfid.bcf_id)
+    else:
+        return redirect(index)
+    return render(request,"submitassignment.html",context)
 
 
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def submittedassignment(request,id):
+    user=request.user
+    
+
+    if user.is_authenticated and user.is_student:
+        bcf= Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
+        assignment= Assignment.objects.get(a_id=id) 
+        assignmentsubmit=AssignmentSubmit.objects.get(as_assignmentid=id) 
+        
+        enddate=assignment.a_enddate.strftime("%Y-%m-%d %H:%M")
+         
+        
+        now=datetime.now()
+        date_time = now.strftime("%Y-%m-%d %H:%M")
+        #print(attendancerecord1)
+        try:
+            
+            bcfid = Bcf.objects.get(bcf_id=assignment.a_bcfid.bcf_id,bcf_batchid=user.student.s_batchid)   
+                              
+
+        except:
+            return redirect(studenthome)
+        
+        if bcfid.bcf_batchid is not None:
+            context={'bcfid':bcfid,'userrole':"Student",'bcf':bcf,'assignment':assignment,'assignmentsubmit':assignmentsubmit,'enddate':enddate,'datetime':date_time}
+        else:
+            return redirect(studenthome)
+
+        if request.method=="POST":
+            file=request.FILES.get('File')
+            assignmentsubmit.as_file=file
+            assignmentsubmit.as_date=now
+            assignmentsubmit.save()
+            return redirect(sassignmenthome,id=assignment.a_bcfid.bcf_id)
+    else:
+        return redirect(index)
+    return render(request,"submittedassignment.html",context)
 
 
 

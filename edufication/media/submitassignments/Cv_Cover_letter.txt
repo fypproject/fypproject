@@ -1,0 +1,12 @@
+Dear Hiring Manager,
+
+I am writing to express my interest in the Python Developer position currently available at your company. My name is Muhammad Zain Noorani, and I have 2 years of experience in Python development.
+
+I am experienced in Python automation, including web scraping, web mining, and data mining. In addition, I have expertise in Django development and have worked on several projects using this framework. I am confident that my skills and experience make me a strong candidate for this role.
+
+I am excited about the opportunity to work with your team and contribute to the success of your company through my skills in Python development. I am a quick learner, and I am always eager to take on new challenges and improve my skills.
+
+Thank you for considering my application. I look forward to the opportunity to discuss my qualifications further.
+
+Sincerely,
+Muhammad Zain Noorani

@@ -1,4 +1,5 @@
 from django.db import models
+import os
 
 # Create your models here.
 
@@ -105,6 +106,9 @@ class Assignment(models.Model):
     a_file=models.FileField(blank=True,null=True,upload_to='assignments/')
     a_mark=models.IntegerField()
     a_bcfid=models.ForeignKey(Bcf,on_delete=models.CASCADE)
+    
+    def filename(self):
+        return os.path.basename(self.a_file.name)
 
 class Quiz(models.Model):
     q_id=models.AutoField(primary_key=True)
@@ -143,3 +147,12 @@ class AttendanceRecord(models.Model):
     atr_studentid=models.ForeignKey(User,on_delete=models.CASCADE)
     atr_option=models.CharField(max_length=255,choices=options)
     atr_atid=models.ForeignKey(Attendance,on_delete=models.CASCADE)
+
+
+class AssignmentSubmit(models.Model):
+    as_id=models.AutoField(primary_key=True)
+    as_file=models.FileField(upload_to='submitassignments/')
+    as_date=models.DateTimeField()
+    as_marks=models.IntegerField(null=True,blank=True)
+    as_assignmentid=models.ForeignKey(Assignment,on_delete=models.CASCADE)
+    as_studentid=models.ForeignKey(User,on_delete=models.CASCADE)

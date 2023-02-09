@@ -1,0 +1,59 @@
+
+
+{% extends 'dashboard.html' %}
+
+{% block body %}
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>Program</h2>
+        </div>
+        <!-- Input -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        
+                    
+                    <h2>
+                        Upload Assignment Marks
+                    </h2>
+
+
+                    </div>
+                    
+                    <div class="body">
+
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                                <p><b>Name:</b> {{assignmentsubmit.as_studentid.first_name}}</p>
+                                
+                                <p><b>Registration Number:</b> {{assignmentsubmit.as_studentid.student.s_regno}}</p>
+                                <p><b>Total Marks:</b> {{assignmentsubmit.as_assignmentid.a_mark}}
+                        <form  method="POST">
+                            {% csrf_token %}
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <label>Marks</label>
+                                    <input type="number" min="0" max="{{assignmentsubmit.as_assignmentid.a_mark}}"  name="marks" class="form-control inputelement" value="{{assignmentsubmit.as_marks | default:''}}" required />
+                                    </div>
+                                </div>
+                                
+                        <input type="submit" name="btnupdate" value="Update" class="btn btn-success" />
+                        {% comment %} <input type="button" name="btnback" value="Back" class="btn btn-info" />                {% endcomment %}
+                                
+                        </form>
+
+                        </div>
+                        </div>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Input -->
+    </div>
+</section>
+
+{% endblock body %}

@@ -1,0 +1,100 @@
+
+{% extends 'dashboard.html' %}
+{% block body %}
+
+<section class="content">
+    <div class="container-fluid">
+        <!-- No Header Card -->
+        <div class="block-header">
+            <h2><span>Course > Assignment</span></h2>
+        </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="body">
+                    
+                                <h3>{{assignment.a_name}}</h3>
+                                <h4>Task: {{assignment.a_desc}}</h4>
+                                <p><b>Start Date :</b> {{assignment.a_startdate}} </p>
+                                <p><b>End Date :</b> {{assignment.a_enddate}}</p>
+                               
+                                <p><b>Submitted On :</b>{{assignmentsubmit.as_date}} </p>
+                                <p><b>Submit Status : </b>
+                                {%if assignment.a_enddate < assignmentsubmit.as_date%}
+                                Submitted Late
+                                {%else%}
+                                Submitted on Time
+                                {%endif%}
+                                </p>
+                                <p><b>Total Marks :</b> {{assignment.a_mark}}</p>
+                                <p><b>Obtained Marks :</b> 
+                                    {%if assignmentsubmit.as_marks is None %}
+                                        Not Assigned
+                                        {%else%}
+                                    {{assignmentsubmit.as_marks}} </p>
+                                    {%endif%}
+                                    <p><b>File : </b> {% if assignment.a_file.url is not None %}
+                                        <a href="{{assignment.a_file.url}}" download> {{assignment.a_file|cut:'assignments/'}} </a>
+                                        {% else%}
+                                         Null 
+                                        {%endif%}</p>
+                                
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Uploaded Assignment
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <div class="body">
+                                        <label>Submitted File:</label>
+                                            <a href="{{assignmentsubmit.as_file.url}}" download >
+                                            
+                                            <p>{{assignmentsubmit.as_file|cut:'submitassignments/'}} </p>
+                                            </a>
+                                            {%if enddate > datetime%}
+                                     {% comment %} <input type='button' value='Update' class='btn btn-primary' id="update"/> {% endcomment %}
+                                     <button class="btn bg-cyan waves-effect m-b-15" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false"
+                                        aria-controls="collapseExample">
+                                        UPDATE
+                                        </button>
+                                        <div class="collapse" id="collapseExample">
+                                        <div class="">
+                                            <div class="col-sm-12" >
+                                                <form method="post" enctype="multipart/form-data">    
+                                                    {% csrf_token %}
+                                                    <div class="form-group">
+                                                        <div class="form-line ">
+                                                            <label>Choose Updated File:</label>
+                                                            <input name="File" type="file" required/>
+                                                        </div>
+                                                    </div>
+                                                    <input type="submit" name="btninsert" value="Submit" class="btn btn-success" />
+                                                </form>
+                                                </div>
+                                        </div>
+                            </div>
+                                            {%else%}
+                                            Aapka time nikal gaya
+                                            {%endif%}
+                                            
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+        <!-- #END# No Header Card -->
+
+    </div>
+</section>
+{% endblock body %}

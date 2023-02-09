@@ -21,7 +21,7 @@
                     <div class="body">
                         <div class="table-responsive">
                         <a href="/faculty/createassignment/{{bcfid.bcf_id}}"><input type="submit" value="Add New Assignment" class="btn btn-success"/></a>&nbsp&nbsp
-                        <a href=""><input type='submit' value='Received Assignment' class='btn btn-info'/></a>
+                        
                         <br><br>
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                 <thead>
@@ -52,8 +52,9 @@
                                                     {%endif%}
                                                 
                                                 <td>
-                                                    <a href="{%url 'updateassignment' id=assignment.a_id %}"><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
-                                                    <a href="{%url 'deleteassignment' id=assignment.a_id %}"><input type='submit' value='Delete' class='btn btn-danger'/></a>
+                                                    <a href="{%url 'updateassignment' id=assignment.a_id %}"><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+                                                    <a href="{%url 'deleteassignment' id=assignment.a_id %}"><input type='submit' value='Delete' class='btn btn-danger'/></a><br><br>
+                                                    <a href="{%url 'receivedassignment' id=assignment.a_id %}"><input type='submit' value='Received Assignment' class='btn bg-green'/></a>&nbsp&nbsp
                                                 </td>
                                             </tr>
                                             {%endfor%}

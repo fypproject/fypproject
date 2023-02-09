@@ -1,0 +1,62 @@
+{% extends 'dashboard.html' %}
+{% block body %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>
+                <span>Course: {{bcfid.bcf_courseid}}</span>
+            </h2>
+        </div>
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Lecture/Announcement
+                        </h2>
+                    </div>
+                    
+                    <div class="body">
+                       <p><b>Name: {{user.first_name}}</b></p>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                <tr>
+                                    
+                                    <th>Name</th>
+                                    <th>Description</th>
+                                    <th>File</th>
+                                    
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    {%for lecture in lectures%}
+                                               <tr>
+                                                    
+                                                    <td>{{lecture.l_name}}</td>
+                                                    <td>{{lecture.l_desc}}</td>
+                                                    {% if lecture.l_file.url is not None %}
+                                                    <td><a href="{{lecture.l_file.url}}" download> File </a></td></td>
+                                                    {% else%}
+                                                    <td> Null </td></td>
+                                                    {%endif%}
+                                                    
+                                                    
+                                                </tr>
+                                                {%endfor    %}
+                                        
+                                                
+                                            
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

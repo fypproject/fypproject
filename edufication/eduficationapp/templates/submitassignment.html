@@ -1,0 +1,59 @@
+
+{% extends 'dashboard.html' %}
+{% block body %}
+
+<section class="content">
+    <div class="container-fluid">
+        <!-- No Header Card -->
+        <div class="block-header">
+            <h2><span>Course > Assignment</span></h2>
+        </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="body">
+                   
+                                <h3>{{assignment.a_name}}</h3>
+                                <h4>Task: {{assignment.a_desc}}</h4>
+                                <p>Start Date : {{assignment.a_startdate}} </p>
+                                <p>End Date : {{assignment.a_enddate}}</p>
+                                <p>Total Marks : {{assignment.a_mark}}</p>
+                                <p>File :  {% if assignment.a_file.url is not None %}
+                                    <a href="{{assignment.a_file.url}}" download> {{assignment.a_file|cut:'assignments/'}} </a>
+                                    {% else%}
+                                     Null 
+                                    {%endif%}</p>
+                                
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                            Upload Assignment
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-sm-12">
+                            <form method="post" enctype="multipart/form-data">    
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <div class="form-line ">
+                                        <input name="File" type="file" required/>
+                                    </div>
+                                </div>
+                                <input type="submit" name="btninsert" value="Submit" class="btn btn-success" />
+                            </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+            </div>
+            
+        <!-- #END# No Header Card -->
+
+    </div>
+</section>
+{% endblock body %}

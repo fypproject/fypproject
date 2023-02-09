@@ -1,0 +1,103 @@
+
+{% extends 'dashboard.html' %}
+{% block body %}
+
+<section class="content">
+    <div class="container-fluid">
+        <!-- No Header Card -->
+        <div class="block-header">
+            <h2><span>Course > Assignment</span></h2>
+        </div>
+        <h3>Unsubmitted Assignment</h3>
+        <div class="row">
+            
+            {%for assignment,enddate,assignmentsubmit,subdate in assignments%}
+            
+            {% comment %} {%if assignmentsubmit == assignment.a_id%} {% endcomment %}
+            {%if assignmentsubmit == ''%}
+            {% if  enddate < date_time %}
+            <a href="{%url 'submitassignment' id=assignment.a_id%}" >
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="card">
+                    
+                    
+                    <div class="body  bg-red">
+                        <h3>{{assignment.a_name}} </h3>
+                        <h4>Start Date/Time :<br> {{assignment.a_startdate}}   </h4>
+                        <h4>End Date/Time :<br> {{assignment.a_enddate}}</h4>
+                        <h5>Late</h5>
+                    </div>
+                   
+                    
+                </div>
+            </div>
+            </a>
+            {%else%}
+            <a href="{%url 'submitassignment' id=assignment.a_id%}" >
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    <div class="card">
+                        
+                       
+                        <div class="body  bg-cyan">
+                            <h3>{{assignment.a_name}} </h3>
+                            <h4>Start Date/Time :<br> {{assignment.a_startdate}}</h4>
+                            <h4>End Date/Time :<br> {{assignment.a_enddate}}</h4>
+                            <h5> </h5>
+                        </div>
+                        
+                    </div>
+                </div>
+                </a>
+                {%endif%}
+                {%endif%}
+            {%endfor%}
+
+        </div>
+        <h3>Submitted Assignment</h3>
+        <div class="row">
+            
+            {%for assignment,enddate,assignmentsubmit,subdate in assignments%}
+            
+            {% comment %} {%if assignmentsubmit == assignment.a_id%} {% endcomment %}
+            {%if assignmentsubmit.as_id is not None  %}
+            {%if enddate < subdate%}
+            <a href="{%url 'submittedassignment' id=assignment.a_id%}" >
+            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <div class="card">
+                    
+                    <div class="body  bg-orange">
+                        <h3>{{assignment.a_name}} </h3>
+                        <h4>Start Date/Time :<br> {{assignment.a_startdate}}   </h4>
+                        <h4>End Date/Time :<br> {{assignment.a_enddate}}</h4>
+                        <h5>Submitted Late</h5>
+                    </div>
+                   
+                    
+                </div>
+            </div>
+            </a>
+            {% else %}
+            <a href="{%url 'submittedassignment' id=assignment.a_id%}" >
+                <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                    <div class="card">
+                        
+                        <div class="body  bg-green">
+                            <h3>{{assignment.a_name}} </h3>
+                            <h4>Start Date/Time :<br> {{assignment.a_startdate}}   </h4>
+                            <h4>End Date/Time :<br> {{assignment.a_enddate}}</h4>
+                            <h5>Submitted </h5>
+                        </div>
+                       
+                        
+                    </div>
+                </div>
+                </a>
+                {%endif%}
+                {%endif%}
+            {%endfor%}
+
+        </div>
+        <!-- #END# No Header Card -->
+    </div>
+</section>
+{% endblock body %}
