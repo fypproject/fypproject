@@ -43,7 +43,8 @@
                                                     <td>
                                                         <a href="{%url 'updatequiz' id=quiz.q_id%}"><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp
                                                         <a href="{%url 'deletequiz' id=quiz.q_id%}"><input type='submit' value='Delete' class='btn btn-danger'/></a>&nbsp&nbsp
-                                                        <a href="{%url 'qquizhome' id=quiz.q_id%}"><input type='submit' value='Questions' class='btn btn-success'/></a>
+                                                        <a href="{%url 'qquizhome' id=quiz.q_id%}"><input type='submit' value='Questions' class='btn btn-success'/></a>&nbsp&nbsp
+                                                        <a href="{%url 'receivedquiz' id=quiz.q_id%}"><input type='submit' value='Received Quiz' class='btn bg-green'/></a>
                                                     </td>
                                                 </tr>
                                                 {%endfor%}

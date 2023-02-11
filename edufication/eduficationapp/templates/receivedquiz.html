@@ -1,0 +1,78 @@
+
+{% extends 'dashboard.html' %}
+{% block body %}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>
+                <span>Course: {{bcfid.bcf_courseid}}</span>
+            </h2>
+        </div>
+        <!-- Basic Examples -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                          Received : {{quizzes.q_name}}   
+                        </h2>
+                    </div>
+                    <div class="body">
+                        <div class="table-responsive">
+                       
+                        <h3>Total Marks:{{totalmarks}}</h3> 
+                        <br><br>
+                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                <thead>
+                                    <tr>
+                                        <th>Student Name</th>
+                                        <th>Registration Number</th>
+                                        <th>Quiz End Date/Time</th>
+                                        <th>Submitted Date/Time</th>
+                                        <th>Obtained Marks</th>
+                                        <th>Status</th>
+                                        <th>Option</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {%for student,quizsubmit,obtmarks in quizreceived%}
+                                        <tr>
+                                                <td>{{student.user.first_name}}</td>
+                                                <td >{{student.s_regno}}</td>
+                                                <td>{{quizzes.q_enddate}}</td>
+                                                <td>
+                                                    {%if quizsubmit.qs_date is None%}
+                                                    Not Submitted
+                                                    {%else%}
+                                                    {{quizsubmit.qs_date}}
+                                                    {%endif%}
+                                                </td>
+                                                <td>{{obtmarks}}</td>
+                                               
+                                                <td>{%if quizsubmit.qs_date is not None%}
+                                                    Submitted
+                                                    {%else%}
+                                                    Not Submitted
+                                                    
+                                                    {%endif%}
+                                                </td>
+                                                <td>
+                                                    {%if quizsubmit.qs_id is not None%}
+                                                    <a href="{%url 'viewquiz' quizzes.q_id student.user.id %}"><input type='submit' value='View' class='btn btn-info'/></a>&nbsp&nbsp
+                                                    {%else%}
+                                                    {%endif%}
+                                                </td>
+                                            </tr>
+                                            
+                                       {%endfor%}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

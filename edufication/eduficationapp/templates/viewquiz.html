@@ -1,0 +1,71 @@
+
+{% extends 'dashboard.html' %}
+{% block body %}
+
+
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="block-header">
+            <h2>Course > Quiz</h2>
+        </div>
+        <!-- Input -->
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        <h2>
+                        {{quiz.q_name}}
+                        </h2>
+                        
+                    </div>
+                    <div class="body">
+                        
+                        <p>
+                            <b>Name:</b>  {{studentrecord.qs_studentid.student.user.first_name}}
+                        </p>
+                        <p>
+                            <b>Reg No:</b>  {{studentrecord.qs_studentid.student.s_regno}}
+                        </p>
+                        <p>
+                            <b>Marks:</b>  {{obtmarks}}/{{totalmarks}}
+                        </p>   
+                        <br>
+                        {%for qs in quizsubmit%}
+                        <div class="row clearfix">
+                            
+                            <div class="col-sm-12">
+
+                                    <p>{{qs.qs_questionid.qq_question}} &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp &nbsp&nbsp&nbsp       <b>({{qs.qs_obtmarks}}/{{qs.qs_tmarks}})</b></p>
+                                    <p><b>Student's Answer:</b>{{qs.qs_answer}}</p>
+                                    <p><b>Correct Answer: </b>{{qs.qs_questionid.qq_correctanswer}}</p>
+                                          
+                            
+                               
+
+                            </div>
+                        </div>
+                        {%endfor%}
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header">
+                        
+                        
+                        
+                        <a href="{%url 'receivedquiz' id=quiz.q_id %}"><input type="button" value="Go back" class="btn btn-success" /></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- #END# Input -->
+    </div>
+</section>
+
+{% endblock body %}

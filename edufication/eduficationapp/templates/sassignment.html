@@ -11,27 +11,12 @@
         <h3>Unsubmitted Assignment</h3>
         <div class="row">
             
-            {%for assignment,enddate,assignmentsubmit,subdate in assignments%}
+            {%for assignment,enddate,assignmentsubmit,subdate,startdate in assignments%}
             
             {% comment %} {%if assignmentsubmit == assignment.a_id%} {% endcomment %}
             {%if assignmentsubmit == ''%}
-            {% if  enddate < date_time %}
-            <a href="{%url 'submitassignment' id=assignment.a_id%}" >
-            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
-                <div class="card">
-                    
-                    
-                    <div class="body  bg-red">
-                        <h3>{{assignment.a_name}} </h3>
-                        <h4>Start Date/Time :<br> {{assignment.a_startdate}}   </h4>
-                        <h4>End Date/Time :<br> {{assignment.a_enddate}}</h4>
-                        <h5>Late</h5>
-                    </div>
-                   
-                    
-                </div>
-            </div>
-            </a>
+            {% if  enddate > date_time %}
+            {%if startdate > date_time %}
             {%else%}
             <a href="{%url 'submitassignment' id=assignment.a_id%}" >
                 <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
@@ -49,6 +34,25 @@
                 </div>
                 </a>
                 {%endif%}
+            {%else%}
+            
+                <a href="{%url 'submitassignment' id=assignment.a_id%}" >
+                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                        <div class="card">
+                            
+                            
+                            <div class="body  bg-red">
+                                <h3>{{assignment.a_name}} </h3>
+                                <h4>Start Date/Time :<br> {{assignment.a_startdate}}   </h4>
+                                <h4>End Date/Time :<br> {{assignment.a_enddate}}</h4>
+                                <h5>Late</h5>
+                            </div>
+                           
+                            
+                        </div>
+                    </div>
+                    </a>
+                {%endif%}
                 {%endif%}
             {%endfor%}
 
@@ -56,7 +60,7 @@
         <h3>Submitted Assignment</h3>
         <div class="row">
             
-            {%for assignment,enddate,assignmentsubmit,subdate in assignments%}
+            {%for assignment,enddate,assignmentsubmit,subdate,startdate in assignments%}
             
             {% comment %} {%if assignmentsubmit == assignment.a_id%} {% endcomment %}
             {%if assignmentsubmit.as_id is not None  %}

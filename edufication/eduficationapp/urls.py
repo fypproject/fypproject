@@ -58,6 +58,8 @@ urlpatterns = [
     path('faculty/createquiz/<int:id>',views.createquiz,name='createquiz'),
     path('faculty/updatequiz/<int:id>',views.updatequiz,name='updatequiz'),
     path('faculty/deletequiz/<int:id>',views.deletequiz,name='deletequiz'),
+    path('faculty/receivedquiz/<int:id>',views.receivedquiz,name='receivedquiz'),
+    path('faculty/viewquiz/<int:id>/<int:pk>',views.viewquiz,name='viewquiz'),
     path('faculty/createqquiz/<int:id>',views.createqquiz,name='createqquiz'),
     path('faculty/qquiz/<int:id>',views.qquizhome,name='qquizhome'),
     path('faculty/updateqquiz/<int:id>',views.updateqquiz,name='updateqquiz'),
@@ -75,7 +77,9 @@ urlpatterns = [
     path('student/assignment/<int:id>',views.sassignmenthome,name='studentassignmenthome'),
     path('student/submitassignment/<int:id>',views.submitassignment,name='submitassignment'),
     path('student/submittedassignment/<int:id>',views.submittedassignment,name='submittedassignment'),
-
+    path('student/quiz/<int:id>',views.squizhome,name='studentquizhome'),
+    path('student/submitquiz/<int:id>',views.submitquiz,name='submitquiz'),
+    path('student/submittedquiz/<int:id>',views.submittedquiz,name='submittedquiz'),
     
 
     path('test',views.test,name='test'),

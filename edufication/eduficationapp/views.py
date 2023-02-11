@@ -868,12 +868,12 @@ def receivedassignment(request,id):
                     assignmentsubmit=AssignmentSubmit.objects.filter(as_assignmentid=assignment.a_id,as_studentid=student)
                     if assignmentsubmit.exists():
                         assubmitarr.append(assignmentsubmit[0])
-                        print(assignmentsubmit[0])
+                        #print(assignmentsubmit[0])
                     else:
                         assubmitarr.append('')
 
 
-            print(assubmitarr)
+            #print(assubmitarr)
             assignmentreceived=list(zip(studentsarr,assubmitarr))
             #student1=Student.objects.filter(user=User.objects.filter(is_student=True),s_batchid=bcfid.bcf_batchid.b_id)
             # print(student1)
@@ -1018,6 +1018,98 @@ def deletequiz(request,id):
         quiz = Quiz.objects.get(q_id=id)
         quiz.delete()
         return redirect(quizhome,id=quiz.q_bcfid.bcf_id)
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def receivedquiz(request,id):
+    user=request.user
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        quiz= Quiz.objects.get(q_id=id)
+
+        try:
+            bcfid = Bcf.objects.get(bcf_id=quiz.q_bcfid.bcf_id,bcf_facultyid=user.id)
+        except:
+            return redirect(facultyhome)
+        studentsarr=[]
+        qssubmitarr=[]
+        obtmarks=[]
+        if bcfid.bcf_facultyid is not None :
+            quizquestion=QuizQuestion.objects.filter(qq_quizid=quiz.q_id)
+            total=0
+            for qq in quizquestion:
+                total=total+qq.qq_marks
+            user1=User.objects.filter(is_student=True)
+            
+            for student in user1:
+                student1=Student.objects.filter(user=student,s_batchid=bcfid.bcf_batchid.b_id)
+
+                if student1.exists():
+                    #print(student1)
+                    studentsarr.append(student1[0])
+                    quizsubmit=QuizSubmit.objects.filter(qs_quizid=quiz.q_id,qs_studentid=student)
+                    
+                    obt=0
+                    
+                    if quizsubmit.exists():
+                        qssubmitarr.append(quizsubmit[0])
+                        for qs in quizsubmit:
+                            
+                            obt=obt+qs.qs_obtmarks
+                        
+                    else:
+                        qssubmitarr.append('')
+
+                    #print(obt)
+                    obtmarks.append(obt)
+                    
+            
+            quizreceived=list(zip(studentsarr,qssubmitarr,obtmarks))
+            #student1=Student.objects.filter(user=User.objects.filter(is_student=True),s_batchid=bcfid.bcf_batchid.b_id)
+            # print(student1)
+            #print(studentsarr[0])
+            
+            context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'quizzes':quiz,'quizreceived':quizreceived,'totalmarks':total}
+        else:
+            return redirect(facultyhome)
+        
+    else:
+        return redirect(index)
+    return render(request,"receivedquiz.html",context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def viewquiz(request,id,pk):
+    user=request.user
+    
+
+    if user.is_authenticated and user.is_faculty:
+        bcf= Bcf.objects.filter(bcf_facultyid=user.id)
+        quiz= Quiz.objects.get(q_id=id)
+
+        try:
+            bcfid = Bcf.objects.get(bcf_id=quiz.q_bcfid.bcf_id,bcf_facultyid=user.id)
+        except:
+            return redirect(facultyhome)
+        
+        #quizquestion=QuizQuestion.objects.filter(qq_quizid=quiz.q_id)
+        quizsubmit=QuizSubmit.objects.filter(qs_quizid=quiz.q_id,qs_studentid=pk)
+        studentrecord=QuizSubmit.objects.filter(qs_quizid=quiz.q_id,qs_studentid=pk).first()
+        print(studentrecord)
+        total=0
+        obt=0
+        for qs in quizsubmit:
+            total=total+qs.qs_tmarks
+            obt=obt+qs.qs_obtmarks
+        if bcfid.bcf_batchid is not None:
+            context={'bcfid':bcfid,'userrole':"Faculty",'bcf':bcf,'quiz':quiz,'quizsubmit':quizsubmit,'totalmarks':total,'obtmarks':obt,'studentrecord':studentrecord}
+        else:
+            return redirect(facultyhome)
+        
+        
+            
+
+    else:
+        return redirect(index)
+    return render(request,"viewquiz.html",context)
+
 
 
 ### Quiz Questions Scenes
@@ -1351,6 +1443,7 @@ def sassignmenthome(request,id):
         bcf= Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
         arrenddate=[]
         arrsubdate=[]
+        arrstartdate=[]
         assignmentsarr=[]
         #print(attendancerecord1)
         
@@ -1364,7 +1457,7 @@ def sassignmenthome(request,id):
         assignment= Assignment.objects.filter(a_bcfid=bcfid.bcf_id)                    
         for ass in assignment:
             
-            assignmentsubmit=AssignmentSubmit.objects.filter(as_assignmentid=ass.a_id)
+            assignmentsubmit=AssignmentSubmit.objects.filter(as_assignmentid=ass.a_id,as_studentid=user.id)
             if assignmentsubmit.count() == 0:
                 assignmentsarr.append('')
                 arrsubdate.append('')
@@ -1376,13 +1469,13 @@ def sassignmenthome(request,id):
            
             
             arrenddate.append(ass.a_enddate.strftime("%Y-%m-%d %H:%M"))
-         
+            arrstartdate.append(ass.a_startdate.strftime("%Y-%m-%d %H:%M"))
         print(assignmentsarr)
         now=datetime.now()
         date_time = now.strftime("%Y-%m-%d %H:%M")
         #print(date_time)
         
-        assignment1=list(zip(assignment,arrenddate,assignmentsarr,arrsubdate))
+        assignment1=list(zip(assignment,arrenddate,assignmentsarr,arrsubdate,arrstartdate))
         if bcfid.bcf_batchid is not None:
             context={'bcfid':bcfid,'userrole':"Student",'bcf':bcf,'assignments':assignment1,'date_time':date_time}
         else:
@@ -1431,7 +1524,7 @@ def submittedassignment(request,id):
     if user.is_authenticated and user.is_student:
         bcf= Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
         assignment= Assignment.objects.get(a_id=id) 
-        assignmentsubmit=AssignmentSubmit.objects.get(as_assignmentid=id) 
+        
         
         enddate=assignment.a_enddate.strftime("%Y-%m-%d %H:%M")
          
@@ -1442,7 +1535,7 @@ def submittedassignment(request,id):
         try:
             
             bcfid = Bcf.objects.get(bcf_id=assignment.a_bcfid.bcf_id,bcf_batchid=user.student.s_batchid)   
-                              
+            assignmentsubmit=AssignmentSubmit.objects.get(as_assignmentid=id,as_studentid=user.id) 
 
         except:
             return redirect(studenthome)
@@ -1461,6 +1554,172 @@ def submittedassignment(request,id):
     else:
         return redirect(index)
     return render(request,"submittedassignment.html",context)
+
+
+
+
+### Student Quiz Scenes
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def squizhome(request,id):
+    user=request.user
+    
+
+    if user.is_authenticated and user.is_student:
+        bcf= Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
+        arrenddate=[]
+        arrstartdate=[]
+        arrsubdate=[]
+        quizarr=[]
+        #print(attendancerecord1)
+        
+        try:
+            
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_batchid=user.student.s_batchid)
+            
+
+        except:
+            return redirect(studenthome)
+        quizs= Quiz.objects.filter(q_bcfid=bcfid.bcf_id)                    
+        for quiz in quizs:
+            quizsubmit=QuizSubmit.objects.filter(qs_quizid=quiz.q_id,qs_studentid=user.id)
+            if quizsubmit.count() == 0:
+                quizarr.append('')
+                arrsubdate.append('')
+            else:
+                for quz in quizsubmit:
+                    quizarr.append(quz)
+                    arrsubdate.append(quz.qs_date.strftime("%Y-%m-%d %H:%M"))
+            arrenddate.append(quiz.q_enddate.strftime("%Y-%m-%d %H:%M"))
+            arrstartdate.append(quiz.q_startdate.strftime("%Y-%m-%d %H:%M"))
+        now=datetime.now()
+        date_time = now.strftime("%Y-%m-%d %H:%M")
+        quiz1=list(zip(quizs,arrenddate,quizarr,arrsubdate,arrstartdate))
+        if bcfid.bcf_batchid is not None:
+            context={'bcfid':bcfid,'userrole':"Student",'bcf':bcf,'quizzes':quiz1,'date_time':date_time}
+        else:
+            return redirect(studenthome)
+    else:
+        return redirect(index)
+    return render(request,"squiz.html",context)
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def submitquiz(request,id):
+    user=request.user
+    
+
+    if user.is_authenticated and user.is_student:
+        bcf= Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
+        quiz= Quiz.objects.get(q_id=id)  
+        quizquestion=QuizQuestion.objects.filter(qq_quizid=quiz.q_id)
+        quizsubmitobj=QuizSubmit.objects.filter(qs_quizid=quiz.q_id,qs_studentid=user.id)
+        enddate=quiz.q_enddate.strftime("%Y-%m-%d %H:%M")  
+        now= datetime.now().strftime("%Y-%m-%d %H:%M")
+        if enddate < now:
+            return redirect(squizhome,id=quiz.q_bcfid.bcf_id)
+        if quizsubmitobj.count()>0:
+            return redirect(squizhome,id=quiz.q_bcfid.bcf_id)
+        #print(quizquestion)
+        #print(attendancerecord1)
+        try:
+            
+            bcfid = Bcf.objects.get(bcf_id=quiz.q_bcfid.bcf_id,bcf_batchid=user.student.s_batchid)   
+                              
+
+        except:
+            return redirect(studenthome)
+        
+        if bcfid.bcf_batchid is not None:
+            context={'bcfid':bcfid,'userrole':"Student",'bcf':bcf,'quiz':quiz,'quizquestions':quizquestion}
+        else:
+            return redirect(studenthome)
+        answersarr=[]
+        if request.method=="POST":
+            # option0=request.POST['option0']
+            # option1=request.POST['option1']
+            # option2=request.POST['option2']
+            items=list(request.POST.items())
+            for item in items:
+                if 'question' in item[0]:
+                    #print(item[1])
+                    answersarr.append(item[1])
+            
+            #print(answersarr)
+            quizsubmit=list(zip(answersarr,quizquestion))
+            for answer,qq in quizsubmit:
+                
+                print(answer,qq)
+                quizqid=QuizQuestion.objects.get(qq_id=qq.qq_id)
+                if qq.qq_correctanswer == answer:
+
+                    quizsubmitt=QuizSubmit(qs_quizid=quiz,qs_questionid=quizqid,qs_studentid=User.objects.get(username=user.username),qs_answer=answer,qs_obtmarks=qq.qq_marks,qs_tmarks=qq.qq_marks,qs_date=datetime.now())
+                    print("True",)
+                    
+                else:
+                    quizsubmitt=QuizSubmit(qs_quizid=quiz,qs_questionid=quizqid,qs_studentid=User.objects.get(username=user.username),qs_answer=answer,qs_obtmarks=0,qs_tmarks=qq.qq_marks,qs_date=datetime.now())
+                    print("False")
+                quizsubmitt.save()
+            
+
+            return redirect(squizhome,id=quiz.q_bcfid.bcf_id)
+    else:
+        return redirect(index)
+    return render(request,"submitquiz.html",context)
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def submittedquiz(request,id):
+    user=request.user
+    
+
+    if user.is_authenticated and user.is_student:
+        bcf= Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
+        quiz= Quiz.objects.get(q_id=id)
+        enddate=quiz.q_enddate.strftime("%Y-%m-%d %H:%M")  
+        now= datetime.now().strftime("%Y-%m-%d %H:%M")
+        if enddate > now:
+            return redirect(squizhome,id=quiz.q_bcfid.bcf_id)
+        #quizquestion=QuizQuestion.objects.filter(qq_quizid=quiz.q_id)
+        quizsubmit=QuizSubmit.objects.filter(qs_quizid=quiz.q_id,qs_studentid=user.id)
+        try:
+            
+            bcfid = Bcf.objects.get(bcf_id=quiz.q_bcfid.bcf_id,bcf_batchid=user.student.s_batchid)   
+                              
+
+        except:
+            return redirect(studenthome)
+        total=0
+        obt=0
+        for qs in quizsubmit:
+            total=total+qs.qs_tmarks
+            obt=obt+qs.qs_obtmarks
+        if bcfid.bcf_batchid is not None:
+            context={'bcfid':bcfid,'userrole':"Student",'bcf':bcf,'quiz':quiz,'quizsubmit':quizsubmit,'totalmarks':total,'obtmarks':obt}
+        else:
+            return redirect(studenthome)
+        
+        
+            
+
+    else:
+        return redirect(index)
+    return render(request,"submittedquiz.html",context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

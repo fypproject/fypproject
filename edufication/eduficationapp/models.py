@@ -156,3 +156,15 @@ class AssignmentSubmit(models.Model):
     as_marks=models.IntegerField(null=True,blank=True)
     as_assignmentid=models.ForeignKey(Assignment,on_delete=models.CASCADE)
     as_studentid=models.ForeignKey(User,on_delete=models.CASCADE)
+
+
+
+class QuizSubmit(models.Model):
+    qs_id=models.AutoField(primary_key=True)
+    qs_quizid=models.ForeignKey(Quiz,on_delete=models.CASCADE)
+    qs_questionid=models.ForeignKey(QuizQuestion,on_delete=models.CASCADE)
+    qs_studentid=models.ForeignKey(User,on_delete=models.CASCADE)
+    qs_answer=models.CharField(max_length=255)
+    qs_obtmarks=models.IntegerField()
+    qs_tmarks=models.IntegerField()
+    qs_date=models.DateTimeField(null=True)
