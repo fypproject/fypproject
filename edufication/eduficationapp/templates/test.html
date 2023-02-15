@@ -1,3 +1,391 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title></title>
+    <style>
+        .selectstyle{
+            border:unset !important;
+            border-bottom:1px solid #ddd !important;
+            border-bottom-left-radius: unset !important;
+            border-bottom-right-radius: unset !important;
+            -webkit-box-shadow: unset !important;
+            box-shadow: unset !important;
+        }
+    </style>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="{% static 'Assets/plugins/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+    <!-- Waves Effect Css -->
+    <link href="{% static 'Assets/plugins/node-waves/waves.css' %}" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="{% static 'Assets/plugins/animate-css/animate.css' %}" rel="stylesheet" />
+
+    <!-- Morris Chart Css-->
+    <link href="{% static 'Assets/plugins/morrisjs/morris.css' %}" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="{% static 'Assets/css/style.css' %}" rel="stylesheet">
+    <!-- Bootstrap Select Css -->
+    <link href="{% static 'Assets/plugins/bootstrap-select/css/bootstrap-select.css' %}" rel="stylesheet" />
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="{% static 'Assets/css/themes/all-themes.css' %}" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    {%block head%} {%endblock head%}
+</head>
+
+<body class="theme-red">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+
+    <!-- Top Bar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="javascript:void(0);" class="bars"></a>
+                <a class="navbar-brand" href="#">Edufication</a>            
+                
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/logout"><i class="material-icons">input</i></a></li>            
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            <div class="user-info">
+                <div class="image">
+                    <p style="color:white;">{{userrole}}</p>
+                </div>
+                <div class="info-container">
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{user.username}}</div>
+                </div>
+            </div>
+            <!-- #User Info -->
+            <!-- Menu -->
+            <div class="menu">
+                <ul class="list">
+                    <li class="header">MAIN NAVIGATION</li>
+                    {%if userrole == "Admin"%}
+                    <li class="active">
+                       
+                        <a href="{% url 'adminhome' %}">
+                            
+                            
+                                
+                            <i class="material-icons">home</i>
+                            <span>Home</span>
+                        </a>            
+                    </li>
+                    {%elif userrole == "Faculty"%}
+                    <li class="active">
+                       
+                        
+                            
+                            <a href="{% url 'facultyhome' %}">
+                                
+                            <i class="material-icons">home</i>
+                            <span>Home</span>
+                        </a>            
+                    </li>
+                    {%elif userrole == "Student"%}
+                    <li class="active">
+                       
+                        
+                            
+                            <a href="{% url 'studenthome' %}">
+                                
+                            <i class="material-icons">home</i>
+                            <span>Home</span>
+                        </a>            
+                    </li>
+                    {% endif %}
+                    {%if userrole == "Admin"%}
+                    <li>
+                        <a href="{% url 'adminprofile' %}">
+                            <i class="material-icons">person</i>
+                            <span>Profile</span>
+                        </a>            
+                    </li>
+                    {%elif userrole == "Faculty"%}
+                    <li>
+                        <a href="{% url 'facultyprofile' %}">
+                            <i class="material-icons">person</i>
+                            <span>Profile</span>
+                        </a>            
+                    </li>
+                    {%elif userrole == "Student"%}
+                    <li>
+                        <a href="{% url 'studentprofile' %}">
+                            <i class="material-icons">person</i>
+                            <span>Profile</span>
+                        </a>            
+                    </li>
+                    {%endif%}
+                    {% if userrole == "Admin"%}
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">view_list</i>
+                            <span>Tables</span>
+                        </a>
+                        <ul class="ml-menu">
+                            <li>
+                                <a href="{% url 'batch'%}">Batch</a>
+                            </li>
+                            <li>
+                                <a href="{%url 'bcf'%}">Batch Faculty</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'course'%}">Course</a>
+                            </li>
+                            <li>
+                                <a href="{%url 'faculty'%}">Faculty</a>            
+                            </li>
+                            <li>
+                                <a href="{% url 'program' %}">Programs</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'student'%}">Student</a>            
+                            </li>
+                        </ul>
+                    </li> 
+                    {% elif userrole == "Faculty" %}
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">class</i>
+                            <span>Course</span>
+                        </a>
+                        <ul class="ml-menu">
+
+                            {%for bcf in bcf%}
+                            <li>
+                                <a href='/faculty/coursegallery/{{bcf.bcf_id}}' >{{bcf.bcf_courseid}}</a>
+                            </li>
+                            {%endfor%}
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="javascript:void(0);" class="menu-toggle">
+                            <i class="material-icons">class</i>
+                            <span>Course</span>
+                        </a>
+                        <ul class="ml-menu">
+
+                            {%for bcf in bcf%}
+                            <li>
+                                <a href='/student/coursegallery/{{bcf.bcf_id}}' >{{bcf.bcf_courseid}}</a>
+                            </li>
+                            {%endfor%}
+                        </ul>
+                    </li>
+                    {% endif %}
+                    
+                </ul>
+            </div>
+            <!-- #Menu -->
+            <!-- Footer -->
+            <div class="legal">
+                <div class="copyright">
+                    &copy; 2022 <a href="#">Edufication</a>.
+                </div>
+                <div class="version">
+                    <b>Version: </b> 1.0.0
+                </div>
+            </div>
+            <!-- #Footer -->
+        </aside>
+    </section>
+    
+    <section class="content">
+      <div class="container-fluid">
+          <div class="block-header">
+              <h2>Batch Course</h2>
+          </div>
+          <!-- Input -->
+          <div class="row clearfix">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                  <div class="card">
+                      <div class="header">
+                          <h2>
+                              Add New Batch Course
+                          </h2>
+                      </div>
+                      <div class="body">
+                          <div class="row clearfix">
+                              <div class="col-sm-12">
+                          <form action="" method="post" id="bcfform" data-courses-url="{%url 'ajax_load_courses'%}">
+                              {% csrf_token %}
+                                  <div class="form group">
+                                      <label>Batch</label>
+                                  <select name="batch" class="form-control selectstyle" id="displaybatch" required>
+                                          <option value="">Select Batch</option>
+                                          {% for batch in batches %}
+                                          
+                                          <option value="{{batch.b_name}}">{{batch.b_name}}</option>
+                                          {% endfor %}
+                                          
+                                          
+                                      </select>
+                                  </div><br/>
+                                  <div class="form group">
+                                      <label>Course</label>
+                                  <select id="displaycourse" name="courses " class="form-control selectstyle"  >
+                                      <option>Select Batch First</option>
+                                          {% comment %} <option value="">Select Course</option> {% endcomment %}
+                                      
+                                          {% comment %} {% for course in courses %}
+                                          
+                                          <option value="{{course.c_name}}">{{course.c_name}}</option>
+                                          {% endfor %} {% endcomment %}
+                                      </select>
+                                  </div><br />
+                                  <div class="form group">
+                                      <label>Faculty</label>
+                                  <select name="txtfaculty" class="form-control selectstyle" required>
+                                          <option value="">Select Faculty</option>
+                                          {% for faculty in faculties %}
+                                          <option value="{{faculty.username}}">{{faculty.username}}</option>
+                                          {% endfor %}
+                                      </select>
+                                      
+                                      </div><br />
+                              <input type="submit" name="btninsert" value="Assign" class="btn btn-success" /><br><br>                
+                          </form>
+                          
+    
+  
+                          </div>
+                          </div>
+                          <label>{{msg}}</label>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <!-- #END# Input -->
+      </div>
+  </section>
+  <script>
+    $("#displaybatch").change(function () {
+      var url = $("#bcfform").attr("data-courses-url");
+      var batchId = $(this).val();
+      console.log(batchId)
+  
+      $.ajax({
+        url: url,
+        data: {
+          'batch': batchId
+        },
+        success: function (data) {
+          console.log(data)
+          $("#displaycourse").html(data);
+        }
+      });
+  
+    });
+  </script>
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <!-- Jquery Core Js -->
+    <script src="{% static 'Assets/plugins/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="{% static 'Assets/plugins/bootstrap/js/bootstrap.js' %}"></script>
+
+    <!-- Select Plugin Js -->
+   {% comment %} <script src="{% static 'Assets/plugins/bootstrap-select/js/bootstrap-select.js' %}"></script> {% endcomment %}
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="{% static 'Assets/plugins/jquery-slimscroll/jquery.slimscroll.js' %}"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="{% static 'Assets/plugins/node-waves/waves.js' %}"></script>
+
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="{% static 'Assets/plugins/jquery-countto/jquery.countTo.js' %}"></script>
+
+    <!-- Morris Plugin Js -->
+    <script src="{% static 'Assets/plugins/raphael/raphael.min.js' %}"></script>
+    <script src="{% static 'Assets/plugins/morrisjs/morris.js' %}"></script>
+
+    <!-- ChartJs -->
+    <script src="{% static 'Assets/plugins/chartjs/Chart.bundle.js' %}"></script>
+
+    <!-- Flot Charts Plugin Js -->
+    <script src="{% static 'Assets/plugins/flot-charts/jquery.flot.js' %}"></script>
+    <script src="{% static 'Assets/plugins/flot-charts/jquery.flot.resize.js' %}"></script>
+    <script src="{% static 'Assets/plugins/flot-charts/jquery.flot.pie.js' %}"></script>
+    <script src="{% static 'Assets/plugins/flot-charts/jquery.flot.categories.js' %}"></script>
+    <script src="{% static 'Assets/plugins/flot-charts/jquery.flot.time.js' %}"></script>
+
+    <!-- Sparkline Chart Plugin Js -->
+    <script src="{% static 'Assets/plugins/jquery-sparkline/jquery.sparkline.js' %}"></script>
+
+    <!-- Custom Js -->
+    <script src="{% static 'Assets/js/admin.js' %}"></script>
+    <script src="{% static 'Assets/js/pages/index.js' %}"></script>
+
+    <!-- Demo Js -->
+    <script src="{% static 'Assets/js/demo.js' %}"></script>
+    <script src="{% static 'Assets/js/pages/ui/dialogs.js' %}"></script>
+    
+    {%block script%} {%endblock script%}
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +394,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DropDown Scene</title>
 </head>
-<body>
-    <form action="" method="post" id="bcfform" data-courses-url="{%url 'ajax_load_courses'%}">
+<body> 
+{% extends 'dashboard.html' %}
+  {%block body%}
+    <form action="" method="post" id="bcfform" data-courses-url="{%url 'ajax_load_courses'%}" style="margin-left:35vw; margin-top:15vh;">
         {% csrf_token %}
         <label>Batch</label>
         <br>
@@ -44,6 +434,6 @@
 
     });
   </script>
-
+{%endblock body%}
 </body>
-</html>
+</html>  {% endcomment %}

@@ -331,9 +331,10 @@ def deleteprogram(request,id):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def batchshow(request):
     batch= Batch.objects.all()
+    programbatch=Program.objects.all()
     #print(batch)
     
-    return render(request,"batch.html",{'batchs':batch,'userrole':"Admin"})
+    return render(request,"batch.html",{'batchs':batch,'userrole':"Admin",'programs':programbatch})
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def createbatch(request):
@@ -385,8 +386,8 @@ def deletebatch(request,id):
 def courseshow(request):
     course= Course.objects.all()
     #print(course)
-    
-    return render(request,"course.html",{'courses':course,'userrole':"Admin"})
+    program=Program.objects.all()
+    return render(request,"course.html",{'courses':course,'userrole':"Admin",'programs':program})
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def createcourse(request):
@@ -511,9 +512,10 @@ class studentSignUpView(CreateView):
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def studentshow(request):
     student= User.objects.filter(is_student=True)
+    batch=Batch.objects.all()
     #print(course)
     
-    return render(request,"student.html",{'students':student,'userrole':"Admin"})
+    return render(request,"student.html",{'students':student,'userrole':"Admin",'batches':batch})
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -551,22 +553,34 @@ def bcfshow(request):
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def createbcf(request):
+    msg=""
     faculty= User.objects.filter(is_faculty=True)
     batch=Batch.objects.all()
+    bcfobject=Bcf.objects.all()
     course = Course.objects.all()
-    context={'courses':course,'faculties':faculty,'batches':batch,'userrole':"Admin"}
+    
     if request.method == "POST":
-        coursename= request.POST['txtcourse']
+        coursename= request.POST['courses']
         facultyname =request.POST['txtfaculty']
-        batchname=request.POST['txtbatch']
+        batchname=request.POST['batch']
         courseid= Course.objects.get(c_name=coursename)
         batchid=Batch.objects.get(b_name=batchname)
         facultyid=User.objects.get(username=facultyname)
-        
-        #print(programname)
+        for bcf1 in bcfobject:
+            if bcf1.bcf_batchid == batchid and bcf1.bcf_courseid == courseid:
+                #print("Course Already Assigned")
+                msg="Course Already Assigned to this batch."
+                return render(request,"createbcf.html",{'courses':course,'faculties':faculty,'batches':batch,'userrole':"Admin",'msg':msg})
+            
+                
         bcf = Bcf(bcf_batchid=batchid,bcf_courseid=courseid,bcf_facultyid=facultyid)
-        bcf.save()
+        #print("Saved")       
+        bcf.save()    
+        #print(programname)
+        
         return redirect(bcfshow)
+    context={'courses':course,'faculties':faculty,'batches':batch,'userrole':"Admin",'msg':msg}
+    
     return render(request,"createbcf.html",context)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

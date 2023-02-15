@@ -20,8 +20,25 @@
                     </div>
                     <div class="body">
                         <div class="table-responsive">
-                        <a href="{%url 'createstudent'%}"><input type="submit" value="Add New Student" class="btn btn-success"/></a><br><br>
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                        {% comment %} <a href="{%url 'createstudent'%}"><input type="submit" value="Add New Student" class="btn btn-success"/></a><br><br> {% endcomment %}
+                        <div class="col-sm-7"  >
+                            <a href="{% url 'createstudent' %}"><input type="submit" value="Add New Student" class="btn btn-success"/></a>
+                            
+                        </div>
+                        <div class="col-sm-2" >
+                            <label>Filter by batch:</label>
+                        </div>
+                        <div class="col-sm-3" style="margin-left:-4vw;">
+                            
+                            <select class="form-control show-tick" id="myInput" onchange="myFunction()">
+                                <option value="">All</option>
+                                {%for batch in batches%}
+                                <option value="{{batch.b_name}}">{{batch.b_name}}</option>
+                                {%endfor%}
+                            </select>
+                        </div>
+                        
+                        <table class="table table-bordered table-striped table-hover js-basic-example dataTable" id="myTable">
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -62,3 +79,48 @@
         </div>
 </section>
 {% endblock body %}
+
+{%block script%}
+<script>
+    function myFunction() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[5];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }       
+      }
+    }
+
+
+    
+    function myFunction1() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("myInput1");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[6];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }       
+      }
+    }
+    </script>
+
+{%endblock script%}
