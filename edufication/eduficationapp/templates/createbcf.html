@@ -96,7 +96,7 @@
                 <ul class="list">
                     <li class="header">MAIN NAVIGATION</li>
                     {%if userrole == "Admin"%}
-                    <li class="active">
+                    <li>
                        
                         <a href="{% url 'adminhome' %}">
                             
@@ -152,7 +152,7 @@
                     </li>
                     {%endif%}
                     {% if userrole == "Admin"%}
-                    <li>
+                    <li class="active">
                         <a href="javascript:void(0);" class="menu-toggle">
                             <i class="material-icons">view_list</i>
                             <span>Tables</span>
@@ -161,7 +161,7 @@
                             <li>
                                 <a href="{% url 'batch'%}">Batch</a>
                             </li>
-                            <li>
+                            <li class="active">
                                 <a href="{%url 'bcf'%}">Batch Faculty</a>
                             </li>
                             <li>

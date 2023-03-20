@@ -1,12 +1,140 @@
 
 {% extends 'dashboard.html' %}
+{%block tabs%}
+<ul class="list">
+    <li class="header">MAIN NAVIGATION</li>
+    {%if userrole == "Admin"%}
+    <li>
+       
+        <a href="{% url 'adminhome' %}">
+            
+            
+                
+            <i class="material-icons">home</i>
+            <span>Home</span>
+        </a>            
+    </li>
+    {%elif userrole == "Faculty"%}
+    <li>
+       
+        
+            
+            <a href="{% url 'facultyhome' %}">
+                
+            <i class="material-icons">home</i>
+            <span>Home</span>
+        </a>            
+    </li>
+    {%elif userrole == "Student"%}
+    <li>
+       
+            <a href="{% url 'studenthome' %}">
+                
+            <i class="material-icons">home</i>
+            <span>Home</span>
+        </a>            
+    </li>
+    {% endif %}
+    {%if userrole == "Admin"%}
+    <li>
+        <a href="{% url 'adminprofile' %}">
+            <i class="material-icons">person</i>
+            <span>Profile</span>
+        </a>            
+    </li>
+    {%elif userrole == "Faculty"%}
+    <li>
+        <a href="{% url 'facultyprofile' %}">
+            <i class="material-icons">person</i>
+            <span>Profile</span>
+        </a>            
+    </li>
+    {%elif userrole == "Student"%}
+    <li>
+        <a href="{% url 'studentprofile' %}">
+            <i class="material-icons">person</i>
+            <span>Profile</span>
+        </a>            
+    </li>
+    {%endif%}
+    {% if userrole == "Admin"%}
+    <li >
+        <a href="javascript:void(0);" class="menu-toggle">
+            <i class="material-icons">view_list</i>
+            <span>Tables</span>
+        </a>
+        <ul class="ml-menu">
+            <li>
+                <a href="{% url 'batch'%}">Batch</a>
+            </li>
+            <li>
+                <a href="{%url 'bcf'%}">Batch Faculty</a>
+            </li>
+            <li>
+                <a href="{% url 'course'%}">Course</a>
+            </li>
+            <li>
+                <a href="{%url 'faculty'%}">Faculty</a>            
+            </li>
+            <li>
+                <a href="{% url 'program' %}">Programs</a>
+            </li>
+            <li>
+                <a href="{% url 'student'%}">Student</a>            
+            </li>
+        </ul>
+    </li> 
+    {% elif userrole == "Faculty" %}
+    
+    
+    
+    <li class="active">
+        <a href="javascript:void(0);" class="menu-toggle">
+            <i class="material-icons">class</i>
+            <span>Course</span>
+        </a>
+        <ul class="ml-menu">
+
+            {%for bcf in bcf%}
+            {%if bcf.bcf_id == bcfid.bcf_id%}
+            
+            <li class="active">
+                <a href='/faculty/coursegallery/{{bcf.bcf_id}}' >{{bcf.bcf_courseid}} </a>
+            </li>
+            {%else%}
+            <li>
+                <a href='/faculty/coursegallery/{{bcf.bcf_id}}' >{{bcf.bcf_courseid}} </a>
+            </li>
+            {%endif%}
+            {%endfor%}
+        </ul>
+    </li>
+    {% else %}
+    <li>
+        <a href="javascript:void(0);" class="menu-toggle">
+            <i class="material-icons">class</i>
+            <span>Course</span>
+        </a>
+        <ul class="ml-menu">
+
+            {%for bcf in bcf%}
+            <li>
+                <a href='/student/coursegallery/{{bcf.bcf_id}}' >{{bcf.bcf_courseid}}</a>
+            </li>
+            {%endfor%}
+        </ul>
+    </li>
+    {% endif %}
+    
+</ul>
+{%endblock tabs%}
 {% block body %}
 
 <section class="content">
     <div class="container-fluid">
         <div class="block-header">
             <h2>
-                <span>Course</span>
+                <span>Course: {{bcfid.bcf_courseid}}</span>
             </h2>
         </div>
         <!-- Basic Examples -->
@@ -20,7 +148,8 @@
                     </div>
                     <div class="body">
                         <div class="table-responsive">
-                        <a href="/faculty/createassignment/{{bcfid.bcf_id}}"><input type="submit" value="Add New Assignment" class="btn btn-success"/></a>&nbsp&nbsp
+                            {%if bcfid.bcf_status == "In Progress"%}
+                        <a href="/faculty/createassignment/{{bcfid.bcf_id}}"><input type="submit" value="Add New Assignment" class="btn btn-success"/></a>&nbsp&nbsp{%endif%}
                         
                         <br><br>
                             <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
@@ -33,6 +162,7 @@
                                         <th>End Date</th>
                                         <th>Marks</th>
                                         <th>File</th>
+                                        
                                         <th>Option</th>
                                     </tr>
                                 </thead>
@@ -52,8 +182,9 @@
                                                     {%endif%}
                                                 
                                                 <td>
+                                                    {%if bcfid.bcf_status == "In Progress"%}
                                                     <a href="{%url 'updateassignment' id=assignment.a_id %}"><input type='submit' value='Update' class='btn btn-info'/></a>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-                                                    <a href="{%url 'deleteassignment' id=assignment.a_id %}"><input type='submit' value='Delete' class='btn btn-danger'/></a><br><br>
+                                                    <a href="{%url 'deleteassignment' id=assignment.a_id %}"><input type='submit' value='Delete' class='btn btn-danger'/></a><br><br>{%endif%}
                                                     <a href="{%url 'receivedassignment' id=assignment.a_id %}"><input type='submit' value='Received Assignment' class='btn bg-green'/></a>&nbsp&nbsp
                                                 </td>
                                             </tr>

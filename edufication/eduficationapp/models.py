@@ -83,6 +83,7 @@ class Bcf(models.Model):
     bcf_batchid=models.ForeignKey(Batch,on_delete=models.CASCADE)
     bcf_courseid=models.ForeignKey(Course,on_delete=models.CASCADE)
     bcf_facultyid=models.ForeignKey(User,on_delete=models.CASCADE)
+    bcf_status=models.CharField(max_length=100,default="In Progress")
    
 
 

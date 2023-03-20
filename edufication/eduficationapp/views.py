@@ -594,9 +594,11 @@ def updatebcf(request,id):
         coursename= request.POST['txtcourse']
         facultyname =request.POST['txtfaculty']
         batchname=request.POST['txtbatch']
+        status=request.POST['txtstatus']
         bcf.bcf_courseid= Course.objects.get(c_name=coursename)
         bcf.bcf_batchid=Batch.objects.get(b_name=batchname)
         bcf.bcf_facultyid=User.objects.get(username=facultyname)
+        bcf.bcf_status=status
         
         #print(programname)
         bcf.save()
@@ -702,9 +704,11 @@ def updatelecture(request,id):
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
 
-        #bcfid = Bcf.objects.get(bcf_id=id)
+        
         lecture=Lecture.objects.get(l_id=id)
-        context={'userrole':"Faculty",'bcf':bcf,'lecture':lecture}
+        bcfid = Bcf.objects.get(bcf_id=lecture.l_bcfid.bcf_id,bcf_facultyid=user.id)
+        #bcfid = Bcf.objects.get(bcf_id=id)
+        context={'userrole':"Faculty",'bcf':bcf,'lecture':lecture,'bcfid':bcfid}
         if request.method == "POST":
             txtdesc=request.POST['txtdesc']
             
@@ -810,7 +814,8 @@ def updateassignment(request,id):
 
         #bcfid = Bcf.objects.get(bcf_id=id)
         assignment=Assignment.objects.get(a_id=id)
-        context={'userrole':"Faculty",'bcf':bcf,'assignment':assignment}
+        bcfid = Bcf.objects.get(bcf_id=assignment.a_bcfid.bcf_id,bcf_facultyid=user.id)
+        context={'userrole':"Faculty",'bcf':bcf,'assignment':assignment,'bcfid':bcfid}
         if request.method == "POST":
             txtdesc=request.POST['txtdesc']
             stdate=request.POST['stdate']
@@ -998,7 +1003,8 @@ def updatequiz(request,id):
 
         #bcfid = Bcf.objects.get(bcf_id=id)
         quiz=Quiz.objects.get(q_id=id)
-        context={'userrole':"Faculty",'bcf':bcf,'quiz':quiz}
+        bcfid = Bcf.objects.get(bcf_id=quiz.q_bcfid.bcf_id,bcf_facultyid=user.id)
+        context={'userrole':"Faculty",'bcf':bcf,'quiz':quiz,'bcfid':bcfid}
         if request.method == "POST":
             stdate=request.POST['stdate']
             enddate=request.POST['enddate']
@@ -1006,11 +1012,11 @@ def updatequiz(request,id):
             date_time = now.strftime("%Y-%m-%dT%H:%M")
             if stdate <= date_time:
                 msg="Wrong Start date and time"
-                return render(request,"updatequiz.html",{'userrole':"Faculty",'bcf':bcf,'quiz':quiz,'msg':msg})
+                return render(request,"updatequiz.html",{'userrole':"Faculty",'bcf':bcf,'quiz':quiz,'msg':msg,'bcfid':bcfid})
             if stdate > enddate:
                 msg="Wrong End date and time"
                 #print(datetime.now())
-                return render(request,"updatequiz.html",{'userrole':"Faculty",'bcf':bcf,'quiz':quiz,'msg':msg})
+                return render(request,"updatequiz.html",{'userrole':"Faculty",'bcf':bcf,'quiz':quiz,'msg':msg,'bcfid':bcfid})
             quiz.q_startdate=stdate
             quiz.q_enddate=enddate
             quiz.save()
@@ -1134,8 +1140,9 @@ def createqquiz(request,id):
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
         quiz=Quiz.objects.get(q_id=id)
+        bcfid=Bcf.objects.get(bcf_id=quiz.q_bcfid.bcf_id,bcf_facultyid=user.id)
         qquiz=QuizQuestion.objects.filter(qq_quizid=quiz.q_id).count()
-        context={'userrole':"Faculty",'bcf':bcf}
+        context={'userrole':"Faculty",'bcf':bcf,'bcfid':bcfid}
         if request.method == "POST":
             question= request.POST['txtques']
             opt1=request.POST['opt1']
@@ -1178,7 +1185,7 @@ def qquizhome(request,id):
         if bcfid is not None:
             quiz=Quiz.objects.get(q_id=quizid.q_id)
             qquiz1= QuizQuestion.objects.filter(qq_quizid=quizid)
-            context={'userrole':"Faculty",'bcf':bcf,'qquizes':qquiz1,'quiz':quiz}
+            context={'userrole':"Faculty",'bcf':bcf,'qquizes':qquiz1,'quiz':quiz,'bcfid':bcfid}
         else:
             return redirect(facultyhome)
         
@@ -1197,7 +1204,8 @@ def updateqquiz(request,id):
         
         #quiz=Quiz.objects.get(q_id=id)
         qquiz1= QuizQuestion.objects.get(qq_id=id)
-        context={'userrole':"Faculty",'bcf':bcf,'qquiz':qquiz1}  
+        bcfid=Bcf.objects.get(bcf_id=qquiz1.qq_quizid.q_bcfid.bcf_id,bcf_facultyid=user.id)
+        context={'userrole':"Faculty",'bcf':bcf,'qquiz':qquiz1,'bcfid':bcfid}  
 
         if request.method == "POST":
             question= request.POST['txtques']
@@ -1285,7 +1293,7 @@ def createattendancerecord(request,id):
         student=Student.objects.filter(s_batchid=bcfid.bcf_batchid)
         print(student.count())
 
-        context={'userrole':"Faculty",'bcf':bcf,'students':student}
+        context={'userrole':"Faculty",'bcf':bcf,'students':student,'bcfid':bcfid}
         if request.method == "POST":
             #print(request.POST)
             options=request.POST.getlist('txtoption')
@@ -1322,7 +1330,7 @@ def attendancerecordhome(request,id):
         if bcfid is not None:
             attendance=Attendance.objects.get(at_id=attendanceid.at_id)
             attendancerecord= AttendanceRecord.objects.filter(atr_atid=attendanceid)
-            context={'userrole':"Faculty",'bcf':bcf,'attendancerecord':attendancerecord,'attendance':attendance}
+            context={'userrole':"Faculty",'bcf':bcf,'attendancerecord':attendancerecord,'attendance':attendance,'bcfid':bcfid}
         else:
             return redirect(facultyhome)
         
@@ -1343,7 +1351,9 @@ def updateattendancerecord(request,id):
         
         #quiz=Quiz.objects.get(q_id=id)
         attendancerecord1= AttendanceRecord.objects.get(atr_id=id)
-        context={'userrole':"Faculty",'bcf':bcf,'attendancerecord':attendancerecord1}  
+        attendanceid= Attendance.objects.get(at_id=attendancerecord1.atr_atid.at_id)    
+        bcfid=Bcf.objects.get(bcf_id=attendanceid.at_bcfid.bcf_id,bcf_facultyid=user.id)
+        context={'userrole':"Faculty",'bcf':bcf,'attendancerecord':attendancerecord1,'bcfid':bcfid}  
 
         if request.method == "POST":
             txtname= request.POST['txtname']
