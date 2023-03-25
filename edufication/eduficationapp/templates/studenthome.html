@@ -158,7 +158,9 @@
         <div class="block-header">
             
             <br>
+            {%if bcfcomp%}
             <h2> Completed  </h2>
+            {%endif%}
         </div>
                             
                             {% for bcf in bcf%}
@@ -182,5 +184,6 @@
                                 
         
     </div>
+    
 </section>
 {% endblock body %}

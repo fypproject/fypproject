@@ -30,6 +30,7 @@ class Student(models.Model):
         ('Inactive','Inactive'),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    forget_password_token=models.CharField(max_length=100,default='')
     s_phoneno=models.CharField(max_length=50,blank=True,null=True)
     s_city=models.CharField(max_length=50,blank=True,null=True)
     s_country=models.CharField(max_length=50,blank=True,null=True)
@@ -47,6 +48,7 @@ class Faculty(models.Model):
         ('Inactive','Inactive'),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    forget_password_token=models.CharField(max_length=100,default='')
     f_phoneno=models.CharField(max_length=50,blank=True,null=True)
     f_city=models.CharField(max_length=50,blank=True,null=True)
     f_country=models.CharField(max_length=50,blank=True,null=True)
@@ -60,6 +62,7 @@ class Faculty(models.Model):
 
 class myAdmin(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
+    forget_password_token=models.CharField(max_length=100,default='')
     ad_phoneno=models.CharField(max_length=50,blank=True,null=True)
     ad_city=models.CharField(max_length=50,blank=True,null=True)
     ad_country=models.CharField(max_length=50,blank=True,null=True)

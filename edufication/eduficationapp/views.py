@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.views.generic import CreateView            
 from django.forms.utils import ErrorList
 from datetime import datetime
+from .helpers import send_forgot_password_mail
 
 from .forms import myAdminSignUpForm,facultySignUpForm,studentSignUpForm
 from .models import *
@@ -62,6 +63,92 @@ def signin(request):
             messages.error(request,"Invalid Username/Password")
             return render(request,"signin.html")
     return render(request,"signin.html")
+
+import uuid
+def forgotpassword(request):
+    try:
+        if request.method == "POST":
+            username= request.POST['username']
+            if not User.objects.filter(username=username).first():
+                messages.success(request,'Not user found with this username')
+                return redirect(forgotpassword)
+            token=str(uuid.uuid4())
+            user_obj=User.objects.get(username=username)
+            if user_obj is not None:
+                if user_obj.is_student:
+                    student= Student.objects.get(user=user_obj)
+                    student.forget_password_token=token
+                    student.save()
+                elif user_obj.is_faculty:
+                    faculty=Faculty.objects.get(user=user_obj)
+                    faculty.forget_password_token=token
+                    faculty.save()
+                elif user_obj.is_myadmin:
+                    admin=myAdmin.objects.get(user=user_obj)
+                    admin.forget_password_token=token
+                    admin.save()
+            
+
+            
+            send_forgot_password_mail(user_obj.email,token)
+            
+            messages.success(request,'An email is sent..')
+            return redirect(forgotpassword)
+    except Exception as e:
+        print(e)
+    return render(request,"forgotpassword.html")
+
+def changepassword(request,token):
+    try:
+        if Faculty.objects.get(forget_password_token = token):
+            profile_obj=Faculty.objects.get(forget_password_token = token)
+        elif Student.objects.get(forget_password_token = token):
+            profile_obj=Student.objects.get(forget_password_token = token)
+        elif myAdmin.objects.get(forget_password_token = token):
+            profile_obj=myAdmin.objects.get(forget_password_token = token)
+
+        
+        #print(profile_obj)
+        if request.method == 'POST':
+            new_password = request.POST['password1']
+            confirm_password = request.POST['password2']
+            if  new_password != confirm_password:
+                messages.success(request, 'both should  be equal.')
+                return redirect(f'/changepassword/{token}/')
+            user_obj = User.objects.get(id = profile_obj.user.id)
+            user_obj.set_password(new_password)
+            user_obj.save()
+            return redirect(signin)
+    # except profile_obj.DoesNotExist:
+    #     profile_obj=Faculty.objects.get(forget_password_token = token)
+    #     if request.method == 'POST':
+    #         new_password = request.POST['password1']
+    #         confirm_password = request.POST['password2']
+    #         if  new_password != confirm_password:
+    #             messages.success(request, 'both should  be equal.')
+    #             return redirect(f'/changepassword/{token}/')
+    #         user_obj = User.objects.get(id = profile_obj.user.id)
+    #         user_obj.set_password(new_password)
+    #         user_obj.save()
+    #         return redirect(signin)
+    # except profile_obj.DoesNotExist:
+    #     profile_obj=myAdmin.objects.get(forget_password_token = token)
+    #     if request.method == 'POST':
+    #         new_password = request.POST['password1']
+    #         confirm_password = request.POST['password2']
+    #         if  new_password != confirm_password:
+    #             messages.success(request, 'both should  be equal.')
+    #             return redirect(f'/changepassword/{token}/')
+    #         user_obj = User.objects.get(id = profile_obj.user.id)
+    #         user_obj.set_password(new_password)
+    #         user_obj.save()
+    #         return redirect(signin)
+    except Exception as e:
+        print(e)
+    return render(request,"changepassword.html")
+
+
+
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def logout_view(request):
     logout(request)
@@ -91,7 +178,8 @@ def facultyhome(request):
     user = request.user
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
-        context={'user':user,'userrole':"Faculty",'bcf':bcf}
+        bcfcomp=bcf.filter(bcf_status="Completed")
+        context={'user':user,'userrole':"Faculty",'bcf':bcf,'bcfcomp':bcfcomp}
         return render(request,"facultyhome.html",context)
     else:
         return redirect(index)
@@ -103,8 +191,9 @@ def studenthome(request):
    
     if user.is_authenticated and user.is_student:
         bcf=Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
+        bcfcomp=bcf.filter(bcf_status="Completed")
         #print(bcf)
-        context={'user':user,'userrole':"Student",'bcf':bcf}
+        context={'user':user,'userrole':"Student",'bcf':bcf,'bcfcomp':bcfcomp}
         return render(request,"studenthome.html",context)
     else:
         return redirect(index)

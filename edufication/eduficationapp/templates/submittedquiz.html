@@ -1,5 +1,139 @@
 
 {% extends 'dashboard.html' %}
+{%block tabs%}
+<ul class="list">
+    <li class="header">MAIN NAVIGATION</li>
+    {%if userrole == "Admin"%}
+    <li>
+       
+        <a href="{% url 'adminhome' %}">
+            
+            
+                
+            <i class="material-icons">home</i>
+            <span>Home</span>
+        </a>            
+    </li>
+    {%elif userrole == "Faculty"%}
+    <li>
+       
+        
+            
+            <a href="{% url 'facultyhome' %}">
+                
+            <i class="material-icons">home</i>
+            <span>Home</span>
+        </a>            
+    </li>
+    {%elif userrole == "Student"%}
+    <li>
+       
+            <a href="{% url 'studenthome' %}">
+                
+            <i class="material-icons">home</i>
+            <span>Home</span>
+        </a>            
+    </li>
+    {% endif %}
+    {%if userrole == "Admin"%}
+    <li>
+        <a href="{% url 'adminprofile' %}">
+            <i class="material-icons">person</i>
+            <span>Profile</span>
+        </a>            
+    </li>
+    {%elif userrole == "Faculty"%}
+    <li>
+        <a href="{% url 'facultyprofile' %}">
+            <i class="material-icons">person</i>
+            <span>Profile</span>
+        </a>            
+    </li>
+    {%elif userrole == "Student"%}
+    <li>
+        <a href="{% url 'studentprofile' %}">
+            <i class="material-icons">person</i>
+            <span>Profile</span>
+        </a>            
+    </li>
+    {%endif%}
+    {% if userrole == "Admin"%}
+    <li >
+        <a href="javascript:void(0);" class="menu-toggle">
+            <i class="material-icons">view_list</i>
+            <span>Tables</span>
+        </a>
+        <ul class="ml-menu">
+            <li>
+                <a href="{% url 'batch'%}">Batch</a>
+            </li>
+            <li>
+                <a href="{%url 'bcf'%}">Batch Faculty</a>
+            </li>
+            <li>
+                <a href="{% url 'course'%}">Course</a>
+            </li>
+            <li>
+                <a href="{%url 'faculty'%}">Faculty</a>            
+            </li>
+            <li>
+                <a href="{% url 'program' %}">Programs</a>
+            </li>
+            <li>
+                <a href="{% url 'student'%}">Student</a>            
+            </li>
+        </ul>
+    </li> 
+    {% elif userrole == "Faculty" %}
+    
+    
+    
+    <li class="active">
+        <a href="javascript:void(0);" class="menu-toggle">
+            <i class="material-icons">class</i>
+            <span>Course</span>
+        </a>
+        <ul class="ml-menu">
+
+            {%for bcf in bcf%}
+            {%if bcf.bcf_id == bcfid.bcf_id%}
+            
+            <li >
+                <a href='/faculty/coursegallery/{{bcf.bcf_id}}' >{{bcf.bcf_courseid}} </a>
+            </li>
+            {%else%}
+            <li>
+                <a href='/faculty/coursegallery/{{bcf.bcf_id}}' >{{bcf.bcf_courseid}} </a>
+            </li>
+            {%endif%}
+            {%endfor%}
+        </ul>
+    </li>
+    {% else %}
+    <li class="active">
+        <a href="javascript:void(0);" class="menu-toggle">
+            <i class="material-icons">class</i>
+            <span>Course</span>
+        </a>
+        <ul class="ml-menu">
+
+            {%for bcf in bcf%}
+            {%if bcf.bcf_id == bcfid.bcf_id%}
+            <li class="active">
+                <a href='/student/coursegallery/{{bcf.bcf_id}}' >{{bcf.bcf_courseid}}</a>
+            </li>
+            {%else%}
+            <li>
+                <a href='/student/coursegallery/{{bcf.bcf_id}}' >{{bcf.bcf_courseid}}</a>
+            </li>
+            {%endif%}
+            {%endfor%}
+        </ul>
+    </li>
+    {% endif %}
+    
+</ul>
+{%endblock tabs%}   
 {% block body %}
 
 
