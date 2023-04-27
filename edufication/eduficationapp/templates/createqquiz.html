@@ -1,7 +1,100 @@
 
+{% load static %}
+<!DOCTYPE html>
+<html>
 
-{% extends 'dashboard.html' %}
-{%block tabs%}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title></title>
+    <style>
+        .selectstyle{
+            border:unset !important;
+            border-bottom:1px solid #ddd !important;
+            border-bottom-left-radius: unset !important;
+            border-bottom-right-radius: unset !important;
+            -webkit-box-shadow: unset !important;
+            box-shadow: unset !important;
+        }
+    </style>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="{% static 'Assets/plugins/bootstrap/css/bootstrap.css' %}" rel="stylesheet">
+    <!-- Waves Effect Css -->
+    <link href="{% static 'Assets/plugins/node-waves/waves.css' %}" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="{% static 'Assets/plugins/animate-css/animate.css' %}" rel="stylesheet" />
+
+    <!-- Morris Chart Css-->
+    <link href="{% static 'Assets/plugins/morrisjs/morris.css' %}" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="{% static 'Assets/css/style.css' %}" rel="stylesheet">
+    <!-- Bootstrap Select Css -->
+    <link href="{% static 'Assets/plugins/bootstrap-select/css/bootstrap-select.css' %}" rel="stylesheet" />
+    <!-- AdminBSB Themes. You can choose a theme from css/themes instead of get all themes -->
+    <link href="{% static 'Assets/css/themes/all-themes.css' %}" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    {%block head%} {%endblock head%}
+</head>
+
+<body class="theme-red">
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-red">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p>Please wait...</p>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+
+    <!-- Top Bar -->
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+                <a href="javascript:void(0);" class="bars"></a>
+                <a class="navbar-brand" href="#">Edufication</a>            
+                
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="/logout"><i class="material-icons">input</i></a></li>            
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            <div class="user-info">
+                <div class="image">
+                    <p style="color:white;">{{userrole}}</p>
+                </div>
+                <div class="info-container">
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{user.username}}</div>
+                </div>
+            </div>
+            <!-- #User Info -->
+            <!-- Menu -->
+            <div class="menu">
+
 <ul class="list">
     <li class="header">MAIN NAVIGATION</li>
     {%if userrole == "Admin"%}
@@ -128,9 +221,22 @@
     {% endif %}
     
 </ul>
-{%endblock tabs%}
+</div>
+<!-- #Menu -->
+<!-- Footer -->
+<div class="legal">
+    <div class="copyright">
+        &copy; 2022 <a href="#">Edufication</a>.
+    </div>
+    <div class="version">
+        <b>Version: </b> 1.0.0
+    </div>
+</div>
+<!-- #Footer -->
+</aside>
+</section>
 
-{% block body %}
+
 
 <section class="content">
     <div class="container-fluid">
@@ -158,22 +264,22 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="form-line">
-                                    <input type="text" name="opt1" class="form-control inputelement" placeholder="Enter option 1" required />
+                                    <input type="text" name="opt1" id="input1" class="form-control inputelement" placeholder="Enter option 1" required />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="form-line">
-                                    <input type="text" name="opt2" class="form-control inputelement" placeholder="Enter option 2" required />
+                                    <input type="text" name="opt2" id="input2" class="form-control inputelement" placeholder="Enter option 2" required />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="form-line">
-                                    <input type="text" name="opt3" class="form-control inputelement" placeholder="Enter option 3" required />
+                                    <input type="text" name="opt3" id="input3" class="form-control inputelement" placeholder="Enter option 3" required />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="form-line">
-                                    <input type="text" name="opt4" class="form-control inputelement" placeholder="Enter option 4" required />
+                                    <input type="text" name="opt4" id="input4" class="form-control inputelement" placeholder="Enter option 4" required />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -181,11 +287,27 @@
                                     <input type="number" name="mark" class="form-control inputelement" placeholder="Enter question marks" required />
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                {% comment %} <div class="form-group">
                                     <div class="form-line">
                                     <input type="text" name="ans" class="form-control inputelement" placeholder="Enter correct answer" required />
                                     </div>
-                                </div>
+                                </div> {% endcomment %}
+                                
+                                    {% comment %} <label>Program</label> {% endcomment %}
+                                    <div class="form group">
+                                        
+                                    <select id="select" name="ans" class="form-control selectstyle" required  >
+                                        <option>Select Correct Answer </option>
+                                            {% comment %} <option value="">Select Course</option> {% endcomment %}
+                                        
+                                            {% comment %} {% for course in courses %}
+                                            
+                                            <option value="{{course.c_name}}">{{course.c_name}}</option>
+                                            {% endfor %} {% endcomment %}
+                                        </select>
+                                    </div>
+                                <br>
+                                
                                 
                             <input type="submit" name="btninsert" value="Insert" class="btn btn-success" /><br><br>                
                         </form>
@@ -198,4 +320,92 @@
         <!-- #END# Input -->
     </div>
 </section>
-{% endblock body %}
+
+
+<script>
+    const input1 = document.getElementById('input1');
+const input2 = document.getElementById('input2');
+const input3 = document.getElementById('input3');
+const input4 = document.getElementById('input4');
+const select = document.getElementById('select');
+
+input1.addEventListener('input', updateSelectOptions);
+input2.addEventListener('input', updateSelectOptions);
+input3.addEventListener('input', updateSelectOptions);
+input4.addEventListener('input', updateSelectOptions);
+
+function updateSelectOptions() {
+  if (input1.value && input2.value && input3.value && input4.value) {
+    select.innerHTML = '';
+    const option1 = document.createElement('option');
+    option1.value = input1.value;
+    option1.text = input1.value;
+    select.add(option1);
+    
+    const option2 = document.createElement('option');
+    option2.value = input2.value;
+    option2.text = input2.value;
+    select.add(option2);
+    
+    const option3 = document.createElement('option');
+    option3.value = input3.value;
+    option3.text = input3.value;
+    select.add(option3);
+    
+    const option4 = document.createElement('option');
+    option4.value = input4.value;
+    option4.text = input4.value;
+    select.add(option4);
+  } else {
+    select.innerHTML = '<option value="">Select Correct Answer</option>';
+  }
+}
+</script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <!-- Jquery Core Js -->
+    <script src="{% static 'Assets/plugins/jquery/jquery.min.js' %}"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="{% static 'Assets/plugins/bootstrap/js/bootstrap.js' %}"></script>
+
+    <!-- Select Plugin Js -->
+   {% comment %} <script src="{% static 'Assets/plugins/bootstrap-select/js/bootstrap-select.js' %}"></script> {% endcomment %}
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="{% static 'Assets/plugins/jquery-slimscroll/jquery.slimscroll.js' %}"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="{% static 'Assets/plugins/node-waves/waves.js' %}"></script>
+
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="{% static 'Assets/plugins/jquery-countto/jquery.countTo.js' %}"></script>
+
+    <!-- Morris Plugin Js -->
+    <script src="{% static 'Assets/plugins/raphael/raphael.min.js' %}"></script>
+    <script src="{% static 'Assets/plugins/morrisjs/morris.js' %}"></script>
+
+    <!-- ChartJs -->
+    <script src="{% static 'Assets/plugins/chartjs/Chart.bundle.js' %}"></script>
+
+    <!-- Flot Charts Plugin Js -->
+    <script src="{% static 'Assets/plugins/flot-charts/jquery.flot.js' %}"></script>
+    <script src="{% static 'Assets/plugins/flot-charts/jquery.flot.resize.js' %}"></script>
+    <script src="{% static 'Assets/plugins/flot-charts/jquery.flot.pie.js' %}"></script>
+    <script src="{% static 'Assets/plugins/flot-charts/jquery.flot.categories.js' %}"></script>
+    <script src="{% static 'Assets/plugins/flot-charts/jquery.flot.time.js' %}"></script>
+
+    <!-- Sparkline Chart Plugin Js -->
+    <script src="{% static 'Assets/plugins/jquery-sparkline/jquery.sparkline.js' %}"></script>
+
+    <!-- Custom Js -->
+    <script src="{% static 'Assets/js/admin.js' %}"></script>
+    <script src="{% static 'Assets/js/pages/index.js' %}"></script>
+
+    <!-- Demo Js -->
+    <script src="{% static 'Assets/js/demo.js' %}"></script>
+    <script src="{% static 'Assets/js/pages/ui/dialogs.js' %}"></script>
+    
+    
+</body>
+
+</html>

@@ -158,6 +158,7 @@ class AssignmentSubmit(models.Model):
     as_file=models.FileField(upload_to='submitassignments/')
     as_date=models.DateTimeField()
     as_marks=models.IntegerField(null=True,blank=True)
+    as_plagiarismpercent=models.IntegerField(null=True,blank=True)
     as_assignmentid=models.ForeignKey(Assignment,on_delete=models.CASCADE)
     as_studentid=models.ForeignKey(User,on_delete=models.CASCADE)
 
@@ -172,3 +173,4 @@ class QuizSubmit(models.Model):
     qs_obtmarks=models.IntegerField()
     qs_tmarks=models.IntegerField()
     qs_date=models.DateTimeField(null=True)
+

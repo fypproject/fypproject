@@ -72,6 +72,9 @@ urlpatterns = [
     path('faculty/attendancerecord/<int:id>',views.attendancerecordhome,name='attendancerecord'),
     path('faculty/updateattendancerecord/<int:id>',views.updateattendancerecord,name='updateattendancerecord'),
 
+    path('faculty/plagiarismcheck/<int:id>',views.plagiarismchecker,name='plagiarismchecker'),
+    # path('faculty/plagiarismreport',views.plagiarismreport,name='plagiarismreport'),
+
     path('student/profile',views.studentprofile,name='studentprofile'),
     path('student/coursegallery/<int:id>',views.scoursegallery,name='scoursegallery'),
     path('student/attendance/<int:id>',views.sattendancehome,name='studentattendancehome'),
@@ -82,6 +85,7 @@ urlpatterns = [
     path('student/quiz/<int:id>',views.squizhome,name='studentquizhome'),
     path('student/submitquiz/<int:id>',views.submitquiz,name='submitquiz'),
     path('student/submittedquiz/<int:id>',views.submittedquiz,name='submittedquiz'),
+    # path('pdf',views.pdffile, name='pdffile'),
     
 
     path('test',views.test,name='test'),

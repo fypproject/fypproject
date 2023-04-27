@@ -6,10 +6,52 @@ from django.views.generic import CreateView
 from django.forms.utils import ErrorList
 from datetime import datetime
 from .helpers import send_forgot_password_mail
-
+from .plagiarism import plagchecker
 from .forms import myAdminSignUpForm,facultySignUpForm,studentSignUpForm
 from .models import *
 from django.views.decorators.cache import cache_control
+
+
+
+### PDF Generator for Plagiarism Report
+from django.http import FileResponse
+import io 
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+
+
+# https://www.codingforentrepreneurs.com/blog/html-template-to-pdf-in-django/
+
+# def pdffile(request):
+#     buf=io.BytesIO()
+#     c=canvas.Canvas(buf,pagesize=letter,bottomup=0)
+#     textob= c.beginText()
+#     textob.setTextOrigin(inch,inch)
+#     textob.setFont("Helvetica",14)
+#     title="Hello World"
+#     text_width = c.stringWidth(title, 'Helvetica', 14)
+
+
+#     line1=['hello zain','hello abdullah','hello ali']
+
+# # Calculate the position of the center of the page
+#     canvas_width, canvas_height = c._pagesize
+#     x = canvas_width / 2
+#     y = canvas_height -750
+#     c.drawCentredString(x, y, title)
+    
+    
+#     line_height = 15  # Adjust the line height as needed
+#     for i in range(0, len(line1)):
+#         y -= line_height
+#         c.drawString(x - c.stringWidth(line1[i], 'Helvetica', 12) -200, y, line1[i])
+    
+
+#     c.showPage()
+#     c.save()
+#     buf.seek(0)
+#     return FileResponse(buf, as_attachment=True,filename='pdffile.pdf')
 
 # @cache_control(no_cache=True, must_revalidate=True)
 # def func():
@@ -191,6 +233,7 @@ def studenthome(request):
    
     if user.is_authenticated and user.is_student:
         bcf=Bcf.objects.filter(bcf_batchid=user.student.s_batchid)
+        
         bcfcomp=bcf.filter(bcf_status="Completed")
         #print(bcf)
         context={'user':user,'userrole':"Student",'bcf':bcf,'bcfcomp':bcfcomp}
@@ -766,7 +809,7 @@ def createlecture(request,id):
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
         try:
-            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id)
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id,bcf_status="In Progress")
         except:
             return redirect(facultyhome)
         if bcfid.bcf_facultyid is not None:
@@ -793,9 +836,11 @@ def updatelecture(request,id):
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
 
-        
-        lecture=Lecture.objects.get(l_id=id)
-        bcfid = Bcf.objects.get(bcf_id=lecture.l_bcfid.bcf_id,bcf_facultyid=user.id)
+        try:    
+            lecture=Lecture.objects.get(l_id=id)
+            bcfid = Bcf.objects.get(bcf_id=lecture.l_bcfid.bcf_id,bcf_facultyid=user.id,bcf_status="In Progress")
+        except:
+            return redirect(facultyhome)
         #bcfid = Bcf.objects.get(bcf_id=id)
         context={'userrole':"Faculty",'bcf':bcf,'lecture':lecture,'bcfid':bcfid}
         if request.method == "POST":
@@ -823,8 +868,13 @@ def updatelecture(request,id):
 def deletelecture(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
-        lecture = Lecture.objects.get(l_id=id)
-        lecture.delete()
+        try:    
+            lecture=Lecture.objects.get(l_id=id)
+            bcfid = Bcf.objects.get(bcf_id=lecture.l_bcfid.bcf_id,bcf_facultyid=user.id,bcf_status="In Progress")
+            lecture.delete()
+        except:
+            return redirect(facultyhome)
+        
         return redirect(lecturehome,id=lecture.l_bcfid.bcf_id)
     
 
@@ -859,7 +909,7 @@ def createassignment(request,id):
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
         try:
-            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id)
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id,bcf_status="In Progress")
         except:
             return redirect(facultyhome)
         if bcfid.bcf_facultyid is not None:
@@ -902,8 +952,11 @@ def updateassignment(request,id):
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
 
         #bcfid = Bcf.objects.get(bcf_id=id)
-        assignment=Assignment.objects.get(a_id=id)
-        bcfid = Bcf.objects.get(bcf_id=assignment.a_bcfid.bcf_id,bcf_facultyid=user.id)
+        try:
+            assignment=Assignment.objects.get(a_id=id)
+            bcfid = Bcf.objects.get(bcf_id=assignment.a_bcfid.bcf_id,bcf_facultyid=user.id,bcf_status="In Progress")
+        except:
+            return redirect(facultyhome)
         context={'userrole':"Faculty",'bcf':bcf,'assignment':assignment,'bcfid':bcfid}
         if request.method == "POST":
             txtdesc=request.POST['txtdesc']
@@ -947,8 +1000,13 @@ def updateassignment(request,id):
 def deleteassignment(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
-        assignment = Assignment.objects.get(a_id=id)
-        assignment.delete()
+        try:
+            assignment=Assignment.objects.get(a_id=id)
+            bcfid = Bcf.objects.get(bcf_id=assignment.a_bcfid.bcf_id,bcf_facultyid=user.id,bcf_status="In Progress")
+            assignment.delete()
+        except:
+            return redirect(facultyhome)
+        
         return redirect(assignmenthome,id=assignment.a_bcfid.bcf_id)
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
@@ -956,9 +1014,10 @@ def receivedassignment(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
-        assignment= Assignment.objects.get(a_id=id)
+        
 
         try:
+            assignment= Assignment.objects.get(a_id=id)
             bcfid = Bcf.objects.get(bcf_id=assignment.a_bcfid.bcf_id,bcf_facultyid=user.id)
         except:
             return redirect(facultyhome)
@@ -982,6 +1041,9 @@ def receivedassignment(request,id):
 
 
             #print(assubmitarr)
+            
+            
+            
             assignmentreceived=list(zip(studentsarr,assubmitarr))
             #student1=Student.objects.filter(user=User.objects.filter(is_student=True),s_batchid=bcfid.bcf_batchid.b_id)
             # print(student1)
@@ -1000,12 +1062,13 @@ def updateassignmentmarks(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
-        assignmentsubmit=AssignmentSubmit.objects.get(as_id=id)
-        assignment= Assignment.objects.get(a_id=assignmentsubmit.as_assignmentid.a_id)
+        
+       
 
         try:
-
-            bcfid = Bcf.objects.get(bcf_id=assignment.a_bcfid.bcf_id,bcf_facultyid=user.id)
+            assignmentsubmit=AssignmentSubmit.objects.get(as_id=id)
+            assignment= Assignment.objects.get(a_id=assignmentsubmit.as_assignmentid.a_id)
+            bcfid = Bcf.objects.get(bcf_id=assignment.a_bcfid.bcf_id,bcf_facultyid=user.id,bcf_status="In Progress")
         except:
             return redirect(facultyhome)
         if bcfid.bcf_facultyid is not None :
@@ -1052,7 +1115,7 @@ def createquiz(request,id):
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
         try:
-            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id)
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id,bcf_status="In Progress")
         except:
             return redirect(facultyhome)
         if bcfid.bcf_facultyid is not None:
@@ -1091,8 +1154,11 @@ def updatequiz(request,id):
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
 
         #bcfid = Bcf.objects.get(bcf_id=id)
-        quiz=Quiz.objects.get(q_id=id)
-        bcfid = Bcf.objects.get(bcf_id=quiz.q_bcfid.bcf_id,bcf_facultyid=user.id)
+        try:
+            quiz=Quiz.objects.get(q_id=id)
+            bcfid = Bcf.objects.get(bcf_id=quiz.q_bcfid.bcf_id,bcf_facultyid=user.id,bcf_status="In Progress")
+        except:
+            return redirect(facultyhome)
         context={'userrole':"Faculty",'bcf':bcf,'quiz':quiz,'bcfid':bcfid}
         if request.method == "POST":
             stdate=request.POST['stdate']
@@ -1124,8 +1190,13 @@ def updatequiz(request,id):
 def deletequiz(request,id):
     user=request.user
     if user.is_authenticated and user.is_faculty:
-        quiz = Quiz.objects.get(q_id=id)
-        quiz.delete()
+        try:
+            quiz=Quiz.objects.get(q_id=id)
+            bcfid = Bcf.objects.get(bcf_id=quiz.q_bcfid.bcf_id,bcf_facultyid=user.id,bcf_status="In Progress")
+            quiz.delete()
+        except:
+            return redirect(facultyhome)
+        
         return redirect(quizhome,id=quiz.q_bcfid.bcf_id)
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def receivedquiz(request,id):
@@ -1191,9 +1262,10 @@ def viewquiz(request,id,pk):
 
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
-        quiz= Quiz.objects.get(q_id=id)
+        
 
         try:
+            quiz= Quiz.objects.get(q_id=id)
             bcfid = Bcf.objects.get(bcf_id=quiz.q_bcfid.bcf_id,bcf_facultyid=user.id)
         except:
             return redirect(facultyhome)
@@ -1201,6 +1273,8 @@ def viewquiz(request,id,pk):
         #quizquestion=QuizQuestion.objects.filter(qq_quizid=quiz.q_id)
         quizsubmit=QuizSubmit.objects.filter(qs_quizid=quiz.q_id,qs_studentid=pk)
         studentrecord=QuizSubmit.objects.filter(qs_quizid=quiz.q_id,qs_studentid=pk).first()
+        if studentrecord is None:
+            return redirect(receivedquiz,id=quiz.q_id)
         print(studentrecord)
         total=0
         obt=0
@@ -1292,8 +1366,11 @@ def updateqquiz(request,id):
         
         
         #quiz=Quiz.objects.get(q_id=id)
-        qquiz1= QuizQuestion.objects.get(qq_id=id)
-        bcfid=Bcf.objects.get(bcf_id=qquiz1.qq_quizid.q_bcfid.bcf_id,bcf_facultyid=user.id)
+        try:
+            qquiz1= QuizQuestion.objects.get(qq_id=id)
+            bcfid=Bcf.objects.get(bcf_id=qquiz1.qq_quizid.q_bcfid.bcf_id,bcf_facultyid=user.id,bcf_status="In Progress")
+        except:
+            return redirect(facultyhome)
         context={'userrole':"Faculty",'bcf':bcf,'qquiz':qquiz1,'bcfid':bcfid}  
 
         if request.method == "POST":
@@ -1349,7 +1426,7 @@ def createattendance(request,id):
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
         try:
-            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id)
+            bcfid = Bcf.objects.get(bcf_id=id,bcf_facultyid=user.id,bcf_status="In Progress")
         except:
             return redirect(facultyhome)
         if bcfid.bcf_facultyid is not None:
@@ -1376,7 +1453,7 @@ def createattendancerecord(request,id):
     if user.is_authenticated and user.is_faculty:
         bcf= Bcf.objects.filter(bcf_facultyid=user.id)
         attendance=Attendance.objects.get(at_id=id)
-        bcfid=Bcf.objects.get(bcf_id=attendance.at_bcfid.bcf_id)
+        bcfid=Bcf.objects.get(bcf_id=attendance.at_bcfid.bcf_id,bcf_status="In Progress")
 
         studentuser=User.objects.filter(is_student=True)
         student=Student.objects.filter(s_batchid=bcfid.bcf_batchid)
@@ -1440,8 +1517,11 @@ def updateattendancerecord(request,id):
         
         #quiz=Quiz.objects.get(q_id=id)
         attendancerecord1= AttendanceRecord.objects.get(atr_id=id)
-        attendanceid= Attendance.objects.get(at_id=attendancerecord1.atr_atid.at_id)    
-        bcfid=Bcf.objects.get(bcf_id=attendanceid.at_bcfid.bcf_id,bcf_facultyid=user.id)
+        attendanceid= Attendance.objects.get(at_id=attendancerecord1.atr_atid.at_id)
+        try:    
+            bcfid=Bcf.objects.get(bcf_id=attendanceid.at_bcfid.bcf_id,bcf_facultyid=user.id,bcf_status="In Progress")
+        except:
+            return redirect(facultyhome)
         context={'userrole':"Faculty",'bcf':bcf,'attendancerecord':attendancerecord1,'bcfid':bcfid}  
 
         if request.method == "POST":
@@ -1822,6 +1902,26 @@ def submittedquiz(request,id):
 
 
 
+def plagiarismchecker(request,id):
+    print(id)
+    print("Hello World")
+    as_submit=AssignmentSubmit.objects.get(as_id=id)
+    result=plagchecker(as_submit.as_file)
+    percent,links=result
+    as_submit.as_plagiarismpercent=percent
+    as_submit.save()
+    # print(percent)
+    # print(links)
+    # print(as_submit.as_studentid.first_name)
+    # print(as_submit.as_assignmentid.a_name)
+    
+    
+    
+    context={'plagpercent':percent,'links':links,'idassignment':as_submit.as_assignmentid.a_id,'assignmentsubmit':as_submit}
+    return render(request,"plagiarismreport.html",context)
+
+# def plagiarismreport(request):
+#     return render(request,"plagiarismreport.html")
 
 
 

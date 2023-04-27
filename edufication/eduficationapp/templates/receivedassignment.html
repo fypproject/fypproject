@@ -1,5 +1,26 @@
 
 {% extends 'dashboard.html' %}
+{%block head%}
+<style>
+    #preloader {
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: none;
+    }
+    .preloader.pl-size-xl {
+       
+        position: absolute;
+        
+        left: 50vw;
+        top: 50vh;
+    }
+</style>
+{%endblock head%}
 {%block tabs%}
 <ul class="list">
     <li class="header">MAIN NAVIGATION</li>
@@ -161,6 +182,7 @@
                                         <th>Submitted Date/Time</th>
                                         <th>Obtained Marks</th>
                                         <th>File</th>
+                                        <th>Plagiarism Percentage</th>
                                         <th>Status</th>
                                         {%if bcfid.bcf_status == "In Progress"%}
                                         <th>Option</th>
@@ -186,6 +208,7 @@
                                                     {{assignmentsubmit.as_marks}}
                                                 {%endif%}</td>
                                                 <td> <a href="{{assignmentsubmit.as_file.url}}" download> {{assignmentsubmit.as_file|cut:'submitassignments/'}} </a></td>
+                                                <td>{%if assignmentsubmit.as_plagiarismpercent is not None%}{{assignmentsubmit.as_plagiarismpercent}}%{%else%}{%endif%}</td>
                                                 <td>{%if assignments.a_enddate < assignmentsubmit.as_date%}
                                                     Late
                                                     {%elif assignments.a_enddate > assignmentsubmit.as_date%}
@@ -198,7 +221,10 @@
                                                 <td>
                                                     
                                                     {%if assignmentsubmit.as_id is not None%}
-                                                    <a href="{%url 'updateassignmentmarks' id=assignmentsubmit.as_id%}"><input type='submit' value='Upload Marks' class='btn btn-info'/></a>&nbsp&nbsp
+                                                    <a href="{%url 'updateassignmentmarks' id=assignmentsubmit.as_id%}"><input type='submit' value='Upload Marks' class='btn btn-info'/></a><br><br>
+                                                    {%if assignmentsubmit.as_plagiarismpercent is not None%}
+                                                    {%else%}
+                                                    <a href="{%url 'plagiarismchecker' id=assignmentsubmit.as_id%}"><input type='submit' onclick="showPreloader()" value='Plagiarism Check' class='btn btn-success'/></a>{%endif%}
                                                     {%else%}
                                                     {%endif%}
                                                 </td>
@@ -209,6 +235,18 @@
                                        {%endfor%}
                                 </tbody>
                             </table>
+                            <div id="preloader">
+                                <div class="preloader pl-size-xl">
+                                    <div class="spinner-layer">
+                                        <div class="circle-clipper left">
+                                            <div class="circle"></div>
+                                        </div>
+                                        <div class="circle-clipper right">
+                                            <div class="circle"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -217,3 +255,11 @@
     </div>
 </section>
 {% endblock body %}
+{%block script%}
+<script>
+    function showPreloader() {
+      var preloader = document.getElementById("preloader");
+      preloader.style.display = "block";
+    }
+  </script>
+{%endblock script%}
