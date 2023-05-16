@@ -142,25 +142,14 @@ def forgotpassword(request):
 
 def changepassword(request,token):
     try:
+       
         if Faculty.objects.get(forget_password_token = token):
             profile_obj=Faculty.objects.get(forget_password_token = token)
-        elif Student.objects.get(forget_password_token = token):
-            profile_obj=Student.objects.get(forget_password_token = token)
-        elif myAdmin.objects.get(forget_password_token = token):
-            profile_obj=myAdmin.objects.get(forget_password_token = token)
+        
 
         
         #print(profile_obj)
-        if request.method == 'POST':
-            new_password = request.POST['password1']
-            confirm_password = request.POST['password2']
-            if  new_password != confirm_password:
-                messages.success(request, 'both should  be equal.')
-                return redirect(f'/changepassword/{token}/')
-            user_obj = User.objects.get(id = profile_obj.user.id)
-            user_obj.set_password(new_password)
-            user_obj.save()
-            return redirect(signin)
+        
     # except profile_obj.DoesNotExist:
     #     profile_obj=Faculty.objects.get(forget_password_token = token)
     #     if request.method == 'POST':
@@ -187,6 +176,29 @@ def changepassword(request,token):
     #         return redirect(signin)
     except Exception as e:
         print(e)
+        try:
+            if Student.objects.get(forget_password_token = token):
+                profile_obj=Student.objects.get(forget_password_token = token)
+        except Exception as e:
+            try:
+                if myAdmin.objects.get(forget_password_token = token):
+                    profile_obj=myAdmin.objects.get(forget_password_token = token)
+            except Exception as e:
+                return redirect(signin)
+    
+    if request.method == 'POST':
+            new_password = request.POST['password1']
+            confirm_password = request.POST['password2']
+            if  new_password != confirm_password:
+                messages.success(request, 'both should  be equal.')
+                return redirect(f'/changepassword/{token}/')
+            user_obj = User.objects.get(id = profile_obj.user.id)
+            user_obj.set_password(new_password)
+            profile_obj.forget_password_token=""
+            profile_obj.save()
+            
+            user_obj.save()
+            return redirect(signin)
     return render(request,"changepassword.html")
 
 

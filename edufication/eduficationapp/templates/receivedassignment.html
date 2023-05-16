@@ -224,7 +224,7 @@
                                                     <a href="{%url 'updateassignmentmarks' id=assignmentsubmit.as_id%}"><input type='submit' value='Upload Marks' class='btn btn-info'/></a><br><br>
                                                     {%if assignmentsubmit.as_plagiarismpercent is not None%}
                                                     {%else%}
-                                                    <a href="{%url 'plagiarismchecker' id=assignmentsubmit.as_id%}"><input type='submit' onclick="showPreloader()" value='Plagiarism Check' class='btn btn-success'/></a>{%endif%}
+                                                    <a href="{%url 'plagiarismchecker' id=assignmentsubmit.as_id%}"><input type='submit' onclick="showPreloader()" value='Plagiarism Check' class='btn btn-success'/></a>{%endif%} 
                                                     {%else%}
                                                     {%endif%}
                                                 </td>

@@ -59,7 +59,7 @@ def oldlink(txt):
         
 
 
-def rechecking(txt,sentancematch,sentancearr,linksmatch):
+def rechecking(txt,sentancematch,sentancearr,linksmatch,matchwordcount):
     print("Sentance Remaining:",txt)
     print("Links MAtched from rechecking:",linksmatch)
     for x in linksmatch:
@@ -82,7 +82,7 @@ def rechecking(txt,sentancematch,sentancearr,linksmatch):
                     break
             
         if plagcount== 1:
-
+            matchwordcount.append(txt)
             #sentancearr.append(txt)
             print("Searched Link:",searchedlink)
             print("Text from rechecking:",txt)
@@ -96,7 +96,7 @@ def rechecking(txt,sentancematch,sentancearr,linksmatch):
 
 
 
-def plagiarismchecker(txt,sentancematch,sentancearr,linksmatch):
+def plagiarismchecker(txt,sentancematch,sentancearr,linksmatch,matchwordcount):
     
     print(txt)
     global searchedlink
@@ -179,6 +179,7 @@ def plagiarismchecker(txt,sentancematch,sentancearr,linksmatch):
         if plagcount== 1:
             sentancematch.value+=1
             linksmatch.append(link)
+            matchwordcount.append(txt)
             #sentancearr.append(txt)
             print("Link:",link)
             print("Text:",txt)
@@ -212,8 +213,8 @@ def plagiarismchecker(txt,sentancematch,sentancearr,linksmatch):
 
 
 def map_func(args):
-    func, arg, shared_var,shared_list,shared_link = args
-    return func(arg, shared_var,shared_list,shared_link)
+    func, arg, shared_var,shared_list,shared_link,shared_matchword = args
+    return func(arg, shared_var,shared_list,shared_link,shared_matchword)
 
 def main_function(txt):
     global all_length
@@ -234,17 +235,20 @@ def main_function(txt):
     # for tokenclean in tokenscleaned:
     #     print(tokenclean)
     all_length=len(tokenscleaned)
+    allwords1=' '.join(tokenscleaned)
+    allwordsnum=len(allwords1.split())
     print(all_length)
     #print(tokenscleaned)
     with multiprocessing.Manager() as manager:
         sentancematch = manager.Value('i', 0)
         sentancearr=manager.list()
         linksmatch=manager.list()
+        matchwordcount=manager.list()
 
         pool = multiprocessing.Pool()
         #pool.map(plagiarismchecker, tokenscleaned)
-        results=pool.map(map_func,[(plagiarismchecker,arg,sentancematch,sentancearr,linksmatch) for arg in tokenscleaned])
-        results2=pool.map(map_func,[(rechecking,arg,sentancematch,sentancearr,linksmatch) for arg in sentancearr])
+        results=pool.map(map_func,[(plagiarismchecker,arg,sentancematch,sentancearr,linksmatch,matchwordcount) for arg in tokenscleaned])
+        results2=pool.map(map_func,[(rechecking,arg,sentancematch,sentancearr,linksmatch,matchwordcount) for arg in sentancearr])
         pool.close()
         pool.join()
         print("All Length:",all_length)
@@ -253,7 +257,13 @@ def main_function(txt):
         plagiarismpercent=plagiarismpercent*100
         print("Plagiarism Percentage:",round(plagiarismpercent))
         #print(linksmatch)
-        return round(plagiarismpercent),list(linksmatch)
+        matchwords=' '.join(matchwordcount)
+        matchwords=len(matchwords.split())
+        print("Count of match words:",matchwords)
+        plagiarismpercentword=matchwords/allwordsnum
+        plagiarismpercentword=plagiarismpercentword*100
+        print("Plagiarism Percentage in words:",round(plagiarismpercentword),"%")
+        return round(plagiarismpercentword),list(linksmatch)
         # print("Unmatched Sentences:",sentancearr)
         # print("Links Matched:",linksmatch)
         
