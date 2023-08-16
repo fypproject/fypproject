@@ -26,40 +26,40 @@ def tokenize_sentence(text):
     sentences = re.split('(?<!\\w\\.\\w.)(?<![A-Z][a-z]\\.)(?<=\\.|\\?|\\!|\\n)\\s', text)
     return sentences
 
-def oldlink(txt):
-    #global sentancearr
+# def oldlink(txt):
+#     #global sentancearr
     
-    global searchedlink
-    global plagcount
-    lsearched=requests.get(searchedlink)
-    plagcount=0
-    soupl1 = BeautifulSoup(lsearched.text, 'html.parser')
-    child_soup=soupl1.findAll("div")
+#     global searchedlink
+#     global plagcount
+#     lsearched=requests.get(searchedlink)
+#     plagcount=0
+#     soupl1 = BeautifulSoup(lsearched.text, 'html.parser')
+#     child_soup=soupl1.findAll("div")
         
-    for i in child_soup:
-        websentences = tokenize_sentence(i.text)
-        for y in websentences: 
-            #print(i.text)
-            if txt in y:
-                plagcount=1
-                break
-            elif similar(y,txt) >= 0.6:
-                #print("Plagiarism: 90%")
-                #print(txt)
-                plagcount=1
-                break
+#     for i in child_soup:
+#         websentences = tokenize_sentence(i.text)
+#         for y in websentences: 
+#             #print(i.text)
+#             if txt in y:
+#                 plagcount=1
+#                 break
+#             elif similar(y,txt) >= 0.6:
+#                 #print("Plagiarism: 90%")
+#                 #print(txt)
+#                 plagcount=1
+#                 break
             
-    if plagcount== 1:
-        #sentancearr.append(txt)
-        print("Searched Link:",searchedlink)
-        print("Text:",txt)
-        searchedlink=searchedlink
+#     if plagcount== 1:
+#         #sentancearr.append(txt)
+#         print("Searched Link:",searchedlink)
+#         print("Text:",txt)
+#         searchedlink=searchedlink
         
-        return 1
+#         return 1
         
 
 
-def rechecking(txt,sentancematch,sentancearr,linksmatch,matchwordcount):
+def rechecking(txt,sentancematch,sentancearr,linksmatch,matchwordcount,sentencelist):
     print("Sentance Remaining:",txt)
     print("Links MAtched from rechecking:",linksmatch)
     for x in linksmatch:
@@ -75,7 +75,7 @@ def rechecking(txt,sentancematch,sentancearr,linksmatch,matchwordcount):
                 if txt in y:
                     plagcount=1
                     break
-                elif similar(y,txt) >= 0.9:
+                elif similar(y,txt) >= 0.6:
                     #print("Plagiarism: 90%")
                     #print(txt)
                     plagcount=1
@@ -86,6 +86,7 @@ def rechecking(txt,sentancematch,sentancearr,linksmatch,matchwordcount):
             #sentancearr.append(txt)
             print("Searched Link:",searchedlink)
             print("Text from rechecking:",txt)
+            sentencelist.append(txt)
             sentancematch.value+=1
             break
     if plagcount==0:
@@ -96,7 +97,7 @@ def rechecking(txt,sentancematch,sentancearr,linksmatch,matchwordcount):
 
 
 
-def plagiarismchecker(txt,sentancematch,sentancearr,linksmatch,matchwordcount):
+def plagiarismchecker(txt,sentancematch,sentancearr,linksmatch,matchwordcount,sentencelist):
     
     print(txt)
     global searchedlink
@@ -183,7 +184,8 @@ def plagiarismchecker(txt,sentancematch,sentancearr,linksmatch,matchwordcount):
             #sentancearr.append(txt)
             print("Link:",link)
             print("Text:",txt)
-            searchedlink=link
+            searchedlink=link  #only for print
+            sentencelist.append(txt)
             
             break
         # else:
@@ -195,7 +197,7 @@ def plagiarismchecker(txt,sentancematch,sentancearr,linksmatch,matchwordcount):
             
 
         
-        count1=count1+1
+        count1=count1+1  #Dekhane ke liye ke konsi link chl rhi hai.
 
                 
             
@@ -213,8 +215,8 @@ def plagiarismchecker(txt,sentancematch,sentancearr,linksmatch,matchwordcount):
 
 
 def map_func(args):
-    func, arg, shared_var,shared_list,shared_link,shared_matchword = args
-    return func(arg, shared_var,shared_list,shared_link,shared_matchword)
+    func, arg, shared_var,shared_list,shared_link,shared_matchword,shared_sentencelist = args
+    return func(arg, shared_var,shared_list,shared_link,shared_matchword,shared_sentencelist)
 
 def main_function(txt):
     global all_length
@@ -244,15 +246,18 @@ def main_function(txt):
         sentancearr=manager.list()
         linksmatch=manager.list()
         matchwordcount=manager.list()
+        sentencelist=manager.list()
 
         pool = multiprocessing.Pool()
         #pool.map(plagiarismchecker, tokenscleaned)
-        results=pool.map(map_func,[(plagiarismchecker,arg,sentancematch,sentancearr,linksmatch,matchwordcount) for arg in tokenscleaned])
-        results2=pool.map(map_func,[(rechecking,arg,sentancematch,sentancearr,linksmatch,matchwordcount) for arg in sentancearr])
+        results=pool.map(map_func,[(plagiarismchecker,arg,sentancematch,sentancearr,linksmatch,matchwordcount,sentencelist) for arg in tokenscleaned])
+        results2=pool.map(map_func,[(rechecking,arg,sentancematch,sentancearr,linksmatch,matchwordcount,sentencelist) for arg in sentancearr])
         pool.close()
         pool.join()
         print("All Length:",all_length)
+
         print("Sentence Match:",sentancematch.value)
+        # print("Sentance Array:",sentancearr);
         plagiarismpercent=sentancematch.value/all_length
         plagiarismpercent=plagiarismpercent*100
         print("Plagiarism Percentage:",round(plagiarismpercent))
@@ -263,6 +268,7 @@ def main_function(txt):
         plagiarismpercentword=matchwords/allwordsnum
         plagiarismpercentword=plagiarismpercentword*100
         print("Plagiarism Percentage in words:",round(plagiarismpercentword),"%")
+        # print("Sentence Matched:",sentencelist)
         return round(plagiarismpercentword),list(linksmatch)
         # print("Unmatched Sentences:",sentancearr)
         # print("Links Matched:",linksmatch)

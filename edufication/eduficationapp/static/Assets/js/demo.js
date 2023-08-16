@@ -104,4 +104,16 @@ function loadTracking() {
     ga('create', trackingId, 'auto');
     ga('send', 'pageview');
 }
+function addAlert(){
+    var confirmResult = confirm("Do you want to create?");
+        if (confirmResult) {
+            // User clicked "OK"
+            // Execute the update action or perform any other desired action
+            return true;
+        } else {
+            // User clicked "Cancel" or closed the alert
+            // Prevent the form submission or any other unwanted action
+            return false;
+        }
+}
 //========================================================================================================

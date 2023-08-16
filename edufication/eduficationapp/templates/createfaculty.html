@@ -178,7 +178,7 @@
                                             {{form.email}}
                                             </div>
                                         </div>
-                                    <input type="submit" name="btninsert" value="Insert" class="btn btn-success" /><br><br>                
+                                    <input type="submit" name="btninsert" value="Create" class="btn btn-success" onclick="return addAlert();" /><br><br>                
                                 </form>
                                 {% if form.errors %}
                                     <label>{{form.errors.password2}}</label>
